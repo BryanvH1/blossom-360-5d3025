@@ -5,12 +5,21 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Developer 360 — Console</title>
+<link rel="icon" type="image/svg+xml" href="assets/blossom-logomark.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#006838">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
 <div class="wrap wide">
-  <h1>Developer 360 — Console</h1>
-  <p class="sub">Blossom · for John and Bryan · nothing here is stored on the web — everything lives in this browser</p>
+  <header class="masthead">
+    <img src="assets/blossom-logo.png" alt="Blossom">
+    <div class="titles">
+      <h1>Developer 360 — Console</h1>
+      <p class="sub">For John and Bryan · nothing here is stored on the web — everything lives in this browser</p>
+    </div>
+  </header>
 
   <div class="card">
     <div class="toolbar">
@@ -23,7 +32,7 @@
       <button class="btn ghost sm" id="exportBtn" type="button">Export backup</button>
       <button class="btn ghost sm" id="importBtn" type="button">Import backup</button>
     </div>
-    <div id="chips"></div>
+    <div id="coverage"></div>
     <div id="addPanel" class="hidden" style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px">
       <label for="paste">Paste one or more response codes (one per line)</label>
       <textarea class="codebox" id="paste" placeholder="B360-1.…"></textarea>
@@ -161,12 +170,7 @@
   /* ---------- render ---------- */
   function render(){
     var rs = mine();
-    // chips
-    $('chips').innerHTML = rs.length ? rs.map(function(r,i){
-      return '<span class="chip"><b>' + esc(r.rater) + '</b> · ' + esc(relLabel(r.relationship)) +
-             (r.date ? ' · ' + esc(r.date) : '') +
-             ' <button data-del="' + esc(r.id) + '" title="Remove this response">×</button></span>';
-    }).join('') : '<span class="small muted">No responses loaded for ' + esc(person) + '.</span>';
+    renderCoverage(rs);
 
     var m = rs.length ? B.score(rs) : null;
     $('empty').classList.toggle('hidden', rs.length > 0);
@@ -194,6 +198,58 @@
       save(); render();
     }
   });
+
+  /* ---------- rater coverage ---------- */
+  function renderCoverage(rs){
+    var byRater = {};
+    rs.forEach(function(r){ byRater[r.rater] = r; });
+    var received = rs.length;
+
+    var rows = D.roster.map(function(name){
+      var r = byRater[name];
+      var expected = (name === person) ? 'Self' : '';
+      if (r){
+        return '<tr><td class="who">' + esc(name) + '</td>' +
+               '<td>' + esc(relLabel(r.relationship)) + '</td>' +
+               '<td><span class="status in"><span class="dot"></span>Received</span></td>' +
+               '<td class="small muted">' + esc(r.date || '—') + '</td>' +
+               '<td class="right"><button class="btn ghost sm" data-del="' + esc(r.id) + '">Remove</button></td></tr>';
+      }
+      return '<tr class="awaiting"><td class="who">' + esc(name) + '</td>' +
+             '<td class="small muted">' + (expected || '—') + '</td>' +
+             '<td><span class="status out"><span class="dot"></span>Awaiting</span></td>' +
+             '<td class="small muted">—</td><td></td></tr>';
+    }).join('');
+
+    var warn = '';
+    if (received){
+      var hasSelf = rs.some(function(r){ return r.relationship === 'self'; });
+      var hasOther = rs.some(function(r){ return r.relationship !== 'self'; });
+      var bits = [];
+      if (!hasSelf) bits.push('No self-assessment yet — the blind-spot column stays empty until ' + esc(person) + ' scores themselves, and that column is the point of the exercise.');
+      if (!hasOther) bits.push('Only a self-assessment so far — every score below is ' + esc(person) + ' rating themselves, so nothing here is a 360 yet.');
+      var othersCount = rs.filter(function(r){ return r.relationship !== 'self'; }).length;
+      if (othersCount > 0 && othersCount < 3) bits.push('Only ' + othersCount + ' rater' + (othersCount === 1 ? '' : 's') +
+        ' besides the self-score. One strong opinion moves these averages a long way — treat the ranking as provisional until more arrive.');
+      if (bits.length) warn = '<div class="note warn small" style="margin:12px 0 0">' + bits.join('<br>') + '</div>';
+    }
+
+    var outstanding = D.roster.filter(function(n){ return !byRater[n]; });
+
+    $('coverage').innerHTML =
+      '<div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">' +
+      '<div class="covbar"><span class="frac">' + received + '</span>' +
+      '<span class="small muted">response' + (received === 1 ? '' : 's') + ' in for <b>' + esc(person) + '</b>' +
+      (outstanding.length ? ' · nothing yet from ' + esc(outstanding.join(', ')) : ' · everyone on the roster has responded') +
+      '</span></div>' +
+      '<table class="cov"><tr><th>Rater</th><th>Relationship</th><th>Status</th><th>Received</th><th></th></tr>' +
+      rows + '</table>' + warn +
+      '<p class="small muted" style="margin:12px 0 0">The table lists the whole roster, not necessarily everyone you asked — ignore ' +
+      'any row for someone who was never invited to rate ' + esc(person) + '.<br>' +
+      'This list does not refresh on its own. It changes only when you paste a new response code into <b>Add a response</b>: ' +
+      'each rater sends you their code, and nothing appears here until you paste it.</p>' +
+      '</div>';
+  }
 
   /* ---------- 1. SCORES ---------- */
   function renderScores(m, rs){
@@ -282,10 +338,11 @@
 
   function radar(m){
     var W = 420, H = 360, cx = W/2, cy = H/2 + 6, R = 118, n = m.dims.length;
+    /* self gets the warm contrast — it is the line you read against the other two */
     var series = [
-      {key:'self',  label:'Self',     color:'#c2703d'},
-      {key:'mgr',   label:'Managers', color:'#2e6f8e'},
-      {key:'peer',  label:'Peers',    color:'#4e9a6a'}
+      {key:'self',  label:'Self',     color:'#b4653a'},
+      {key:'mgr',   label:'Managers', color:'#006838'},
+      {key:'peer',  label:'Peers',    color:'#8a9a00'}
     ].filter(function(s){ return m.dims.some(function(d){ return d[s.key] !== null; }); });
     function pt(i, v){
       var a = -Math.PI/2 + i * 2*Math.PI/n, r = R * (Math.max(0, Math.min(5, v)) / 5);
@@ -493,7 +550,7 @@
   function lineChart(snaps){
     var W = 760, H = 300, L = 46, Rr = 18, T = 16, Bm = 42;
     var pw = W - L - Rr, ph = H - T - Bm;
-    var colors = ['#2e6f8e','#c2703d','#4e9a6a','#7a5ea8','#b3392c'];
+    var colors = ['#006838','#b4653a','#8a9a00','#3f7f9e','#9c4f6c'];
     var legend = [];
     var n = snaps.length;
     function x(i){ return n === 1 ? L + pw/2 : L + i * pw / (n - 1); }
