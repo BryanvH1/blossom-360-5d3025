@@ -9,23 +9,23 @@ window.B360_DATA = {
     },
     {
       "name": "Jeremy",
-      "role": "Developer",
-      "profile": null
+      "role": "Associate Developer",
+      "profile": "developer-associate"
     },
     {
       "name": "Bryan",
-      "role": "COO / CFO",
-      "profile": null
+      "role": "COO / CFO · Integrator",
+      "profile": "coo-cfo-integrator"
     },
     {
       "name": "John",
-      "role": null,
-      "profile": null
+      "role": "Chief Vision Officer / CEO",
+      "profile": "ceo-visionary"
     },
     {
       "name": "Mark",
-      "role": null,
-      "profile": null
+      "role": "Chief Growth Officer",
+      "profile": "cgo"
     }
   ],
   "relationships": [
@@ -40,6 +40,10 @@ window.B360_DATA = {
     [
       "peer",
       "Peer"
+    ],
+    [
+      "report",
+      "Direct report"
     ]
   ],
   "profiles": {
@@ -49,7 +53,12 @@ window.B360_DATA = {
       "formTitle": "Developer 360 — Rater Form",
       "consoleTitle": "Developer 360 — Console",
       "blurb": "Thirty observable behaviours · about eight minutes",
-      "note": "The thirty behaviours and their weights describe a software developer moving toward lead developer. They are not a fair description of any other job.",
+      "note": "Weighted for a software developer moving toward lead developer: eight of the thirty are critical, and they lean on handover, transparency and mentoring.",
+      "relationships": [
+        "self",
+        "manager",
+        "peer"
+      ],
       "dimensions": [
         {
           "code": "A",
@@ -452,7 +461,7 @@ window.B360_DATA = {
         },
         {
           "value": "3",
-          "label": "Solid — meets the bar for a developer here"
+          "label": "Solid — meets the bar for this role"
         },
         {
           "value": "2",
@@ -471,6 +480,1749 @@ window.B360_DATA = {
         "1. What is he genuinely good at — what should not change?",
         "2. If he changed ONE thing, what would make the biggest difference?",
         "3. What would you need to see before you'd be comfortable with him leading the dev team?"
+      ]
+    },
+    "developer-associate": {
+      "id": "developer-associate",
+      "label": "Associate Developer",
+      "formTitle": "Associate Developer 360 — Rater Form",
+      "consoleTitle": "Associate Developer 360 — Console",
+      "blurb": "Thirty observable behaviours · about eight minutes",
+      "note": "Weighted for someone establishing competence, not for someone moving into a lead role. The criticals are about learning speed and not going quiet, rather than mentoring or handover.",
+      "relationships": [
+        "self",
+        "manager",
+        "peer"
+      ],
+      "dimensions": [
+        {
+          "code": "A",
+          "name": "Delivery & Predictability",
+          "question": "Can the team plan around them?"
+        },
+        {
+          "code": "B",
+          "name": "Code & Technical Craft",
+          "question": "Is the work durable, or does it come back?"
+        },
+        {
+          "code": "C",
+          "name": "Communication & Transparency",
+          "question": "Do people know where things stand without chasing them?"
+        },
+        {
+          "code": "D",
+          "name": "Collaboration & Coachability",
+          "question": "Does feedback actually change anything?"
+        },
+        {
+          "code": "E",
+          "name": "Ownership & Growth",
+          "question": "Are they getting better, and do they own their work?"
+        }
+      ],
+      "items": [
+        {
+          "code": "A1",
+          "text": "Gives estimates that turn out to be close to reality",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A2",
+          "text": "Finishes what they start before picking up new work",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A3",
+          "text": "Raises a delay or blocker early, before the date is missed",
+          "importance": 3,
+          "dim": "A"
+        },
+        {
+          "code": "A4",
+          "text": "Breaks large work into pieces that can be shipped and reviewed",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A5",
+          "text": "Delivers work that is genuinely done — tested, not \"done except…\"",
+          "importance": 3,
+          "dim": "A"
+        },
+        {
+          "code": "A6",
+          "text": "Negotiates scope changes openly rather than absorbing them silently",
+          "importance": 1,
+          "dim": "A"
+        },
+        {
+          "code": "B1",
+          "text": "Writes code others can read and change without asking them",
+          "importance": 3,
+          "dim": "B"
+        },
+        {
+          "code": "B2",
+          "text": "Tests their own work before handing it off",
+          "importance": 3,
+          "dim": "B"
+        },
+        {
+          "code": "B3",
+          "text": "Chooses the simple solution when the simple solution is enough",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B4",
+          "text": "Names and logs technical debt rather than hiding it",
+          "importance": 1,
+          "dim": "B"
+        },
+        {
+          "code": "B5",
+          "text": "Diagnoses problems methodically rather than changing things at random",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B6",
+          "text": "Leaves enough of a trail that someone else could pick the work up",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "C1",
+          "text": "Provides status without being asked for it",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C2",
+          "text": "Writes down what they learned so the next person does not relearn it",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C3",
+          "text": "Explains technical trade-offs so a non-developer can make the call",
+          "importance": 1,
+          "dim": "C"
+        },
+        {
+          "code": "C4",
+          "text": "Acknowledges messages and requests within an agreed time",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C5",
+          "text": "Says \"I'm stuck\" instead of going quiet",
+          "importance": 3,
+          "dim": "C"
+        },
+        {
+          "code": "C6",
+          "text": "Delivers bad news early and plainly",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "D1",
+          "text": "Receives critical feedback without becoming defensive",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D2",
+          "text": "Acts on feedback — the same issue doesn't need raising twice",
+          "importance": 3,
+          "dim": "D"
+        },
+        {
+          "code": "D3",
+          "text": "Asks for help before burning significant time",
+          "importance": 3,
+          "dim": "D"
+        },
+        {
+          "code": "D4",
+          "text": "Executes a decision fully even when they argued against it",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D5",
+          "text": "Shares what they know instead of holding it",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D6",
+          "text": "Keeps disagreements about the work, not the person",
+          "importance": 1,
+          "dim": "D"
+        },
+        {
+          "code": "E1",
+          "text": "Owns the outcome, not the ticket — follows through to working in production",
+          "importance": 2,
+          "dim": "E"
+        },
+        {
+          "code": "E2",
+          "text": "Thinks past their own task to what the product and customer need",
+          "importance": 2,
+          "dim": "E"
+        },
+        {
+          "code": "E3",
+          "text": "Applies review feedback the next time, not only this time",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E4",
+          "text": "Comes away understanding why something worked, not just that it did",
+          "importance": 2,
+          "dim": "E"
+        },
+        {
+          "code": "E5",
+          "text": "Flags something that looks wrong even when it isn't theirs to fix",
+          "importance": 2,
+          "dim": "E"
+        },
+        {
+          "code": "E6",
+          "text": "Given an ambiguous problem, comes back with the questions that sharpen it",
+          "importance": 2,
+          "dim": "E"
+        }
+      ],
+      "metrics": {
+        "A1": {
+          "metric": "% of tasks finished within ±50% of the estimate given",
+          "target": "≥ 50%, rising",
+          "source": "Manual tally / Linear estimate vs. actual",
+          "cadence": "Monthly"
+        },
+        "A2": {
+          "metric": "Peak number of items in progress at one time during the week",
+          "target": "≤ 2",
+          "source": "Manual tally / Linear board snapshot",
+          "cadence": "Weekly"
+        },
+        "A3": {
+          "metric": "% of missed dates where a heads-up came ≥1 day BEFORE the date",
+          "target": "100%",
+          "source": "Manual tally (whoever assigned the work logs it)",
+          "cadence": "Monthly"
+        },
+        "A4": {
+          "metric": "% of tasks closed within 5 working days of being started",
+          "target": "≥ 70%",
+          "source": "Manual tally / Linear cycle time",
+          "cadence": "Monthly"
+        },
+        "A5": {
+          "metric": "Items reopened or bounced back after being called done",
+          "target": "≤ 2 per month",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "A6": {
+          "metric": "Scope changes discovered after the fact rather than agreed up front",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "B1": {
+          "metric": "Review comments asking what the code does or why",
+          "target": "Trend down 40% in 90 days",
+          "source": "Manual tally / GitHub review comments",
+          "cadence": "Monthly"
+        },
+        "B2": {
+          "metric": "Defects the reviewer finds that a self-test would have caught",
+          "target": "≤ 1 per week",
+          "source": "Manual tally at review",
+          "cadence": "Weekly"
+        },
+        "B3": {
+          "metric": "Times a reviewer flags a solution as more complex than the problem needs",
+          "target": "≤ 2 per month",
+          "source": "Manual tally / review notes",
+          "cadence": "Monthly"
+        },
+        "B4": {
+          "metric": "Shortcuts they flagged themselves vs. ones the reviewer found",
+          "target": "≥ 1:1",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "B5": {
+          "metric": "Bugs where the fix addressed the cause rather than the symptom",
+          "target": "≥ 80%",
+          "source": "Manual tally at review",
+          "cadence": "Monthly"
+        },
+        "B6": {
+          "metric": "% of finished tasks with a note explaining what changed and why",
+          "target": "≥ 90%",
+          "source": "Manual checklist / PR description",
+          "cadence": "Monthly"
+        },
+        "C1": {
+          "metric": "% of weekdays with a short written update posted unprompted",
+          "target": "≥ 90%",
+          "source": "Manual tally",
+          "cadence": "Weekly"
+        },
+        "C2": {
+          "metric": "Notes or docs written from something newly learned",
+          "target": "≥ 2 per month",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "C3": {
+          "metric": "Explanations a non-developer rated 1–5 as \"I understood the trade-off\"",
+          "target": "Average ≥ 3.5",
+          "source": "Manual — one rating per explanation",
+          "cadence": "Monthly"
+        },
+        "C4": {
+          "metric": "% of requests acknowledged within 1 business day",
+          "target": "≥ 90%",
+          "source": "Manual tally / spot check",
+          "cadence": "Monthly"
+        },
+        "C5": {
+          "metric": "Stretches of more than half a day stuck with no one told",
+          "target": "0",
+          "source": "Self-logged + confirmed at standup",
+          "cadence": "Weekly"
+        },
+        "C6": {
+          "metric": "Problems leadership learned about only after the deadline",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "D1": {
+          "metric": "% of feedback conversations the giver rates as \"received openly\"",
+          "target": "≥ 90%",
+          "source": "Manual — giver logs it same day",
+          "cadence": "Per conversation"
+        },
+        "D2": {
+          "metric": "Pieces of feedback that had to be raised a second time",
+          "target": "0 per quarter",
+          "source": "Manual tally (keep a feedback log)",
+          "cadence": "Monthly"
+        },
+        "D3": {
+          "metric": "Tasks where more than 4 hours were lost before asking for help",
+          "target": "0",
+          "source": "Self-logged time-to-ask",
+          "cadence": "Weekly"
+        },
+        "D4": {
+          "metric": "Closed decisions reopened or relitigated",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "D5": {
+          "metric": "Times they answered someone else's question rather than deflecting it",
+          "target": "≥ 4 per month",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "D6": {
+          "metric": "Disagreements that had to be escalated",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "E1": {
+          "metric": "% of their items that reach production without someone else finishing them",
+          "target": "≥ 85%",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "E2": {
+          "metric": "Questions asked about the customer or product before starting a task",
+          "target": "≥ 2 per month",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "E3": {
+          "metric": "Repeat review comments — the same correction given twice",
+          "target": "0 per month",
+          "source": "Manual tally / GitHub review comments",
+          "cadence": "Monthly"
+        },
+        "E4": {
+          "metric": "Can explain a past fix a month later without looking it up",
+          "target": "≥ 80% of spot checks",
+          "source": "Manual — ask at the monthly check-in",
+          "cadence": "Monthly"
+        },
+        "E5": {
+          "metric": "Problems raised that were outside their assigned work",
+          "target": "≥ 1 per month",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "E6": {
+          "metric": "Ambiguous tasks where they returned clarifying questions before building",
+          "target": "100%",
+          "source": "Manual tally",
+          "cadence": "Per occurrence"
+        }
+      },
+      "scale": [
+        {
+          "value": "5",
+          "label": "Exceptional — could teach this to others"
+        },
+        {
+          "value": "4",
+          "label": "Strong — consistently does this well"
+        },
+        {
+          "value": "3",
+          "label": "Solid — meets the bar for this role"
+        },
+        {
+          "value": "2",
+          "label": "Developing — inconsistent, needs prompting"
+        },
+        {
+          "value": "1",
+          "label": "Significant development needed"
+        },
+        {
+          "value": "N/A",
+          "label": "Haven't seen enough to judge — leave blank"
+        }
+      ],
+      "openQuestions": [
+        "1. What are they genuinely good at — what should not change?",
+        "2. If they changed ONE thing, what would make the biggest difference?",
+        "3. What would you need to see to be fully confident in them in this role?"
+      ]
+    },
+    "cgo": {
+      "id": "cgo",
+      "label": "Chief Growth Officer",
+      "formTitle": "Chief Growth Officer 360 — Rater Form",
+      "consoleTitle": "Chief Growth Officer 360 — Console",
+      "blurb": "Thirty observable behaviours · about eight minutes",
+      "note": "Weighted for growth at a small company: a forecast people can plan against and a promise the company can keep matter more here than raw activity.",
+      "relationships": [
+        "self",
+        "manager",
+        "peer",
+        "report"
+      ],
+      "dimensions": [
+        {
+          "code": "A",
+          "name": "Pipeline & Revenue",
+          "question": "Is growth happening, and can we see it coming?"
+        },
+        {
+          "code": "B",
+          "name": "Customer & Market Insight",
+          "question": "Do we understand the grower better because of them?"
+        },
+        {
+          "code": "C",
+          "name": "Go-to-Market Execution",
+          "question": "Do plans turn into signed customers?"
+        },
+        {
+          "code": "D",
+          "name": "Communication & Leadership",
+          "question": "Does the rest of the company know what is happening, and why?"
+        },
+        {
+          "code": "E",
+          "name": "Judgement & Accountability",
+          "question": "Do they own the number?"
+        }
+      ],
+      "items": [
+        {
+          "code": "A1",
+          "text": "Builds a pipeline the company can forecast from, not a list of hopes",
+          "importance": 3,
+          "dim": "A"
+        },
+        {
+          "code": "A2",
+          "text": "Hits the revenue commitments they sign up to",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A3",
+          "text": "Flags a miss early enough that the company can respond",
+          "importance": 3,
+          "dim": "A"
+        },
+        {
+          "code": "A4",
+          "text": "Prioritises the accounts that actually move the number",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A5",
+          "text": "Knows the unit economics of the deals they bring in",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A6",
+          "text": "Grows the accounts we already have, not only new logos",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "B1",
+          "text": "Brings back what growers actually said, not what confirms the plan",
+          "importance": 3,
+          "dim": "B"
+        },
+        {
+          "code": "B2",
+          "text": "Turns customer conversations into something the product team can act on",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B3",
+          "text": "Positions honestly against the competition",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B4",
+          "text": "Spots a shift in the market before it shows up in the numbers",
+          "importance": 1,
+          "dim": "B"
+        },
+        {
+          "code": "B5",
+          "text": "Knows which customers are at risk before they churn",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B6",
+          "text": "Separates one loud customer from a real pattern",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "C1",
+          "text": "Turns a strategy into a plan with dates and owners",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C2",
+          "text": "Follows through on what they promised a customer",
+          "importance": 3,
+          "dim": "C"
+        },
+        {
+          "code": "C3",
+          "text": "Runs a repeatable process rather than improvising each deal",
+          "importance": 1,
+          "dim": "C"
+        },
+        {
+          "code": "C4",
+          "text": "Builds materials the rest of the team can actually use",
+          "importance": 1,
+          "dim": "C"
+        },
+        {
+          "code": "C5",
+          "text": "Kills what isn't working instead of defending it",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C6",
+          "text": "Checks with product and support before promising something",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "D1",
+          "text": "Gives the leadership team an honest read, including the bad parts",
+          "importance": 3,
+          "dim": "D"
+        },
+        {
+          "code": "D2",
+          "text": "Sets clear expectations with the people they lead",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D3",
+          "text": "Represents Blossom well in front of customers and the industry",
+          "importance": 1,
+          "dim": "D"
+        },
+        {
+          "code": "D4",
+          "text": "Listens to pushback without needing to win",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D5",
+          "text": "Shares context so others can act without them",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D6",
+          "text": "Develops the people who work with them",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "E1",
+          "text": "Owns the number — no excuses when it misses",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E2",
+          "text": "Makes decisions at the pace the business needs",
+          "importance": 2,
+          "dim": "E"
+        },
+        {
+          "code": "E3",
+          "text": "Says no to deals that are wrong for Blossom",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E4",
+          "text": "Only promises what the company can actually deliver",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E5",
+          "text": "Changes course on evidence rather than defending a position",
+          "importance": 2,
+          "dim": "E"
+        },
+        {
+          "code": "E6",
+          "text": "Thinks past this quarter to where growth comes from next year",
+          "importance": 2,
+          "dim": "E"
+        }
+      ],
+      "metrics": {
+        "A1": {
+          "metric": "Forecast accuracy — closed revenue vs. the forecast given 90 days earlier",
+          "target": "Within ±20%",
+          "source": "Manual — record each forecast, compare at close",
+          "cadence": "Quarterly"
+        },
+        "A2": {
+          "metric": "Revenue against the committed number",
+          "target": "≥ 95% of commitment",
+          "source": "Finance / CRM",
+          "cadence": "Monthly"
+        },
+        "A3": {
+          "metric": "% of misses flagged before the period closed rather than after",
+          "target": "100%",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "A4": {
+          "metric": "% of selling time spent on the named target accounts",
+          "target": "≥ 70%",
+          "source": "Manual — weekly time or activity review",
+          "cadence": "Monthly"
+        },
+        "A5": {
+          "metric": "Deals closed where CAC and expected margin were known before signing",
+          "target": "100%",
+          "source": "Manual checklist at signature",
+          "cadence": "Per deal"
+        },
+        "A6": {
+          "metric": "Net revenue retention on existing accounts",
+          "target": "≥ 100%",
+          "source": "Finance / billing",
+          "cadence": "Quarterly"
+        },
+        "B1": {
+          "metric": "Grower conversations logged with verbatim notes, not summaries",
+          "target": "≥ 8 per month",
+          "source": "Manual — shared notes doc",
+          "cadence": "Monthly"
+        },
+        "B2": {
+          "metric": "Customer insights handed to product that became work items",
+          "target": "≥ 2 per month",
+          "source": "Manual tally / Linear",
+          "cadence": "Monthly"
+        },
+        "B3": {
+          "metric": "Competitive claims that survived a fact check",
+          "target": "100%",
+          "source": "Manual — spot check by John or Bryan",
+          "cadence": "Quarterly"
+        },
+        "B4": {
+          "metric": "Market shifts called in advance that later proved out",
+          "target": "≥ 1 per year",
+          "source": "Manual — keep a dated prediction log",
+          "cadence": "Quarterly"
+        },
+        "B5": {
+          "metric": "Churned accounts that had been flagged at risk beforehand",
+          "target": "≥ 80%",
+          "source": "Manual — maintain a risk list",
+          "cadence": "Quarterly"
+        },
+        "B6": {
+          "metric": "Requests escalated as \"a pattern\" that turned out to be one customer",
+          "target": "≤ 1 per quarter",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "C1": {
+          "metric": "% of GTM initiatives with a named owner and a date at kickoff",
+          "target": "100%",
+          "source": "Manual checklist",
+          "cadence": "Monthly"
+        },
+        "C2": {
+          "metric": "Customer commitments met by the date promised",
+          "target": "≥ 95%",
+          "source": "Manual — log every commitment made",
+          "cadence": "Monthly"
+        },
+        "C3": {
+          "metric": "% of deals that followed the defined stages",
+          "target": "≥ 80%",
+          "source": "CRM / manual",
+          "cadence": "Quarterly"
+        },
+        "C4": {
+          "metric": "Sales materials others used without asking him to redo them",
+          "target": "≥ 80% of assets",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "C5": {
+          "metric": "Initiatives formally stopped after failing their test",
+          "target": "≥ 1 per quarter",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "C6": {
+          "metric": "Promises made to customers without checking product or support first",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "D1": {
+          "metric": "Leadership rate the honesty of the growth update 1–5",
+          "target": "Average ≥ 4.0",
+          "source": "Manual — one rating per update",
+          "cadence": "Monthly"
+        },
+        "D2": {
+          "metric": "Direct reports who can state their top three priorities unprompted",
+          "target": "100%",
+          "source": "Manual — ask at the monthly check-in",
+          "cadence": "Monthly"
+        },
+        "D3": {
+          "metric": "Customer or partner complaints about how Blossom was represented",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "D4": {
+          "metric": "Decisions where he changed position after internal pushback",
+          "target": "≥ 1 per quarter",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "D5": {
+          "metric": "Deals or accounts only he can speak to",
+          "target": "Trend to 0",
+          "source": "Manual — maintain a coverage list",
+          "cadence": "Quarterly"
+        },
+        "D6": {
+          "metric": "Documented development conversations with each report",
+          "target": "≥ 1 per month each",
+          "source": "Manual log",
+          "cadence": "Monthly"
+        },
+        "E1": {
+          "metric": "Misses reported with a cause and a corrective action, not a reason",
+          "target": "100%",
+          "source": "Manual — review each miss",
+          "cadence": "Monthly"
+        },
+        "E2": {
+          "metric": "Decisions still open past their agreed decide-by date",
+          "target": "0",
+          "source": "Manual — keep a decision log",
+          "cadence": "Monthly"
+        },
+        "E3": {
+          "metric": "Deals declined on fit, and the reason recorded",
+          "target": "≥ 1 per quarter",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "E4": {
+          "metric": "Signed commitments the company could not deliver on time",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "E5": {
+          "metric": "Positions changed on new evidence vs. defended past it",
+          "target": "≥ 2:1",
+          "source": "Manual — decision log review",
+          "cadence": "Quarterly"
+        },
+        "E6": {
+          "metric": "Named growth bets for next year with a first step under way",
+          "target": "≥ 2 live at all times",
+          "source": "Manual — plan review",
+          "cadence": "Quarterly"
+        }
+      },
+      "scale": [
+        {
+          "value": "5",
+          "label": "Exceptional — could teach this to others"
+        },
+        {
+          "value": "4",
+          "label": "Strong — consistently does this well"
+        },
+        {
+          "value": "3",
+          "label": "Solid — meets the bar for this role"
+        },
+        {
+          "value": "2",
+          "label": "Developing — inconsistent, needs prompting"
+        },
+        {
+          "value": "1",
+          "label": "Significant development needed"
+        },
+        {
+          "value": "N/A",
+          "label": "Haven't seen enough to judge — leave blank"
+        }
+      ],
+      "openQuestions": [
+        "1. What are they genuinely good at — what should not change?",
+        "2. If they changed ONE thing, what would make the biggest difference?",
+        "3. What would you need to see to be fully confident in them in this role?"
+      ]
+    },
+    "ceo-visionary": {
+      "id": "ceo-visionary",
+      "label": "Chief Vision Officer / CEO",
+      "formTitle": "Chief Vision Officer 360 — Rater Form",
+      "consoleTitle": "Chief Vision Officer 360 — Console",
+      "blurb": "Thirty observable behaviours · about eight minutes",
+      "note": "Built around the EOS Visionary seat. The criticals are weighted toward a stable, repeatable direction and toward ideas being filtered and finished — the two places a Visionary most often costs the company more than they add.",
+      "relationships": [
+        "self",
+        "manager",
+        "peer",
+        "report"
+      ],
+      "dimensions": [
+        {
+          "code": "A",
+          "name": "Vision & Direction",
+          "question": "Is it clear where we are going, and why?"
+        },
+        {
+          "code": "B",
+          "name": "Strategic Judgement",
+          "question": "Are the big calls right, and made in time?"
+        },
+        {
+          "code": "C",
+          "name": "Culture & People",
+          "question": "Is this a place good people stay?"
+        },
+        {
+          "code": "D",
+          "name": "External & Relationships",
+          "question": "Do they open doors the company could not open itself?"
+        },
+        {
+          "code": "E",
+          "name": "Discipline & Follow-through",
+          "question": "Do the ideas become things, or just more ideas?"
+        }
+      ],
+      "items": [
+        {
+          "code": "A1",
+          "text": "States where Blossom is going in terms anyone here can repeat",
+          "importance": 3,
+          "dim": "A"
+        },
+        {
+          "code": "A2",
+          "text": "Keeps the direction stable long enough to be executed against",
+          "importance": 3,
+          "dim": "A"
+        },
+        {
+          "code": "A3",
+          "text": "Connects day-to-day work to the longer-term goal",
+          "importance": 1,
+          "dim": "A"
+        },
+        {
+          "code": "A4",
+          "text": "Makes the priorities clear when everything feels urgent",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A5",
+          "text": "Explains a change in direction with the reasoning behind it",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A6",
+          "text": "Sets goals that stretch the company without breaking it",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "B1",
+          "text": "Makes the big calls in time rather than letting them drift",
+          "importance": 3,
+          "dim": "B"
+        },
+        {
+          "code": "B2",
+          "text": "Faces uncomfortable facts about the business honestly",
+          "importance": 3,
+          "dim": "B"
+        },
+        {
+          "code": "B3",
+          "text": "Weighs evidence over instinct when the stakes are high",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B4",
+          "text": "Understands the economics well enough to choose between options",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B5",
+          "text": "Knows which decisions are theirs and which belong to someone else",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B6",
+          "text": "Says plainly when a call they made turned out wrong",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "C1",
+          "text": "Holds people to the standard they set for themselves",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C2",
+          "text": "Deals with a people problem rather than working around it",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C3",
+          "text": "Gives credit outward and takes responsibility inward",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C4",
+          "text": "Makes it safe to bring them bad news",
+          "importance": 3,
+          "dim": "C"
+        },
+        {
+          "code": "C5",
+          "text": "Invests in the growth of the leadership team",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C6",
+          "text": "Absorbs pressure rather than passing it straight to the team",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "D1",
+          "text": "Opens doors the company could not open without them",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D2",
+          "text": "Represents Blossom credibly to growers, handlers and partners",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D3",
+          "text": "Builds relationships that outlast a single deal",
+          "importance": 1,
+          "dim": "D"
+        },
+        {
+          "code": "D4",
+          "text": "Brings back intelligence the company can act on",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D5",
+          "text": "Negotiates deals that still look right a year later",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D6",
+          "text": "Brings others into a relationship rather than holding it alone",
+          "importance": 1,
+          "dim": "D"
+        },
+        {
+          "code": "E1",
+          "text": "Finishes the initiatives they start, or kills them out loud",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E2",
+          "text": "Filters their own ideas before handing them to the team",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E3",
+          "text": "Lets decisions stay decided",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E4",
+          "text": "Works through the process the team relies on rather than around it",
+          "importance": 2,
+          "dim": "E"
+        },
+        {
+          "code": "E5",
+          "text": "Prepares for the meetings they ask others to prepare for",
+          "importance": 1,
+          "dim": "E"
+        },
+        {
+          "code": "E6",
+          "text": "Follows through on what they commit to internally",
+          "importance": 2,
+          "dim": "E"
+        }
+      ],
+      "metrics": {
+        "A1": {
+          "metric": "Team members who can state the company's direction consistently, unprompted",
+          "target": "100% of staff",
+          "source": "Manual — ask each person once a quarter",
+          "cadence": "Quarterly"
+        },
+        "A2": {
+          "metric": "Changes of stated strategic direction",
+          "target": "≤ 1 per year",
+          "source": "Manual — dated log of stated direction",
+          "cadence": "Quarterly"
+        },
+        "A3": {
+          "metric": "Rocks or projects with no stated line to the longer-term goal",
+          "target": "0",
+          "source": "Manual — quarterly plan review",
+          "cadence": "Quarterly"
+        },
+        "A4": {
+          "metric": "Occasions the team reported being unable to tell what came first",
+          "target": "0",
+          "source": "Manual — asked at the monthly check-in",
+          "cadence": "Monthly"
+        },
+        "A5": {
+          "metric": "Direction changes announced with written reasoning",
+          "target": "100%",
+          "source": "Manual tally",
+          "cadence": "Per occurrence"
+        },
+        "A6": {
+          "metric": "Quarterly Rocks completed",
+          "target": "≥ 80%",
+          "source": "EOS scorecard / ClickUp",
+          "cadence": "Quarterly"
+        },
+        "B1": {
+          "metric": "Decisions still open past their agreed decide-by date",
+          "target": "0",
+          "source": "Manual — decision log with dates",
+          "cadence": "Monthly"
+        },
+        "B2": {
+          "metric": "Bad-news items he raised himself vs. ones others had to surface",
+          "target": "≥ 1:1",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "B3": {
+          "metric": "Major decisions with the evidence written down before deciding",
+          "target": "≥ 80%",
+          "source": "Manual — decision log",
+          "cadence": "Quarterly"
+        },
+        "B4": {
+          "metric": "Can state current runway, margin and burn without preparing",
+          "target": "Correct within 10%",
+          "source": "Manual — spot check",
+          "cadence": "Quarterly"
+        },
+        "B5": {
+          "metric": "Decisions he made that belonged to someone else's seat",
+          "target": "≤ 1 per quarter",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "B6": {
+          "metric": "Reversed calls acknowledged openly to the team",
+          "target": "100%",
+          "source": "Manual tally",
+          "cadence": "Per occurrence"
+        },
+        "C1": {
+          "metric": "Standards he asked of others that he also met himself",
+          "target": "100% of spot checks",
+          "source": "Manual — leadership review",
+          "cadence": "Quarterly"
+        },
+        "C2": {
+          "metric": "Known people problems still unaddressed after 30 days",
+          "target": "0",
+          "source": "Manual — people review",
+          "cadence": "Monthly"
+        },
+        "C3": {
+          "metric": "Public credit given for wins vs. blame assigned for losses",
+          "target": "≥ 3:1",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "C4": {
+          "metric": "Team rate 1–5: \"I can bring John a problem early without cost\"",
+          "target": "Average ≥ 4.0",
+          "source": "Anonymous pulse where possible",
+          "cadence": "Quarterly"
+        },
+        "C5": {
+          "metric": "Documented development conversations with each leader",
+          "target": "≥ 1 per quarter each",
+          "source": "Manual log",
+          "cadence": "Quarterly"
+        },
+        "C6": {
+          "metric": "Urgent requests passed straight to the team within 24h of arriving",
+          "target": "≤ 2 per month",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "D1": {
+          "metric": "Introductions or opportunities only he could have created",
+          "target": "≥ 2 per quarter",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "D2": {
+          "metric": "Negative feedback about how Blossom was represented",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "D3": {
+          "metric": "Key relationships still active a year after the first deal",
+          "target": "≥ 80%",
+          "source": "Manual — relationship list review",
+          "cadence": "Annually"
+        },
+        "D4": {
+          "metric": "External insights brought back that became a decision or work item",
+          "target": "≥ 1 per month",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "D5": {
+          "metric": "Deals renegotiated or regretted within 12 months",
+          "target": "0",
+          "source": "Manual review",
+          "cadence": "Annually"
+        },
+        "D6": {
+          "metric": "Key relationships with a second Blossom person involved",
+          "target": "≥ 70%",
+          "source": "Manual — relationship list",
+          "cadence": "Quarterly"
+        },
+        "E1": {
+          "metric": "Initiatives started that were finished or formally killed",
+          "target": "100% resolved within 2 quarters",
+          "source": "Manual — initiative log",
+          "cadence": "Quarterly"
+        },
+        "E2": {
+          "metric": "New ideas handed to the team per week",
+          "target": "≤ 3, each with a stated priority",
+          "source": "Manual tally",
+          "cadence": "Weekly"
+        },
+        "E3": {
+          "metric": "Closed decisions he reopened",
+          "target": "≤ 1 per quarter",
+          "source": "Manual — decision log",
+          "cadence": "Monthly"
+        },
+        "E4": {
+          "metric": "Requests made outside the agreed planning and meeting rhythm",
+          "target": "≤ 2 per month",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "E5": {
+          "metric": "Meetings he called and arrived prepared for",
+          "target": "100%",
+          "source": "Manual — attendee rating",
+          "cadence": "Monthly"
+        },
+        "E6": {
+          "metric": "Internal commitments met by the date given",
+          "target": "≥ 90%",
+          "source": "Manual — commitment log",
+          "cadence": "Monthly"
+        }
+      },
+      "scale": [
+        {
+          "value": "5",
+          "label": "Exceptional — could teach this to others"
+        },
+        {
+          "value": "4",
+          "label": "Strong — consistently does this well"
+        },
+        {
+          "value": "3",
+          "label": "Solid — meets the bar for this role"
+        },
+        {
+          "value": "2",
+          "label": "Developing — inconsistent, needs prompting"
+        },
+        {
+          "value": "1",
+          "label": "Significant development needed"
+        },
+        {
+          "value": "N/A",
+          "label": "Haven't seen enough to judge — leave blank"
+        }
+      ],
+      "openQuestions": [
+        "1. What are they genuinely good at — what should not change?",
+        "2. If they changed ONE thing, what would make the biggest difference?",
+        "3. What would you need to see to be fully confident in them in this role?"
+      ]
+    },
+    "coo-cfo-integrator": {
+      "id": "coo-cfo-integrator",
+      "label": "COO / CFO · Integrator",
+      "formTitle": "COO / CFO · Integrator 360 — Rater Form",
+      "consoleTitle": "COO / CFO · Integrator 360 — Console",
+      "blurb": "Thirty observable behaviours · about eight minutes",
+      "note": "Built around the EOS Integrator seat. The criticals sit on accountability, removing obstacles, a forecast people can plan against, and the honesty of the partnership with the Visionary.",
+      "relationships": [
+        "self",
+        "manager",
+        "peer",
+        "report"
+      ],
+      "dimensions": [
+        {
+          "code": "A",
+          "name": "Execution & Accountability",
+          "question": "Does the plan actually happen?"
+        },
+        {
+          "code": "B",
+          "name": "Financial Stewardship",
+          "question": "Do we know our numbers, and act on them?"
+        },
+        {
+          "code": "C",
+          "name": "Leading the Team",
+          "question": "Are people clear, capable and held to it?"
+        },
+        {
+          "code": "D",
+          "name": "Operating Rhythm",
+          "question": "Does the business run on a system rather than heroics?"
+        },
+        {
+          "code": "E",
+          "name": "Partnership with the Visionary",
+          "question": "Does the Visionary–Integrator pair actually work?"
+        }
+      ],
+      "items": [
+        {
+          "code": "A1",
+          "text": "Turns the quarterly plan into owned, dated commitments",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A2",
+          "text": "Holds people to what they signed up for, kindly and consistently",
+          "importance": 3,
+          "dim": "A"
+        },
+        {
+          "code": "A3",
+          "text": "Removes the obstacle rather than escalating it",
+          "importance": 3,
+          "dim": "A"
+        },
+        {
+          "code": "A4",
+          "text": "Closes out the quarter honestly — what hit, what didn't, why",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A5",
+          "text": "Says no, or not now, to work that isn't the priority",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "A6",
+          "text": "Meets his own commitments to the standard he expects of others",
+          "importance": 2,
+          "dim": "A"
+        },
+        {
+          "code": "B1",
+          "text": "Knows the numbers well enough to answer without preparing",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B2",
+          "text": "Gives leadership a forecast they can plan against",
+          "importance": 3,
+          "dim": "B"
+        },
+        {
+          "code": "B3",
+          "text": "Flags a cash or margin problem early",
+          "importance": 3,
+          "dim": "B"
+        },
+        {
+          "code": "B4",
+          "text": "Ties spending decisions back to the plan",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "B5",
+          "text": "Keeps the books and reporting current enough to be useful",
+          "importance": 1,
+          "dim": "B"
+        },
+        {
+          "code": "B6",
+          "text": "Explains the financial picture so non-finance people can decide",
+          "importance": 2,
+          "dim": "B"
+        },
+        {
+          "code": "C1",
+          "text": "Makes sure everyone knows what they own",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C2",
+          "text": "Has the hard conversation when performance slips",
+          "importance": 3,
+          "dim": "C"
+        },
+        {
+          "code": "C3",
+          "text": "Develops the people who report to him",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C4",
+          "text": "Resolves friction between people rather than letting it sit",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C5",
+          "text": "Listens well enough that people bring him problems early",
+          "importance": 2,
+          "dim": "C"
+        },
+        {
+          "code": "C6",
+          "text": "Puts people in seats that actually fit them",
+          "importance": 1,
+          "dim": "C"
+        },
+        {
+          "code": "D1",
+          "text": "Runs meetings worth the time they take",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D2",
+          "text": "Keeps a consistent cadence rather than reacting week to week",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D3",
+          "text": "Documents how things work so the company doesn't depend on memory",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D4",
+          "text": "Measures the handful of things that actually indicate health",
+          "importance": 2,
+          "dim": "D"
+        },
+        {
+          "code": "D5",
+          "text": "Simplifies process that has stopped earning its keep",
+          "importance": 1,
+          "dim": "D"
+        },
+        {
+          "code": "D6",
+          "text": "Pushes decisions to the level closest to the work",
+          "importance": 1,
+          "dim": "D"
+        },
+        {
+          "code": "E1",
+          "text": "Filters and sequences the Visionary's ideas without killing momentum",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E2",
+          "text": "Disagrees privately and commits publicly",
+          "importance": 2,
+          "dim": "E"
+        },
+        {
+          "code": "E3",
+          "text": "Translates vision into something the team can execute",
+          "importance": 2,
+          "dim": "E"
+        },
+        {
+          "code": "E4",
+          "text": "Tells John what he needs to hear, not what is comfortable",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E5",
+          "text": "Keeps the leadership team aligned behind one plan",
+          "importance": 3,
+          "dim": "E"
+        },
+        {
+          "code": "E6",
+          "text": "Protects the organisation from whiplash without blocking change",
+          "importance": 2,
+          "dim": "E"
+        }
+      ],
+      "metrics": {
+        "A1": {
+          "metric": "% of quarterly Rocks with a single named owner and a due date at kickoff",
+          "target": "100%",
+          "source": "ClickUp / EOS Rocks list",
+          "cadence": "Quarterly"
+        },
+        "A2": {
+          "metric": "Missed commitments where the conversation happened within a week",
+          "target": "100%",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "A3": {
+          "metric": "Median days from an obstacle being raised to being cleared",
+          "target": "≤ 5 business days",
+          "source": "Manual — obstacle log / IDS list",
+          "cadence": "Monthly"
+        },
+        "A4": {
+          "metric": "Quarter-close reviews naming what missed and why",
+          "target": "100%",
+          "source": "Manual — written quarterly review",
+          "cadence": "Quarterly"
+        },
+        "A5": {
+          "metric": "Non-priority requests accepted into the quarter after it started",
+          "target": "≤ 2",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "A6": {
+          "metric": "His own commitments met by the date given",
+          "target": "≥ 95%",
+          "source": "Manual — commitment log",
+          "cadence": "Monthly"
+        },
+        "B1": {
+          "metric": "Spot checks on cash, runway, margin and AR answered correctly unprepared",
+          "target": "≥ 90%",
+          "source": "Manual — John spot checks",
+          "cadence": "Quarterly"
+        },
+        "B2": {
+          "metric": "Forecast vs. actual on cash and revenue",
+          "target": "Within ±10%",
+          "source": "Finance",
+          "cadence": "Monthly"
+        },
+        "B3": {
+          "metric": "Cash or margin problems flagged ≥60 days before they would bite",
+          "target": "100%",
+          "source": "Manual review",
+          "cadence": "Quarterly"
+        },
+        "B4": {
+          "metric": "Spend approved without a stated link to the plan",
+          "target": "0",
+          "source": "Manual — approval log",
+          "cadence": "Monthly"
+        },
+        "B5": {
+          "metric": "Days after month end that the books are closed and reported",
+          "target": "≤ 10",
+          "source": "Finance calendar",
+          "cadence": "Monthly"
+        },
+        "B6": {
+          "metric": "Leadership rate 1–5: \"I understood the numbers well enough to decide\"",
+          "target": "Average ≥ 4.0",
+          "source": "Manual — one rating per review",
+          "cadence": "Monthly"
+        },
+        "C1": {
+          "metric": "Team members who can state what they own unprompted",
+          "target": "100%",
+          "source": "Manual — ask each quarter",
+          "cadence": "Quarterly"
+        },
+        "C2": {
+          "metric": "Performance issues still unaddressed 30 days after being recognised",
+          "target": "0",
+          "source": "Manual — people review",
+          "cadence": "Monthly"
+        },
+        "C3": {
+          "metric": "Documented development conversations with each report",
+          "target": "≥ 1 per month each",
+          "source": "Manual log",
+          "cadence": "Monthly"
+        },
+        "C4": {
+          "metric": "Unresolved interpersonal issues carried more than one quarter",
+          "target": "0",
+          "source": "Manual — IDS list review",
+          "cadence": "Quarterly"
+        },
+        "C5": {
+          "metric": "Problems that reached him early vs. after they became urgent",
+          "target": "≥ 3:1",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "C6": {
+          "metric": "Role changes in the last year that improved fit",
+          "target": "Net positive",
+          "source": "Manual review",
+          "cadence": "Annually"
+        },
+        "D1": {
+          "metric": "Attendees rate each recurring meeting 1–5 on worth the time",
+          "target": "Average ≥ 4.0",
+          "source": "Manual — rating at close of meeting",
+          "cadence": "Monthly"
+        },
+        "D2": {
+          "metric": "Scheduled leadership meetings held as planned",
+          "target": "≥ 90%",
+          "source": "Calendar review",
+          "cadence": "Quarterly"
+        },
+        "D3": {
+          "metric": "Core processes with a current written description",
+          "target": "100% of the top 10",
+          "source": "Manual checklist",
+          "cadence": "Quarterly"
+        },
+        "D4": {
+          "metric": "Scorecard measures reviewed weekly and acted on when off-track",
+          "target": "100%",
+          "source": "EOS scorecard",
+          "cadence": "Weekly"
+        },
+        "D5": {
+          "metric": "Process steps removed or simplified",
+          "target": "≥ 1 per quarter",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "D6": {
+          "metric": "Decisions escalated to him that the owner could have made",
+          "target": "≤ 2 per month",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "E1": {
+          "metric": "Visionary ideas triaged with a stated yes / not now / no within a week",
+          "target": "100%",
+          "source": "Manual — idea log",
+          "cadence": "Monthly"
+        },
+        "E2": {
+          "metric": "Occasions he undercut a decision publicly after agreeing to it",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "E3": {
+          "metric": "Team can state how the current quarter connects to the vision",
+          "target": "≥ 80% of staff",
+          "source": "Manual — ask each quarter",
+          "cadence": "Quarterly"
+        },
+        "E4": {
+          "metric": "Uncomfortable truths raised with John, logged at the time",
+          "target": "≥ 1 per month",
+          "source": "Manual log",
+          "cadence": "Monthly"
+        },
+        "E5": {
+          "metric": "Leadership team giving the same answer on the current priorities",
+          "target": "100%",
+          "source": "Manual — ask each separately",
+          "cadence": "Quarterly"
+        },
+        "E6": {
+          "metric": "Direction changes absorbed without a mid-quarter replan",
+          "target": "≥ 80%",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        }
+      },
+      "scale": [
+        {
+          "value": "5",
+          "label": "Exceptional — could teach this to others"
+        },
+        {
+          "value": "4",
+          "label": "Strong — consistently does this well"
+        },
+        {
+          "value": "3",
+          "label": "Solid — meets the bar for this role"
+        },
+        {
+          "value": "2",
+          "label": "Developing — inconsistent, needs prompting"
+        },
+        {
+          "value": "1",
+          "label": "Significant development needed"
+        },
+        {
+          "value": "N/A",
+          "label": "Haven't seen enough to judge — leave blank"
+        }
+      ],
+      "openQuestions": [
+        "1. What are they genuinely good at — what should not change?",
+        "2. If they changed ONE thing, what would make the biggest difference?",
+        "3. What would you need to see to be fully confident in them in this role?"
       ]
     }
   },

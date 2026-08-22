@@ -125,12 +125,25 @@
   var names = D.roster.map(function(p){ return [p.name, p.role ? p.name + ' — ' + p.role : p.name]; });
   fill($('evaluee'), names);
   fill($('rater'), D.roster.map(function(p){ return [p.name, p.name]; }));
-  fill($('relationship'), D.relationships);
   $('date').value = new Date().toISOString().slice(0,10);
 
   /* ---------- render the item set for a profile ---------- */
+  function relLabel(k){
+    for (var i = 0; i < D.relationships.length; i++) if (D.relationships[i][0] === k) return D.relationships[i][1];
+    return k;
+  }
+
+  function fillRelationships(p){
+    var keep = $('relationship').value;
+    $('relationship').innerHTML = '<option value="">Choose…</option>';
+    var allowed = (p && p.relationships) ? p.relationships : ['self','manager','peer'];
+    fill($('relationship'), allowed.map(function(k){ return [k, relLabel(k)]; }));
+    if (allowed.indexOf(keep) !== -1) $('relationship').value = keep;
+  }
+
   function renderProfile(p){
     profile = p;
+    fillRelationships(p);
     var host = $('items'); host.innerHTML = ''; $('openQs').innerHTML = '';
     if (!p) return;
 

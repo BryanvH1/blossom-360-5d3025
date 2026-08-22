@@ -105,7 +105,9 @@
     var self = responses.filter(function (r) { return r.relationship === 'self'; });
     var mgr = responses.filter(function (r) { return r.relationship === 'manager'; });
     var peer = responses.filter(function (r) { return r.relationship === 'peer'; });
-    var others = mgr.concat(peer);
+    var report = responses.filter(function (r) { return r.relationship === 'report'; });
+    /* everyone who is not the person themselves — the self-score never lifts its own result */
+    var others = mgr.concat(peer).concat(report);
 
     var rows = profile.items.map(function (it) {
       function vals(list) {
@@ -116,7 +118,7 @@
       return {
         code: it.code, text: it.text, dim: it.dim, importance: it.importance,
         self: r2(selfV), mgr: r2(mean(vals(mgr))), peer: r2(mean(vals(peer))),
-        others: r2(othersV),
+        report: r2(mean(vals(report))), others: r2(othersV),
         blind: (selfV !== null && othersV !== null) ? r2(selfV - othersV) : null,
         gap: othersV !== null ? r2(it.importance * (5 - othersV)) : null
       };
@@ -144,7 +146,7 @@
       var s = avg('self'), o = avg('others');
       return {
         code: d.code, name: d.name, question: d.question,
-        self: s, mgr: avg('mgr'), peer: avg('peer'), others: o,
+        self: s, mgr: avg('mgr'), peer: avg('peer'), report: avg('report'), others: o,
         pct: o === null ? null : o / 5,
         blind: (s !== null && o !== null) ? r2(s - o) : null
       };
@@ -153,7 +155,7 @@
     var os = overallOf('self'), oo = overallOf('others');
     var overall = {
       code: '', name: 'OVERALL', self: os, mgr: overallOf('mgr'), peer: overallOf('peer'),
-      others: oo, pct: oo === null ? null : oo / 5,
+      report: overallOf('report'), others: oo, pct: oo === null ? null : oo / 5,
       blind: (os !== null && oo !== null) ? r2(os - oo) : null
     };
 
@@ -163,7 +165,8 @@
     return {
       profile: profile, rows: rows, ranked: ranked, top5: ranked.slice(0, 5),
       dims: dims, overall: overall, blindSpots: blindSpots,
-      counts: { self: self.length, manager: mgr.length, peer: peer.length, total: responses.length },
+      counts: { self: self.length, manager: mgr.length, peer: peer.length,
+                report: report.length, total: responses.length },
       tie: { gap: cut, count: tiedAtCut, contested: cut === null ? [] :
              ranked.filter(function (r) { return r.gap === cut; }).map(function (r) { return r.code; }) },
       responses: responses

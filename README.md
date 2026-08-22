@@ -37,17 +37,31 @@ do not hand-edit `data.js`, or the spreadsheet and the web pages will drift apar
 
 ## One assessment per role
 
-Each role has its own **profile** — its own dimensions, behaviours, importance weights and metric
-library — defined in `assessment_content.py`. Choosing who is being evaluated swaps the questions and
-retitles the page; the console does the same when you change person.
+Each role has its own **profile** — dimensions, behaviours, importance weights, metric library and
+rater groups — as one module in `profiles/`. Choosing who is being evaluated swaps the questions and
+retitles both pages.
 
-Today only **Frans** has one (`developer` → "Developer 360"). Everyone else shows *"No assessment is
-defined for X yet"* rather than falling back to the developer questions, which would produce numbers
-that look objective and mean nothing.
+| Person | Role | Profile | Raters |
+|---|---|---|---|
+| Frans | Developer | `developer` | self · manager · peer |
+| Jeremy | Associate Developer | `developer-associate` | self · manager · peer |
+| Bryan | COO / CFO · Integrator | `coo-cfo-integrator` | self · manager · peer · direct report |
+| John | Chief Vision Officer / CEO | `ceo-visionary` | self · manager · peer · direct report |
+| Mark | Chief Growth Officer | `cgo` | self · manager · peer · direct report |
 
-**To add a role:** copy the `developer` entry in `PROFILES`, rewrite its dimensions / items / metrics
-for that job, point the person at it in `ROSTER`, then run `gen_data.py` (web) and
-`build_assessment.py` (spreadsheet).
+The two leadership profiles are built on the EOS Visionary and Integrator seats, since that is how
+Blossom already runs.
+
+**To add or change a role:** edit the module in `profiles/`, list it in `_MODULES` and point the person
+at it in `ROSTER` (both in `assessment_content.py`), then run `gen_data.py` (web) and
+`build_assessment.py` (spreadsheet). `validate()` runs before `data.js` is written and fails the build
+on a missing metric, an orphan item, a bad relationship, or a critical count that is not exactly eight.
 
 Response codes carry the profile they were answered against. The console refuses a code whose profile
 does not match the person's current one, so nobody can be scored against the wrong questions.
+
+## The spreadsheets are the fallback, not the primary
+
+`workbooks/` holds a generated .xlsx per role. They support **self, manager and peer only** — there are
+no direct-report columns, so the three leadership roles must be read in the web console. The workbook
+remains useful offline and for the individual-contributor roles.

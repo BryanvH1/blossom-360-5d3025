@@ -217,7 +217,9 @@
 
     $('stats').innerHTML = !m ? '' : [
       ['Responses', m.counts.total],
-      ['Self / Mgr / Peer', m.counts.self + ' / ' + m.counts.manager + ' / ' + m.counts.peer],
+      [m.counts.report ? 'Self / Mgr / Peer / Report' : 'Self / Mgr / Peer',
+       m.counts.self + ' / ' + m.counts.manager + ' / ' + m.counts.peer +
+       (m.counts.report ? ' / ' + m.counts.report : '')],
       ['Overall (others)', B.fmt(m.overall.others)],
       ['Overall blind spot', B.signed(m.overall.blind)]
     ].map(function(s){ return '<div><div class="k">' + s[0] + '</div><div class="v">' + s[1] + '</div></div>'; }).join('');
@@ -295,13 +297,16 @@
   /* ---------- 1. SCORES ---------- */
   function renderScores(m, rs){
     if (!m){ $('v-scores').innerHTML = ''; return; }
+    var hasReports = m.counts.report > 0;
     var head = '<tr><th>Code</th><th>Behaviour</th><th class="c">Imp.</th>' +
       rs.map(function(r){ return '<th class="c">' + esc(r.rater) + '<br><span style="font-weight:400;opacity:.8">' + esc(relLabel(r.relationship)) + '</span></th>'; }).join('') +
-      '<th class="c">Others</th><th class="c">Mgr</th><th class="c">Peer</th><th class="c">Blind spot</th><th class="c">Gap</th><th class="c">Rank</th></tr>';
+      '<th class="c">Others</th><th class="c">Mgr</th><th class="c">Peer</th>' +
+      (hasReports ? '<th class="c">Report</th>' : '') +
+      '<th class="c">Blind spot</th><th class="c">Gap</th><th class="c">Rank</th></tr>';
 
     var body = '';
     m.profile.dimensions.forEach(function(dim){
-      body += '<tr><td colspan="' + (10 + rs.length) + '" style="background:var(--accent-soft);font-weight:700;color:var(--navy)">' +
+      body += '<tr><td colspan="' + (10 + rs.length + (hasReports ? 1 : 0)) + '" style="background:var(--accent-soft);font-weight:700;color:var(--navy)">' +
               esc(dim.name) + '</td></tr>';
       m.rows.filter(function(r){ return r.dim === dim.code; }).forEach(function(row){
         var impCls = 'pill i' + row.importance;
@@ -315,6 +320,7 @@
             return td(v === undefined ? '<span class="muted">—</span>' : v, v === undefined ? '' : B.band(v));
           }).join('') +
           bandCell(row.others) + bandCell(row.mgr) + bandCell(row.peer) +
+          (hasReports ? bandCell(row.report) : '') +
           td(B.signed(row.blind), (row.blind !== null && row.blind >= 1) ? 'b-red' : '') +
           td(B.fmt(row.gap)) +
           td(row.rank && row.rank <= 5 ? '<b>' + row.rank + '</b>' : (row.rank || '—'), row.rank && row.rank <= 5 ? 'b-amb' : '') +
@@ -345,11 +351,13 @@
   /* ---------- 2. RESULTS ---------- */
   function renderResults(m){
     if (!m){ $('v-results').innerHTML = ''; return; }
+    var hasReports = m.counts.report > 0;
     var rows = m.dims.concat([m.overall]).map(function(d){
       var isTot = d.name === 'OVERALL';
       return '<tr' + (isTot ? ' style="font-weight:700;background:var(--line-soft)"' : '') + '>' +
         '<td>' + esc(d.name) + '</td>' +
-        bandCell(d.self) + bandCell(d.mgr) + bandCell(d.peer) + bandCell(d.others) +
+        bandCell(d.self) + bandCell(d.mgr) + bandCell(d.peer) +
+        (hasReports ? bandCell(d.report) : '') + bandCell(d.others) +
         td(d.pct === null ? '—' : Math.round(d.pct*100) + '%') +
         td(B.signed(d.blind), (d.blind !== null && d.blind >= 0.75) ? 'b-red' : '') +
         '<td class="small muted">' + esc(d.question || '') + '</td></tr>';
@@ -364,17 +372,26 @@
       '<div class="card"><h2>By dimension</h2>' +
       '<p class="sub">Red under 3.0 · amber 3.0–3.9 · green 4.0 and up.</p>' +
       '<div class="scroll"><table><tr><th>Dimension</th><th class="c">Self</th><th class="c">Mgr</th><th class="c">Peer</th>' +
+      (hasReports ? '<th class="c">Report</th>' : '') +
       '<th class="c">Others avg</th><th class="c">% of 5</th><th class="c">Blind spot</th><th>What it answers</th></tr>' +
       rows + '</table></div></div>' +
       '<div class="grid g2">' +
-        '<div class="card"><h2>Self vs. Managers vs. Peers</h2>' + radar(m) + '</div>' +
+        '<div class="card"><h2>' + radarTitle(m) + '</h2>' + radar(m) + '</div>' +
         '<div class="card"><h2>Biggest blind spots</h2>' +
-        '<p class="sub">Where he rates himself furthest above everyone else.</p>' +
+        '<p class="sub">Where ' + esc(person) + ' rates themselves furthest above everyone else.</p>' +
         '<div class="scroll" style="max-height:none"><table><tr><th class="c">#</th><th class="c">Code</th><th>Behaviour</th>' +
         '<th class="c">Self</th><th class="c">Others</th><th class="c">Gap</th></tr>' + bs + '</table></div>' +
         '<p class="small muted" style="margin-top:10px">A blind spot of +1.00 or more is worth raising even when the ' +
         'absolute score is fine — the disagreement about reality is the problem.</p></div>' +
       '</div>';
+  }
+
+  function radarTitle(m){
+    var parts = ['Self'];
+    if (m.counts.manager) parts.push('Managers');
+    if (m.counts.peer) parts.push('Peers');
+    if (m.counts.report) parts.push('Reports');
+    return parts.length > 1 ? parts.join(' vs. ') : 'Self-assessment only';
   }
 
   function radar(m){
@@ -383,7 +400,8 @@
     var series = [
       {key:'self',  label:'Self',     color:'#b4653a'},
       {key:'mgr',   label:'Managers', color:'#006838'},
-      {key:'peer',  label:'Peers',    color:'#8a9a00'}
+      {key:'peer',  label:'Peers',    color:'#8a9a00'},
+      {key:'report',label:'Reports',  color:'#3f7f9e'}
     ].filter(function(s){ return m.dims.some(function(d){ return d[s.key] !== null; }); });
     function pt(i, v){
       var a = -Math.PI/2 + i * 2*Math.PI/n, r = R * (Math.max(0, Math.min(5, v)) / 5);
@@ -466,7 +484,7 @@
        ['They keep the log', esc(person) + ' records the readings; John or Bryan verify monthly. Someone who won’t track it is telling you something.'],
        ['Monthly, 30 minutes','Read the numbers, not the impressions. “Three surprises last month, zero this month” ends an argument that “communication is better” cannot.'],
        ['Re-run at 90 and 180 days','Same thirty items, same raters. Save a snapshot on the Progression tab each time.'],
-       ['Name the bar up front','Agree what result earns the title before he starts — otherwise it is a moving goalpost.']]
+       ['Name the bar up front','Agree what result counts as done before they start — otherwise it is a moving goalpost.']]
       .map(function(x){ return '<p style="margin:0 0 9px"><b>' + x[0] + '.</b> <span class="small">' + x[1] + '</span></p>'; }).join('') +
       '</div>';
   }
