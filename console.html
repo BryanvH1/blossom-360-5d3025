@@ -187,6 +187,13 @@
   function td(v, cls){ return '<td class="c ' + (cls||'') + '">' + v + '</td>'; }
   function bandCell(v){ return td(B.fmt(v), B.band(v)); }
 
+  function expectedRelationship(evaluee, rater){
+    if (!evaluee || !rater) return null;
+    if (evaluee === rater) return 'self';
+    var m = (D.relationshipMap || {})[evaluee];
+    return (m && m[rater]) ? m[rater] : null;
+  }
+
   function relLabel(k){ var f = D.relationships.filter(function(r){ return r[0]===k; })[0]; return f ? f[1] : k; }
 
   /* ---------- render ---------- */
@@ -250,16 +257,19 @@
     var rows = D.roster.map(function(rp){
       var name = rp.name;
       var r = byRater[name];
-      var expected = (name === person) ? 'Self' : '';
+      var want = expectedRelationship(person, name);
       if (r){
+        var mismatch = want && want !== r.relationship;
         return '<tr><td class="who">' + esc(name) + '</td>' +
-               '<td>' + esc(relLabel(r.relationship)) + '</td>' +
+               '<td>' + esc(relLabel(r.relationship)) +
+               (mismatch ? '<div class="small" style="color:var(--amber)">expected ' +
+                           esc(relLabel(want)) + '</div>' : '') + '</td>' +
                '<td><span class="status in"><span class="dot"></span>Received</span></td>' +
                '<td class="small muted">' + esc(r.date || '—') + '</td>' +
                '<td class="right"><button class="btn ghost sm" data-del="' + esc(r.id) + '">Remove</button></td></tr>';
       }
       return '<tr class="awaiting"><td class="who">' + esc(name) + '</td>' +
-             '<td class="small muted">' + (expected || '—') + '</td>' +
+             '<td class="small muted">' + esc(want ? relLabel(want) : '—') + '</td>' +
              '<td><span class="status out"><span class="dot"></span>Awaiting</span></td>' +
              '<td class="small muted">—</td><td></td></tr>';
     }).join('');
@@ -287,7 +297,10 @@
       '</span></div>' +
       '<table class="cov"><tr><th>Rater</th><th>Relationship</th><th>Status</th><th>Received</th><th></th></tr>' +
       rows + '</table>' + warn +
-      '<p class="small muted" style="margin:12px 0 0">The table lists the whole roster, not necessarily everyone you asked — ignore ' +
+      '<p class="small muted" style="margin:12px 0 0">The Relationship column shows what each person is expected to be. ' +
+      'If someone declared a different one on the form it is flagged in amber — worth checking, because a rater who ' +
+      'changes group between rounds breaks the comparison.<br>' +
+      'The table lists the whole roster, not necessarily everyone you asked — ignore ' +
       'any row for someone who was never invited to rate ' + esc(person) + '.<br>' +
       'This list does not refresh on its own. It changes only when you paste a new response code into <b>Add a response</b>: ' +
       'each rater sends you their code, and nothing appears here until you paste it.</p>' +

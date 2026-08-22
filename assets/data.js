@@ -57,7 +57,8 @@ window.B360_DATA = {
       "relationships": [
         "self",
         "manager",
-        "peer"
+        "peer",
+        "report"
       ],
       "dimensions": [
         {
@@ -2224,6 +2225,34 @@ window.B360_DATA = {
         "2. If they changed ONE thing, what would make the biggest difference?",
         "3. What would you need to see to be fully confident in them in this role?"
       ]
+    }
+  },
+  "relationshipMap": {
+    "John": {
+      "Bryan": "report",
+      "Mark": "report",
+      "Frans": "report",
+      "Jeremy": "report"
+    },
+    "Bryan": {
+      "John": "manager",
+      "Mark": "peer",
+      "Frans": "report",
+      "Jeremy": "report"
+    },
+    "Mark": {
+      "John": "manager",
+      "Bryan": "peer"
+    },
+    "Frans": {
+      "John": "manager",
+      "Bryan": "manager",
+      "Jeremy": "report"
+    },
+    "Jeremy": {
+      "John": "manager",
+      "Bryan": "manager",
+      "Frans": "manager"
     }
   },
   "contact": "bryan@blossom.ag"

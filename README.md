@@ -60,6 +60,19 @@ on a missing metric, an orphan item, a bad relationship, or a critical count tha
 Response codes carry the profile they were answered against. The console refuses a code whose profile
 does not match the person's current one, so nobody can be scored against the wrong questions.
 
+## Who rates whom
+
+`RELATIONSHIP_MAP` in `assessment_content.py` records what each rater is to each person. The form
+fills the relationship in from it so a rater does not drift between groups from one round to the
+next — which would break the comparison — and the console flags in amber any response whose declared
+relationship differs from the expected one. Pairs left out of the map are chosen by hand on the form.
+
+## This is deliberately not anonymous
+
+Every response carries the rater's name, and scores and comments are shared with the person being
+rated. The form says so up front. That is Blossom's choice: candid feedback attached to a name,
+rather than polite feedback from nobody.
+
 ## The spreadsheets are the fallback, not the primary
 
 `workbooks/` holds a generated .xlsx per role. They support **self, manager and peer only** — there are

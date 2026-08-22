@@ -35,6 +35,7 @@
       <div>
         <label for="relationship">Your relationship to them</label>
         <select id="relationship"><option value="">Choose…</option></select>
+        <div class="small muted" id="relHint" style="margin-top:5px"></div>
       </div>
       <div>
         <label for="date">Date</label>
@@ -63,6 +64,13 @@
       <b>How to score.</b> Rate each behaviour 1–5. If you haven't seen enough to judge, choose
       <b>Not observed</b> — a blank is ignored in the maths, a guess is not. The written answers at the end
       matter more than the numbers, so please spend your time there.
+    </div>
+
+    <div class="note small">
+      <b>This is not anonymous, by design.</b> Your name is on your response, and your scores and
+      written answers are shared with the person you are rating. Blossom would rather have candid
+      feedback attached to a name than polite feedback from nobody — so please say the thing you
+      would say to their face, and then be willing to say it to their face.
     </div>
 
     <div class="card tight">
@@ -304,11 +312,34 @@
     }
     lastEvaluee = next;
     applyProfile();
+    applyExpectedRelationship();
     syncSelf();
     save();
   });
 
   /* ---------- relationship coupling ---------- */
+  function expectedRelationship(evaluee, rater){
+    if (!evaluee || !rater) return null;
+    if (evaluee === rater) return 'self';
+    var m = (D.relationshipMap || {})[evaluee];
+    return (m && m[rater]) ? m[rater] : null;
+  }
+
+  function applyExpectedRelationship(){
+    var e = $('evaluee').value, r = $('rater').value, sel = $('relationship');
+    var want = expectedRelationship(e, r);
+    var offered = Array.prototype.map.call(sel.options, function(o){ return o.value; });
+    if (want && offered.indexOf(want) !== -1){
+      if (sel.value !== want) sel.value = want;
+      $('relHint').innerHTML = 'Filled in for you — change it if that is not right.';
+    } else if (e && r && !want){
+      sel.value = '';   // do not leave the previous pair's answer sitting there
+      $('relHint').textContent = 'Not a pairing we have on record — please choose.';
+    } else {
+      $('relHint').textContent = '';
+    }
+  }
+
   function syncSelf(){
     var e = $('evaluee').value, r = $('rater').value, rel = $('relationship').value;
     var same = e && r && e === r;
@@ -324,6 +355,7 @@
     var t = el(ev);
     if (t && t.id === 'evaluee') return;          // handled by its own listener
     if (t && t.matches('input[type=radio]')) touched = true;
+    if (t && t.id === 'rater') applyExpectedRelationship();
     if (!t || t.matches('#rater,#relationship')) syncSelf();
     progress(); save();
   });
@@ -403,7 +435,7 @@
 
   restore();
   lastEvaluee = $('evaluee').value;
-  applyProfile(true); syncSelf(); progress();
+  applyProfile(true); applyExpectedRelationship(); syncSelf(); progress();
 })();
 </script>
 </body>
