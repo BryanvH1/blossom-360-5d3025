@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Developer 360 — Console</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="wrap wide">
+  <h1>Developer 360 — Console</h1>
+  <p class="sub">Blossom · for John and Bryan · nothing here is stored on the web — everything lives in this browser</p>
+
+  <div class="card">
+    <div class="toolbar">
+      <div style="min-width:220px">
+        <label for="person">Person</label>
+        <select id="person"></select>
+      </div>
+      <div class="grow"></div>
+      <button class="btn" id="addBtn" type="button">Add a response</button>
+      <button class="btn ghost sm" id="exportBtn" type="button">Export backup</button>
+      <button class="btn ghost sm" id="importBtn" type="button">Import backup</button>
+    </div>
+    <div id="chips"></div>
+    <div id="addPanel" class="hidden" style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px">
+      <label for="paste">Paste one or more response codes (one per line)</label>
+      <textarea class="codebox" id="paste" placeholder="B360-1.…"></textarea>
+      <div class="toolbar" style="margin:10px 0 0">
+        <button class="btn" id="saveBtn" type="button">Add</button>
+        <button class="btn ghost" id="cancelBtn" type="button">Cancel</button>
+        <span class="small" id="addMsg"></span>
+      </div>
+    </div>
+    <input type="file" id="fileIn" accept="application/json" class="hidden">
+  </div>
+
+  <div class="stat" id="stats" style="margin-bottom:20px"></div>
+
+  <div class="tabs" id="tabs">
+    <button data-t="scores" class="on">Scores</button>
+    <button data-t="results">Results</button>
+    <button data-t="plan">Development Plan</button>
+    <button data-t="metrics">Metric Library</button>
+    <button data-t="prog">Progression</button>
+  </div>
+
+  <div id="empty" class="note warn hidden">
+    No responses for this person yet. Click <b>Add a response</b> and paste a code from the rater form.
+  </div>
+
+  <div id="v-scores" class="view"></div>
+  <div id="v-results" class="view hidden"></div>
+  <div id="v-plan" class="view hidden"></div>
+  <div id="v-metrics" class="view hidden"></div>
+  <div id="v-prog" class="view hidden"></div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/core.js"></script>
+<script>
+(function(){
+  'use strict';
+  var D = window.B360_DATA, B = window.B360, KEY = 'b360.console.v1';
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; };
+
+  var store = load();
+  function load(){
+    try {
+      var j = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (j && j.responses) { j.plan = j.plan || {}; j.snapshots = j.snapshots || []; j.readings = j.readings || {}; return j; }
+    } catch(e){}
+    return { responses: [], plan: {}, snapshots: [], readings: {} };
+  }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){ alert('Could not save to this browser: ' + e.message); } }
+
+  var person = D.roster[0];
+  var tab = 'scores';
+
+  /* ---------- header ---------- */
+  D.roster.forEach(function(n){
+    var o = document.createElement('option'); o.value = n; o.textContent = n; $('person').appendChild(o);
+  });
+  $('person').value = person;
+  $('person').addEventListener('change', function(){ person = this.value; render(); });
+
+  $('addBtn').addEventListener('click', function(){
+    $('addPanel').classList.toggle('hidden');
+    if (!$('addPanel').classList.contains('hidden')) $('paste').focus();
+  });
+  $('cancelBtn').addEventListener('click', function(){
+    $('addPanel').classList.add('hidden'); $('paste').value=''; $('addMsg').textContent='';
+  });
+
+  $('saveBtn').addEventListener('click', function(){
+    var lines = $('paste').value.split(/\r?\n/).map(function(s){ return s.trim(); }).filter(Boolean);
+    if (!lines.length){ msg('Paste at least one code first.', true); return; }
+    var added = 0, replaced = 0, errs = [];
+    lines.forEach(function(line, i){
+      var r;
+      try { r = B.decode(line); }
+      catch(e){ errs.push('Line ' + (i+1) + ': ' + e.message); return; }
+      var ix = store.responses.findIndex(function(x){ return x.id === r.id; });
+      if (ix >= 0){ store.responses[ix] = r; replaced++; } else { store.responses.push(r); added++; }
+    });
+    save();
+    var parts = [];
+    if (added) parts.push(added + ' added');
+    if (replaced) parts.push(replaced + ' replaced (same person, rater and date)');
+    msg((parts.join(', ') || 'Nothing added') + (errs.length ? ' — ' + errs.join(' · ') : ''), errs.length > 0);
+    if (added || replaced){ $('paste').value = ''; render(); }
+  });
+  function msg(t, bad){ $('addMsg').innerHTML = '<span style="color:' + (bad ? 'var(--red)' : 'var(--green)') + '">' + esc(t) + '</span>'; }
+
+  $('exportBtn').addEventListener('click', function(){
+    var blob = new Blob([JSON.stringify(store, null, 2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'blossom-360-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+  $('importBtn').addEventListener('click', function(){ $('fileIn').click(); });
+  $('fileIn').addEventListener('change', function(){
+    var f = this.files[0]; if (!f) return;
+    var fr = new FileReader();
+    fr.onload = function(){
+      try {
+        var j = JSON.parse(fr.result);
+        if (!j.responses) throw new Error('That file does not look like a Blossom 360 backup.');
+        if (!confirm('Replace everything currently in this browser with the contents of ' + f.name + '?')) return;
+        store = { responses: j.responses||[], plan: j.plan||{}, snapshots: j.snapshots||[], readings: j.readings||{} };
+        save(); render();
+      } catch(e){ alert('Could not import: ' + e.message); }
+    };
+    fr.readAsText(f); this.value = '';
+  });
+
+  $('tabs').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    tab = b.dataset.t;
+    Array.prototype.forEach.call($('tabs').children, function(x){ x.classList.toggle('on', x === b); });
+    showTab();
+  });
+  function showTab(){
+    ['scores','results','plan','metrics','prog'].forEach(function(t){
+      $('v-'+t).classList.toggle('hidden', t !== tab);
+    });
+  }
+
+  /* ---------- helpers ---------- */
+  function mine(){ return store.responses.filter(function(r){ return r.evaluee === person; }); }
+  function td(v, cls){ return '<td class="c ' + (cls||'') + '">' + v + '</td>'; }
+  function bandCell(v){ return td(B.fmt(v), B.band(v)); }
+
+  function relLabel(k){ var f = D.relationships.filter(function(r){ return r[0]===k; })[0]; return f ? f[1] : k; }
+
+  /* ---------- render ---------- */
+  function render(){
+    var rs = mine();
+    // chips
+    $('chips').innerHTML = rs.length ? rs.map(function(r,i){
+      return '<span class="chip"><b>' + esc(r.rater) + '</b> · ' + esc(relLabel(r.relationship)) +
+             (r.date ? ' · ' + esc(r.date) : '') +
+             ' <button data-del="' + esc(r.id) + '" title="Remove this response">×</button></span>';
+    }).join('') : '<span class="small muted">No responses loaded for ' + esc(person) + '.</span>';
+
+    var m = rs.length ? B.score(rs) : null;
+    $('empty').classList.toggle('hidden', rs.length > 0);
+
+    $('stats').innerHTML = !m ? '' : [
+      ['Responses', m.counts.total],
+      ['Self / Mgr / Peer', m.counts.self + ' / ' + m.counts.manager + ' / ' + m.counts.peer],
+      ['Overall (others)', B.fmt(m.overall.others)],
+      ['Overall blind spot', B.signed(m.overall.blind)]
+    ].map(function(s){ return '<div><div class="k">' + s[0] + '</div><div class="v">' + s[1] + '</div></div>'; }).join('');
+
+    renderScores(m, rs); renderResults(m); renderPlan(m); renderMetrics(); renderProg(m);
+    showTab();
+  }
+
+  document.addEventListener('click', function(e){
+    var del = e.target.closest('[data-del]');
+    if (del){
+      var id = del.dataset.del;
+      var r = store.responses.filter(function(x){ return x.id === id; })[0];
+      if (!r) return;
+      if (!confirm('Remove ' + r.rater + '’s response for ' + r.evaluee + '? You can re-add it from the original code.')) return;
+      store.responses = store.responses.filter(function(x){ return x.id !== id; });
+      save(); render();
+    }
+  });
+
+  /* ---------- 1. SCORES ---------- */
+  function renderScores(m, rs){
+    if (!m){ $('v-scores').innerHTML = ''; return; }
+    var head = '<tr><th>Code</th><th>Behaviour</th><th class="c">Imp.</th>' +
+      rs.map(function(r){ return '<th class="c">' + esc(r.rater) + '<br><span style="font-weight:400;opacity:.8">' + esc(relLabel(r.relationship)) + '</span></th>'; }).join('') +
+      '<th class="c">Others</th><th class="c">Mgr</th><th class="c">Peer</th><th class="c">Blind spot</th><th class="c">Gap</th><th class="c">Rank</th></tr>';
+
+    var body = '';
+    D.dimensions.forEach(function(dim){
+      body += '<tr><td colspan="' + (10 + rs.length) + '" style="background:var(--accent-soft);font-weight:700;color:var(--navy)">' +
+              esc(dim.name) + '</td></tr>';
+      m.rows.filter(function(r){ return r.dim === dim.code; }).forEach(function(row){
+        var impCls = 'pill i' + row.importance;
+        var impTxt = row.importance === 3 ? 'critical' : (row.importance === 2 ? 'important' : 'helpful');
+        body += '<tr>' +
+          '<td class="c small muted">' + row.code + '</td>' +
+          '<td>' + esc(row.text) + '</td>' +
+          '<td class="c"><span class="' + impCls + '">' + impTxt + '</span></td>' +
+          rs.map(function(r){
+            var v = r.scores[row.code];
+            return td(v === undefined ? '<span class="muted">—</span>' : v, v === undefined ? '' : B.band(v));
+          }).join('') +
+          bandCell(row.others) + bandCell(row.mgr) + bandCell(row.peer) +
+          td(B.signed(row.blind), (row.blind !== null && row.blind >= 1) ? 'b-red' : '') +
+          td(B.fmt(row.gap)) +
+          td(row.rank && row.rank <= 5 ? '<b>' + row.rank + '</b>' : (row.rank || '—'), row.rank && row.rank <= 5 ? 'b-amb' : '') +
+        '</tr>';
+      });
+    });
+
+    var open = '';
+    if (rs.some(function(r){ return (r.open||[]).some(function(t){ return t; }); })){
+      open = '<div class="card" style="margin-top:18px"><h2>Written answers</h2>' +
+        D.openQuestions.map(function(q, qi){
+          var any = rs.filter(function(r){ return (r.open||[])[qi]; });
+          if (!any.length) return '';
+          return '<h3 style="margin-top:16px">' + esc(q) + '</h3>' + any.map(function(r){
+            return '<div style="margin:0 0 10px;padding-left:12px;border-left:3px solid var(--line)">' +
+              '<div class="small muted"><b>' + esc(r.rater) + '</b> · ' + esc(relLabel(r.relationship)) + '</div>' +
+              '<div>' + esc(r.open[qi]).replace(/\n/g,'<br>') + '</div></div>';
+          }).join('');
+        }).join('') + '</div>';
+    }
+
+    $('v-scores').innerHTML =
+      '<div class="note small">Gap = importance × (5 − others’ average). Blank cells are ignored, never counted as zero. ' +
+      '“Others” excludes the self-score, so nobody can lift their own result. Blind spot ≥ +1.00 is shaded.</div>' +
+      '<div class="scroll"><table>' + head + body + '</table></div>' + open;
+  }
+
+  /* ---------- 2. RESULTS ---------- */
+  function renderResults(m){
+    if (!m){ $('v-results').innerHTML = ''; return; }
+    var rows = m.dims.concat([m.overall]).map(function(d){
+      var isTot = d.name === 'OVERALL';
+      return '<tr' + (isTot ? ' style="font-weight:700;background:var(--line-soft)"' : '') + '>' +
+        '<td>' + esc(d.name) + '</td>' +
+        bandCell(d.self) + bandCell(d.mgr) + bandCell(d.peer) + bandCell(d.others) +
+        td(d.pct === null ? '—' : Math.round(d.pct*100) + '%') +
+        td(B.signed(d.blind), (d.blind !== null && d.blind >= 0.75) ? 'b-red' : '') +
+        '<td class="small muted">' + esc(d.question || '') + '</td></tr>';
+    }).join('');
+
+    var bs = m.blindSpots.slice(0,5).map(function(r,i){
+      return '<tr><td class="c">' + (i+1) + '</td><td class="c small muted">' + r.code + '</td><td>' + esc(r.text) + '</td>' +
+        td(B.fmt(r.self)) + td(B.fmt(r.others)) + td(B.signed(r.blind), r.blind >= 1 ? 'b-red' : '') + '</tr>';
+    }).join('');
+
+    $('v-results').innerHTML =
+      '<div class="card"><h2>By dimension</h2>' +
+      '<p class="sub">Red under 3.0 · amber 3.0–3.9 · green 4.0 and up.</p>' +
+      '<div class="scroll"><table><tr><th>Dimension</th><th class="c">Self</th><th class="c">Mgr</th><th class="c">Peer</th>' +
+      '<th class="c">Others avg</th><th class="c">% of 5</th><th class="c">Blind spot</th><th>What it answers</th></tr>' +
+      rows + '</table></div></div>' +
+      '<div class="grid g2">' +
+        '<div class="card"><h2>Self vs. Managers vs. Peers</h2>' + radar(m) + '</div>' +
+        '<div class="card"><h2>Biggest blind spots</h2>' +
+        '<p class="sub">Where he rates himself furthest above everyone else.</p>' +
+        '<div class="scroll" style="max-height:none"><table><tr><th class="c">#</th><th class="c">Code</th><th>Behaviour</th>' +
+        '<th class="c">Self</th><th class="c">Others</th><th class="c">Gap</th></tr>' + bs + '</table></div>' +
+        '<p class="small muted" style="margin-top:10px">A blind spot of +1.00 or more is worth raising even when the ' +
+        'absolute score is fine — the disagreement about reality is the problem.</p></div>' +
+      '</div>';
+  }
+
+  function radar(m){
+    var W = 420, H = 360, cx = W/2, cy = H/2 + 6, R = 118, n = m.dims.length;
+    var series = [
+      {key:'self',  label:'Self',     color:'#c2703d'},
+      {key:'mgr',   label:'Managers', color:'#2e6f8e'},
+      {key:'peer',  label:'Peers',    color:'#4e9a6a'}
+    ].filter(function(s){ return m.dims.some(function(d){ return d[s.key] !== null; }); });
+    function pt(i, v){
+      var a = -Math.PI/2 + i * 2*Math.PI/n, r = R * (Math.max(0, Math.min(5, v)) / 5);
+      return [cx + r*Math.cos(a), cy + r*Math.sin(a)];
+    }
+    var g = '';
+    [1,2,3,4,5].forEach(function(ring){
+      var pts = m.dims.map(function(_,i){ return pt(i, ring).join(','); }).join(' ');
+      g += '<polygon points="' + pts + '" fill="none" stroke="var(--line)" stroke-width="1"' +
+           (ring===5?' ':' stroke-dasharray="2,3"') + '/>';
+    });
+    m.dims.forEach(function(d,i){
+      var p = pt(i,5);
+      g += '<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="var(--line)" stroke-width="1"/>';
+      var lp = pt(i, 6.05), anchor = Math.abs(lp[0]-cx) < 12 ? 'middle' : (lp[0] > cx ? 'start' : 'end');
+      var words = d.name.split(' '), lines = [], cur = '';
+      words.forEach(function(w){ if ((cur+' '+w).trim().length > 14){ lines.push(cur.trim()); cur = w; } else cur += ' ' + w; });
+      lines.push(cur.trim());
+      lines.forEach(function(ln, li){
+        g += '<text x="'+lp[0]+'" y="'+(lp[1] + li*11 - (lines.length-1)*5)+'" text-anchor="'+anchor+
+             '" font-size="10.5" fill="var(--muted)">'+esc(ln)+'</text>';
+      });
+    });
+    series.forEach(function(s){
+      var vals = m.dims.map(function(d){ return d[s.key]; });
+      if (vals.some(function(v){ return v === null; })) return;
+      var pts = vals.map(function(v,i){ return pt(i,v).join(','); }).join(' ');
+      g += '<polygon points="'+pts+'" fill="'+s.color+'" fill-opacity=".10" stroke="'+s.color+'" stroke-width="2"/>';
+      vals.forEach(function(v,i){ var p = pt(i,v); g += '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.2" fill="'+s.color+'"/>'; });
+    });
+    var legend = series.map(function(s){
+      return '<span style="margin-right:14px;font-size:12.5px"><span style="display:inline-block;width:10px;height:10px;' +
+             'background:'+s.color+';border-radius:2px;margin-right:5px"></span>'+s.label+'</span>';
+    }).join('');
+    return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;max-width:'+W+'px;display:block;margin:0 auto">'+g+'</svg>' +
+           '<div style="text-align:center;margin-top:4px">'+legend+'</div>' +
+           '<p class="small muted" style="text-align:center;margin:8px 0 0">Scale 1–5, outer ring = 5. A series is hidden when that group has not scored every dimension.</p>';
+  }
+
+  /* ---------- 3. DEVELOPMENT PLAN ---------- */
+  var PLAN_FIELDS = [['baseline','Baseline (today)'],['target','90-day target'],['cadence','Cadence'],['owner','Who counts it']];
+  function renderPlan(m){
+    if (!m){ $('v-plan').innerHTML = ''; return; }
+    store.plan[person] = store.plan[person] || {};
+    var rows = m.top5.map(function(r, i){
+      var met = D.metrics[r.code] || {};
+      var saved = store.plan[person][r.code] || {};
+      return '<tr>' +
+        '<td class="c"><b>' + (i+1) + '</b></td>' +
+        '<td class="c small muted">' + r.code + '</td>' +
+        '<td><b>' + esc(r.text) + '</b><div class="small muted" style="margin-top:3px">Self ' + B.fmt(r.self) +
+          ' · Others ' + B.fmt(r.others) + ' · Blind spot ' + B.signed(r.blind) + ' · Gap ' + B.fmt(r.gap) + '</div></td>' +
+        '<td class="small">' + esc(met.metric || '') + '</td>' +
+        '<td class="c small">' + esc(met.target || '') + '</td>' +
+        PLAN_FIELDS.map(function(f){
+          var v = saved[f[0]] !== undefined ? saved[f[0]] : (f[0]==='cadence' ? (met.cadence||'') : '');
+          return '<td><input type="text" data-plan="' + r.code + '" data-f="' + f[0] + '" value="' + esc(v) + '" style="font-size:12.5px;padding:5px 7px"></td>';
+        }).join('') +
+      '</tr>';
+    }).join('');
+
+    var tieNote = '';
+    if (m.tie && m.tie.count > 1){
+      var contested = m.tie.contested.join(', ');
+      tieNote = '<div class="note warn small"><b>' + m.tie.count + ' items tie at the cut line</b> ' +
+        '(gap ' + B.fmt(m.tie.gap) + '): ' + esc(contested) + '. Which of these takes the last slot was decided by the ' +
+        'tie-break rule — importance, then blind spot, then item order — not by the data. Treat the fifth item as a ' +
+        'judgement call for you and John, and consider swapping it for another from that list if one matters more. ' +
+        'Ties are normal with a handful of raters and whole-number scores.</div>';
+    }
+    $('v-plan').innerHTML =
+      '<div class="note small">These five were selected by gap score — nobody picked them. Fill the editable cells with ' +
+      esc(person) + ' in the room; they save to this browser as you type.</div>' + tieNote +
+      '<div class="scroll"><table><tr><th class="c">#</th><th class="c">Code</th><th>Behaviour</th><th>Suggested metric</th>' +
+      '<th class="c">Suggested target</th>' + PLAN_FIELDS.map(function(f){ return '<th>' + f[1] + '</th>'; }).join('') + '</tr>' +
+      rows + '</table></div>' +
+      '<div class="card" style="margin-top:18px"><h2>Rules that make this work</h2>' +
+      [['Five, not fifteen','Anything past five stops being a plan and becomes a performance file. If a sixth matters more later, retire one.'],
+       ['Baseline before target','Measure two to four weeks of the current reality before setting the target. A target set from a guess gets argued about instead of hit.'],
+       ['They keep the log', esc(person) + ' records the readings; John or Bryan verify monthly. Someone who won’t track it is telling you something.'],
+       ['Monthly, 30 minutes','Read the numbers, not the impressions. “Three surprises last month, zero this month” ends an argument that “communication is better” cannot.'],
+       ['Re-run at 90 and 180 days','Same thirty items, same raters. Save a snapshot on the Progression tab each time.'],
+       ['Name the bar up front','Agree what result earns the title before he starts — otherwise it is a moving goalpost.']]
+      .map(function(x){ return '<p style="margin:0 0 9px"><b>' + x[0] + '.</b> <span class="small">' + x[1] + '</span></p>'; }).join('') +
+      '</div>';
+  }
+
+  document.addEventListener('input', function(e){
+    var el = e.target.closest('[data-plan]');
+    if (el){
+      store.plan[person] = store.plan[person] || {};
+      store.plan[person][el.dataset.plan] = store.plan[person][el.dataset.plan] || {};
+      store.plan[person][el.dataset.plan][el.dataset.f] = el.value;
+      save(); return;
+    }
+    var rd = e.target.closest('[data-read]');
+    if (rd){
+      store.readings[person] = store.readings[person] || {};
+      store.readings[person][rd.dataset.read] = store.readings[person][rd.dataset.read] || {};
+      store.readings[person][rd.dataset.read][rd.dataset.m] = rd.value;
+      save();
+    }
+  });
+
+  /* ---------- 4. METRIC LIBRARY ---------- */
+  function renderMetrics(){
+    var rows = '';
+    D.dimensions.forEach(function(dim){
+      rows += '<tr><td colspan="6" style="background:var(--accent-soft);font-weight:700;color:var(--navy)">' + esc(dim.name) + '</td></tr>';
+      D.items.filter(function(i){ return i.dim === dim.code; }).forEach(function(it){
+        var m = D.metrics[it.code] || {};
+        var impTxt = it.importance === 3 ? 'critical' : (it.importance === 2 ? 'important' : 'helpful');
+        rows += '<tr><td class="c small muted">' + it.code + '</td><td>' + esc(it.text) +
+          '<div style="margin-top:3px"><span class="pill i' + it.importance + '">' + impTxt + '</span></div></td>' +
+          '<td class="small">' + esc(m.metric||'') + '</td><td class="c small">' + esc(m.target||'') + '</td>' +
+          '<td class="c small">' + esc(m.cadence||'') + '</td><td class="small">' + esc(m.source||'') + '</td></tr>';
+      });
+    });
+    $('v-metrics').innerHTML =
+      '<div class="note small">A quantifiable measure for all thirty behaviours, so whatever the assessment surfaces already has ' +
+      'one. Count events, never adjectives — “two items reopened” is checkable, “quality improved” is a debate. If a metric goes ' +
+      'three weeks unfilled, that is your answer about whether it was the right metric.</div>' +
+      '<div class="scroll"><table><tr><th class="c">Code</th><th>Behaviour</th><th>Suggested quantifiable metric</th>' +
+      '<th class="c">Target</th><th class="c">Cadence</th><th>How to capture it</th></tr>' + rows + '</table></div>';
+  }
+
+  /* ---------- 5. PROGRESSION ---------- */
+  function renderProg(m){
+    var snaps = store.snapshots.filter(function(s){ return s.person === person; });
+    var head = '<div class="card"><div class="toolbar" style="margin:0">' +
+      '<div class="grow"><h2 style="margin:0">Progression</h2>' +
+      '<span class="small muted">Save a snapshot each time you re-run the 360. Two points is an anecdote; the line is the evidence.</span></div>' +
+      '<input type="text" id="snapLabel" placeholder="Label, e.g. Baseline" style="width:190px">' +
+      '<button class="btn sm" id="snapBtn" type="button"' + (m ? '' : ' disabled') + '>Save snapshot</button></div></div>';
+
+    var table = '', chart = '';
+    if (snaps.length){
+      var cols = snaps.map(function(s){ return '<th class="c">' + esc(s.label) + '<br><span style="font-weight:400;opacity:.8">' + esc(s.date) + '</span></th>'; }).join('');
+      var body = D.dimensions.map(function(d){
+        return '<tr><td>' + esc(d.name) + '</td>' + snaps.map(function(s){
+          var v = s.dims[d.code]; return td(B.fmt(v), B.band(v));
+        }).join('') + '</tr>';
+      }).join('') +
+      '<tr style="font-weight:700;background:var(--line-soft)"><td>Overall</td>' +
+        snaps.map(function(s){ return td(B.fmt(s.overall), B.band(s.overall)); }).join('') + '</tr>';
+      table = '<div class="card"><div class="scroll" style="max-height:none"><table><tr><th>Dimension (others’ average)</th>' + cols +
+              '<th></th></tr>' + body + '</table></div>' +
+              '<div class="toolbar" style="margin:12px 0 0">' + snaps.map(function(s,i){
+                return '<button class="btn ghost sm" data-snapdel="' + i + '">Delete “' + esc(s.label) + '”</button>'; }).join('') + '</div></div>';
+      chart = '<div class="card">' + lineChart(snaps) + '</div>';
+    } else {
+      table = '<div class="note warn">No snapshots yet' + (m ? ' — give it a label and click <b>Save snapshot</b> to record today’s scores as the baseline.' : '. Add responses first.') + '</div>';
+    }
+
+    /* metric readings grid */
+    var readings = '';
+    if (m && m.top5.length){
+      store.readings[person] = store.readings[person] || {};
+      var months = ['Baseline','Month 1','Month 2','Month 3','Month 4','Month 5','Month 6'];
+      readings = '<div class="card"><h2>Metric readings — the five development items</h2>' +
+        '<p class="sub">Log each reading as you take it. Saves to this browser.</p><div class="scroll" style="max-height:none"><table>' +
+        '<tr><th>Item / metric</th>' + months.map(function(x){ return '<th class="c">' + x + '</th>'; }).join('') + '<th class="c">Target</th></tr>' +
+        m.top5.map(function(r){
+          var met = D.metrics[r.code] || {}, saved = (store.readings[person]||{})[r.code] || {};
+          return '<tr><td style="min-width:280px"><b>' + r.code + '</b> — <span class="small">' + esc(met.metric||'') + '</span></td>' +
+            months.map(function(mo){
+              return '<td><input type="text" data-read="' + r.code + '" data-m="' + esc(mo) + '" value="' +
+                     esc(saved[mo]||'') + '" style="width:82px;font-size:12.5px;padding:5px 6px;text-align:center"></td>';
+            }).join('') +
+            '<td class="c small">' + esc((store.plan[person]||{})[r.code] && store.plan[person][r.code].target || met.target || '') + '</td></tr>';
+        }).join('') + '</table></div></div>';
+    }
+
+    $('v-prog').innerHTML = head + chart + table + readings;
+
+    var sb = $('snapBtn');
+    if (sb) sb.addEventListener('click', function(){
+      if (!m) return;
+      var label = ($('snapLabel').value || '').trim();
+      if (!label){ alert('Give the snapshot a label first — e.g. “Baseline” or “+90 days”.'); return; }
+      var dims = {};
+      m.dims.forEach(function(d){ dims[d.code] = d.others; });
+      store.snapshots.push({
+        person: person, label: label, date: new Date().toISOString().slice(0,10),
+        dims: dims, overall: m.overall.others
+      });
+      save(); render(); tab = 'prog'; showTab();
+    });
+  }
+
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-snapdel]');
+    if (!b) return;
+    var snaps = store.snapshots.filter(function(s){ return s.person === person; });
+    var target = snaps[parseInt(b.dataset.snapdel,10)];
+    if (!target) return;
+    if (!confirm('Delete the snapshot “' + target.label + '”?')) return;
+    store.snapshots.splice(store.snapshots.indexOf(target), 1);
+    save(); render(); tab = 'prog'; showTab();
+  });
+
+  function lineChart(snaps){
+    var W = 760, H = 300, L = 46, Rr = 18, T = 16, Bm = 42;
+    var pw = W - L - Rr, ph = H - T - Bm;
+    var colors = ['#2e6f8e','#c2703d','#4e9a6a','#7a5ea8','#b3392c'];
+    var legend = [];
+    var n = snaps.length;
+    function x(i){ return n === 1 ? L + pw/2 : L + i * pw / (n - 1); }
+    function y(v){ return T + ph - ((v - 1) / 4) * ph; }
+    var g = '';
+    [1,2,3,4,5].forEach(function(v){
+      g += '<line x1="'+L+'" y1="'+y(v)+'" x2="'+(L+pw)+'" y2="'+y(v)+'" stroke="var(--line)" stroke-width="1"/>' +
+           '<text x="'+(L-8)+'" y="'+(y(v)+3.5)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+v+'</text>';
+    });
+    snaps.forEach(function(s,i){
+      g += '<text x="'+x(i)+'" y="'+(H-Bm+18)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+esc(s.label)+'</text>' +
+           '<text x="'+x(i)+'" y="'+(H-Bm+31)+'" text-anchor="middle" font-size="9.5" fill="var(--muted)" opacity=".75">'+esc(s.date)+'</text>';
+    });
+    D.dimensions.forEach(function(d, di){
+      var pts = snaps.map(function(s,i){ return s.dims[d.code] === null || s.dims[d.code] === undefined ? null : [x(i), y(s.dims[d.code])]; });
+      var valid = pts.filter(Boolean);
+      if (!valid.length) return;
+      var c = colors[di % colors.length];
+      if (valid.length > 1) g += '<polyline points="'+valid.map(function(p){return p.join(',');}).join(' ')+'" fill="none" stroke="'+c+'" stroke-width="2"/>';
+      valid.forEach(function(p){ g += '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.4" fill="'+c+'"/>'; });
+      legend.push('<span style="margin:0 16px 4px 0;display:inline-block;font-size:12.5px;white-space:nowrap">' +
+        '<span style="display:inline-block;width:10px;height:10px;background:'+c+';border-radius:2px;margin-right:5px"></span>' +
+        esc(d.name) + '</span>');
+    });
+    return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">'+g+'</svg>' +
+           '<div style="margin:8px 0 0">'+legend.join('')+'</div>' +
+           '<p class="small muted" style="margin:6px 0 0">Others’ average by dimension, 1–5.</p>';
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

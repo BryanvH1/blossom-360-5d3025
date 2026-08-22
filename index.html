@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Developer 360 — Rater Form</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>Developer 360 — Rater Form</h1>
+  <p class="sub">Blossom · thirty observable behaviours · about eight minutes</p>
+
+  <div class="note">
+    <b>How to score.</b> Rate each behaviour 1–5. If you haven't seen enough to judge, choose
+    <b>Not observed</b> — a blank is ignored in the maths, a guess is not. The written answers at the end
+    matter more than the numbers, so please spend your time there.
+  </div>
+
+  <div class="card">
+    <div class="grid g4">
+      <div>
+        <label for="evaluee">Who are you evaluating?</label>
+        <select id="evaluee"><option value="">Choose…</option></select>
+      </div>
+      <div>
+        <label for="rater">Your name</label>
+        <select id="rater"><option value="">Choose…</option></select>
+      </div>
+      <div>
+        <label for="relationship">Your relationship to them</label>
+        <select id="relationship"><option value="">Choose…</option></select>
+      </div>
+      <div>
+        <label for="date">Date</label>
+        <input type="date" id="date">
+      </div>
+    </div>
+    <div id="selfNote" class="note hidden" style="margin:14px 0 0">
+      You've selected yourself — relationship set to <b>Self</b>. Score yourself as honestly as you can;
+      the point of the exercise is the difference between how you see this and how others do.
+    </div>
+    <div id="sameNote" class="note bad hidden" style="margin:14px 0 0">
+      You've chosen the same person as evaluator and evaluatee but the relationship isn't “Self”.
+      Please fix one or the other.
+    </div>
+  </div>
+
+  <div class="card tight">
+    <div class="toolbar" style="margin:0">
+      <div class="grow">
+        <div class="small muted"><b id="progText">0 of 30 answered</b></div>
+        <div class="bar" style="margin-top:6px"><i id="progBar" style="width:0%"></i></div>
+      </div>
+      <button class="btn ghost sm" id="jumpBtn" type="button">Jump to first unanswered</button>
+    </div>
+  </div>
+
+  <div id="items"></div>
+
+  <h2 style="margin:34px 0 4px">Three questions, in your own words</h2>
+  <p class="sub">These carry more weight in the conversation than any score does.</p>
+  <div class="card" id="openQs"></div>
+
+  <div class="card hidden" id="result">
+    <h2>Your response code</h2>
+    <p class="small muted">Copy this whole block and send it to Bryan — Slack or email is fine.
+      Nothing was transmitted anywhere; this code <em>is</em> your response.</p>
+    <textarea class="codebox" id="code" readonly onclick="this.select()"></textarea>
+    <div class="toolbar" style="margin:12px 0 0">
+      <button class="btn" id="copyBtn" type="button">Copy code</button>
+      <button class="btn ghost" id="mailBtn" type="button">Open in email</button>
+      <button class="btn ghost" id="editBtn" type="button">Go back and edit</button>
+      <span class="small muted" id="copyMsg"></span>
+    </div>
+  </div>
+</div>
+
+<div class="sticky-foot" id="foot">
+  <div class="inner">
+    <button class="btn" id="submitBtn" type="button">Generate my response code</button>
+    <span class="small muted" id="footMsg">Your answers are saved in this browser as you go.</span>
+    <span class="grow"></span>
+    <button class="btn ghost sm" id="clearBtn" type="button">Clear form</button>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/core.js"></script>
+<script>
+(function(){
+  'use strict';
+  var D = window.B360_DATA, KEY = 'b360.draft.v1';
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---------- selects ---------- */
+  function fill(sel, opts){
+    opts.forEach(function(o){
+      var el = document.createElement('option');
+      el.value = o[0]; el.textContent = o[1]; sel.appendChild(el);
+    });
+  }
+  var roster = D.roster.map(function(n){ return [n,n]; });
+  fill($('evaluee'), roster);
+  fill($('rater'), roster);
+  fill($('relationship'), D.relationships);
+  $('date').value = new Date().toISOString().slice(0,10);
+
+  /* ---------- items ---------- */
+  var host = $('items');
+  D.dimensions.forEach(function(dim){
+    var head = document.createElement('div');
+    head.className = 'dim-head';
+    head.innerHTML = '<h2></h2><div class="q"></div>';
+    head.querySelector('h2').textContent = dim.name;
+    head.querySelector('.q').textContent = dim.question;
+    host.appendChild(head);
+
+    var box = document.createElement('div');
+    box.className = 'items';
+    D.items.filter(function(i){ return i.dim === dim.code; }).forEach(function(it){
+      var row = document.createElement('div');
+      row.className = 'item'; row.id = 'row-' + it.code;
+      var left = document.createElement('div');
+      var code = document.createElement('div'); code.className = 'code'; code.textContent = it.code;
+      var txt  = document.createElement('div'); txt.className = 'txt'; txt.textContent = it.text;
+      left.appendChild(code); left.appendChild(txt);
+      var right = document.createElement('div'); right.className = 'radios';
+      [1,2,3,4,5].forEach(function(v){
+        var l = document.createElement('label');
+        l.innerHTML = '<input type="radio" name="' + it.code + '" value="' + v + '"><span>' + v + '</span>';
+        right.appendChild(l);
+      });
+      var na = document.createElement('label'); na.className = 'na';
+      na.innerHTML = '<input type="radio" name="' + it.code + '" value="0"><span>Not obs.</span>';
+      right.appendChild(na);
+      row.appendChild(left); row.appendChild(right);
+      box.appendChild(row);
+    });
+    host.appendChild(box);
+  });
+
+  /* ---------- open questions ---------- */
+  D.openQuestions.forEach(function(q, i){
+    var wrap = document.createElement('div');
+    wrap.style.marginBottom = i < D.openQuestions.length - 1 ? '16px' : '0';
+    var l = document.createElement('label'); l.setAttribute('for','q'+i); l.textContent = q;
+    var t = document.createElement('textarea'); t.id = 'q'+i;
+    wrap.appendChild(l); wrap.appendChild(t);
+    $('openQs').appendChild(wrap);
+  });
+
+  /* ---------- state ---------- */
+  function readForm(){
+    var scores = {}, answered = 0;
+    D.items.forEach(function(it){
+      var el = document.querySelector('input[name="' + it.code + '"]:checked');
+      if (el){ answered++; if (el.value !== '0') scores[it.code] = parseInt(el.value,10); }
+    });
+    return {
+      evaluee: $('evaluee').value, rater: $('rater').value,
+      relationship: $('relationship').value, date: $('date').value,
+      scores: scores, answered: answered,
+      open: D.openQuestions.map(function(_,i){ return $('q'+i).value.trim(); })
+    };
+  }
+  function progress(){
+    var s = readForm(), n = s.answered, pct = Math.round(n / D.items.length * 100);
+    $('progText').textContent = n + ' of ' + D.items.length + ' answered';
+    $('progBar').style.width = pct + '%';
+    document.querySelectorAll('.item').forEach(function(r){
+      var code = r.id.slice(4);
+      var done = !!document.querySelector('input[name="' + code + '"]:checked');
+      r.classList.toggle('unanswered', !done && touched);
+    });
+  }
+  var touched = false;
+
+  function save(){
+    var s = readForm();
+    try { localStorage.setItem(KEY, JSON.stringify({
+      evaluee: s.evaluee, rater: s.rater, relationship: s.relationship, date: s.date,
+      raw: D.items.map(function(it){
+        var el = document.querySelector('input[name="' + it.code + '"]:checked');
+        return el ? el.value : '';
+      }).join(','), open: s.open
+    })); } catch(e){}
+  }
+  function restore(){
+    var j; try { j = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){ return; }
+    if (!j) return;
+    if (j.evaluee) $('evaluee').value = j.evaluee;
+    if (j.rater) $('rater').value = j.rater;
+    if (j.relationship) $('relationship').value = j.relationship;
+    if (j.date) $('date').value = j.date;
+    (j.raw || '').split(',').forEach(function(v, i){
+      if (v === '' || !D.items[i]) return;
+      var el = document.querySelector('input[name="' + D.items[i].code + '"][value="' + v + '"]');
+      if (el) el.checked = true;
+    });
+    (j.open || []).forEach(function(v,i){ if ($('q'+i)) $('q'+i).value = v; });
+  }
+
+  /* ---------- relationship coupling ---------- */
+  function syncSelf(){
+    var e = $('evaluee').value, r = $('rater').value, rel = $('relationship').value;
+    var same = e && r && e === r;
+    if (same && rel !== 'self'){ $('relationship').value = 'self'; rel = 'self'; }
+    $('selfNote').classList.toggle('hidden', !same);
+    $('sameNote').classList.toggle('hidden', !(same && rel !== 'self'));
+    if (!same && rel === 'self' && e && r) $('relationship').value = '';
+  }
+
+  document.addEventListener('change', function(ev){
+    if (ev.target.matches('input[type=radio]')) { touched = true; }
+    if (ev.target.matches('#evaluee,#rater,#relationship')) syncSelf();
+    progress(); save();
+  });
+  document.addEventListener('input', function(ev){
+    if (ev.target.matches('textarea')) save();
+  });
+
+  $('jumpBtn').addEventListener('click', function(){
+    touched = true; progress();
+    var first = D.items.filter(function(it){
+      return !document.querySelector('input[name="' + it.code + '"]:checked');
+    })[0];
+    if (!first){ $('footMsg').textContent = 'Everything is answered.'; return; }
+    var el = $('row-' + first.code);
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+
+  /* ---------- submit ---------- */
+  $('submitBtn').addEventListener('click', function(){
+    touched = true; progress();
+    var s = readForm(), problems = [];
+    if (!s.evaluee) problems.push('who you are evaluating');
+    if (!s.rater) problems.push('your name');
+    if (!s.relationship) problems.push('your relationship to them');
+    if (!s.date) problems.push('the date');
+    if (s.evaluee && s.rater && s.evaluee === s.rater && s.relationship !== 'self')
+      problems.push('the relationship (you picked yourself, so it must be “Self”)');
+    if (s.evaluee && s.rater && s.evaluee !== s.rater && s.relationship === 'self')
+      problems.push('the relationship (“Self” only applies when you are evaluating yourself)');
+    if (s.answered < D.items.length)
+      problems.push((D.items.length - s.answered) + ' unanswered behaviour' + (D.items.length - s.answered === 1 ? '' : 's') +
+        ' — choose “Not observed” if you cannot judge one');
+
+    if (problems.length){
+      $('footMsg').innerHTML = '<span style="color:var(--red)">Still needed: ' + problems.join('; ') + '.</span>';
+      var firstMissing = D.items.filter(function(it){
+        return !document.querySelector('input[name="' + it.code + '"]:checked'); })[0];
+      if (firstMissing) $('row-' + firstMissing.code).scrollIntoView({behavior:'smooth', block:'center'});
+      else document.querySelector('.card').scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    var code = window.B360.encode(s);
+    $('code').value = code;
+    $('result').classList.remove('hidden');
+    $('footMsg').textContent = 'Code generated — copy it from the box above.';
+    $('result').scrollIntoView({behavior:'smooth', block:'start'});
+    window.__lastMeta = s;
+  });
+
+  $('copyBtn').addEventListener('click', function(){
+    var box = $('code'); box.select();
+    function ok(){ $('copyMsg').textContent = 'Copied. Now paste it to Bryan.'; setTimeout(function(){ $('copyMsg').textContent=''; }, 6000); }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(box.value).then(ok, function(){ document.execCommand('copy'); ok(); });
+    } else { document.execCommand('copy'); ok(); }
+  });
+
+  $('mailBtn').addEventListener('click', function(){
+    var m = window.__lastMeta || {};
+    var subject = '360 response — ' + (m.evaluee || '') + ' — from ' + (m.rater || '');
+    var body = 'Here is my 360 response code.\n\n' + $('code').value + '\n';
+    window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  });
+
+  $('editBtn').addEventListener('click', function(){
+    $('result').classList.add('hidden');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  $('clearBtn').addEventListener('click', function(){
+    if (!confirm('Clear every answer on this form? This cannot be undone.')) return;
+    try { localStorage.removeItem(KEY); } catch(e){}
+    location.reload();
+  });
+
+  restore(); syncSelf(); progress();
+})();
+</script>
+</body>
+</html>

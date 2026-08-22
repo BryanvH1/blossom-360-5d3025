@@ -1,0 +1,447 @@
+/* Generated from build_assessment.py — do not edit by hand. */
+window.B360_DATA = {
+  "version": "1",
+  "roster": [
+    "Frans",
+    "Jeremy",
+    "Bryan",
+    "John",
+    "Mark"
+  ],
+  "relationships": [
+    [
+      "self",
+      "Self"
+    ],
+    [
+      "manager",
+      "Manager"
+    ],
+    [
+      "peer",
+      "Peer"
+    ]
+  ],
+  "dimensions": [
+    {
+      "code": "A",
+      "name": "Delivery & Predictability",
+      "question": "Can the business plan around him?"
+    },
+    {
+      "code": "B",
+      "name": "Code & Technical Craft",
+      "question": "Is the work durable, or does it come back?"
+    },
+    {
+      "code": "C",
+      "name": "Communication & Transparency",
+      "question": "Do people know where things stand without chasing him?"
+    },
+    {
+      "code": "D",
+      "name": "Collaboration & Coachability",
+      "question": "Does feedback actually change anything?"
+    },
+    {
+      "code": "E",
+      "name": "Ownership & Lead Readiness",
+      "question": "Does he act like the outcome is his?"
+    }
+  ],
+  "items": [
+    {
+      "code": "A1",
+      "text": "Gives estimates that turn out to be close to reality",
+      "importance": 2,
+      "dim": "A"
+    },
+    {
+      "code": "A2",
+      "text": "Finishes what he starts before picking up new work",
+      "importance": 2,
+      "dim": "A"
+    },
+    {
+      "code": "A3",
+      "text": "Raises a delay or blocker early, before the date is missed",
+      "importance": 3,
+      "dim": "A"
+    },
+    {
+      "code": "A4",
+      "text": "Breaks large work into pieces that can be shipped and reviewed",
+      "importance": 1,
+      "dim": "A"
+    },
+    {
+      "code": "A5",
+      "text": "Delivers work that is genuinely done — tested, not \"done except…\"",
+      "importance": 3,
+      "dim": "A"
+    },
+    {
+      "code": "A6",
+      "text": "Negotiates scope changes openly rather than absorbing them silently",
+      "importance": 2,
+      "dim": "A"
+    },
+    {
+      "code": "B1",
+      "text": "Writes code others can read and change without asking him",
+      "importance": 3,
+      "dim": "B"
+    },
+    {
+      "code": "B2",
+      "text": "Tests his own work before handing it off",
+      "importance": 2,
+      "dim": "B"
+    },
+    {
+      "code": "B3",
+      "text": "Chooses the simple solution when the simple solution is enough",
+      "importance": 1,
+      "dim": "B"
+    },
+    {
+      "code": "B4",
+      "text": "Names and logs technical debt rather than hiding it",
+      "importance": 2,
+      "dim": "B"
+    },
+    {
+      "code": "B5",
+      "text": "Diagnoses production problems fast and fixes the cause, not the symptom",
+      "importance": 2,
+      "dim": "B"
+    },
+    {
+      "code": "B6",
+      "text": "Keeps systems documented well enough that someone else could take over tomorrow",
+      "importance": 3,
+      "dim": "B"
+    },
+    {
+      "code": "C1",
+      "text": "Provides status without being asked for it",
+      "importance": 2,
+      "dim": "C"
+    },
+    {
+      "code": "C2",
+      "text": "Writes decisions and context down where others can find them",
+      "importance": 2,
+      "dim": "C"
+    },
+    {
+      "code": "C3",
+      "text": "Explains technical trade-offs so a non-developer can make the call",
+      "importance": 2,
+      "dim": "C"
+    },
+    {
+      "code": "C4",
+      "text": "Acknowledges messages and requests within an agreed time",
+      "importance": 1,
+      "dim": "C"
+    },
+    {
+      "code": "C5",
+      "text": "Says \"I'm stuck\" instead of going quiet",
+      "importance": 2,
+      "dim": "C"
+    },
+    {
+      "code": "C6",
+      "text": "Delivers bad news early and plainly",
+      "importance": 3,
+      "dim": "C"
+    },
+    {
+      "code": "D1",
+      "text": "Receives critical feedback without becoming defensive",
+      "importance": 2,
+      "dim": "D"
+    },
+    {
+      "code": "D2",
+      "text": "Acts on feedback — the same issue doesn't need raising twice",
+      "importance": 3,
+      "dim": "D"
+    },
+    {
+      "code": "D3",
+      "text": "Asks for help before burning significant time",
+      "importance": 2,
+      "dim": "D"
+    },
+    {
+      "code": "D4",
+      "text": "Executes a decision fully even when he argued against it",
+      "importance": 2,
+      "dim": "D"
+    },
+    {
+      "code": "D5",
+      "text": "Shares what he knows instead of holding it",
+      "importance": 2,
+      "dim": "D"
+    },
+    {
+      "code": "D6",
+      "text": "Keeps disagreements about the work, not the person",
+      "importance": 1,
+      "dim": "D"
+    },
+    {
+      "code": "E1",
+      "text": "Owns the outcome, not the ticket — follows through to working in production",
+      "importance": 3,
+      "dim": "E"
+    },
+    {
+      "code": "E2",
+      "text": "Thinks past his own task to what the product and customer need",
+      "importance": 2,
+      "dim": "E"
+    },
+    {
+      "code": "E3",
+      "text": "Reviews others' work in a way that raises the bar without discouraging",
+      "importance": 2,
+      "dim": "E"
+    },
+    {
+      "code": "E4",
+      "text": "Mentors — makes the other developers measurably better",
+      "importance": 3,
+      "dim": "E"
+    },
+    {
+      "code": "E5",
+      "text": "Anticipates risk and plans for it instead of reacting",
+      "importance": 2,
+      "dim": "E"
+    },
+    {
+      "code": "E6",
+      "text": "Can be handed an ambiguous problem and come back with a plan",
+      "importance": 2,
+      "dim": "E"
+    }
+  ],
+  "metrics": {
+    "A1": {
+      "metric": "% of issues finished within ±25% of the estimate he gave",
+      "target": "≥ 70%",
+      "source": "Manual tally / Linear estimate vs. actual",
+      "cadence": "Monthly"
+    },
+    "A2": {
+      "metric": "Peak number of items in progress at one time during the week",
+      "target": "≤ 2",
+      "source": "Manual tally / Linear board snapshot",
+      "cadence": "Weekly"
+    },
+    "A3": {
+      "metric": "% of missed dates where he gave a heads-up ≥1 day BEFORE the date",
+      "target": "100%",
+      "source": "Manual tally (John or Bryan logs each miss)",
+      "cadence": "Monthly"
+    },
+    "A4": {
+      "metric": "% of work items closed within 5 working days of being started",
+      "target": "≥ 80%",
+      "source": "Manual tally / Linear cycle time",
+      "cadence": "Monthly"
+    },
+    "A5": {
+      "metric": "Number of items reopened or bounced back after being called done",
+      "target": "≤ 1 per month",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "A6": {
+      "metric": "Number of scope changes discovered after the fact rather than agreed up front",
+      "target": "0",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "B1": {
+      "metric": "Questions others must ask him to understand or change his code",
+      "target": "Trend down 50% in 90 days",
+      "source": "Manual tally / GitHub review comments",
+      "cadence": "Monthly"
+    },
+    "B2": {
+      "metric": "Defects found by someone else within 2 weeks of a release",
+      "target": "≤ 2 per release",
+      "source": "Manual tally",
+      "cadence": "Per release"
+    },
+    "B3": {
+      "metric": "Times a reviewer flags a solution as more complex than the problem needs",
+      "target": "≤ 1 per month",
+      "source": "Manual tally / code review notes",
+      "cadence": "Monthly"
+    },
+    "B4": {
+      "metric": "Tech-debt items he logs himself vs. items others discover",
+      "target": "≥ 2 logged/month, ≥ 2:1 ratio",
+      "source": "Manual tally / Linear backlog label",
+      "cadence": "Monthly"
+    },
+    "B5": {
+      "metric": "Median time from bug reported to root cause identified; repeat incidents from same cause",
+      "target": "≤ 1 business day; 0 repeats",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "B6": {
+      "metric": "% of systems he owns with a current one-page README/runbook a stranger could follow",
+      "target": "100% by day 90",
+      "source": "Manual checklist (list systems, tick off)",
+      "cadence": "Monthly"
+    },
+    "C1": {
+      "metric": "% of weeks with a written status update posted without being asked",
+      "target": "100%",
+      "source": "Manual tally (count the weeks)",
+      "cadence": "Weekly"
+    },
+    "C2": {
+      "metric": "Decisions written into a doc or issue comment",
+      "target": "≥ 4 per month",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "C3": {
+      "metric": "John/Bryan rate 1–5: \"I understood the trade-off well enough to decide\"",
+      "target": "Average ≥ 4.0",
+      "source": "Manual — one rating per explanation",
+      "cadence": "Monthly"
+    },
+    "C4": {
+      "metric": "% of requests acknowledged within 1 business day",
+      "target": "≥ 90%",
+      "source": "Manual tally / spot check",
+      "cadence": "Monthly"
+    },
+    "C5": {
+      "metric": "Stretches of >2 days stuck with no one told",
+      "target": "0",
+      "source": "Manual tally + his own log",
+      "cadence": "Weekly"
+    },
+    "C6": {
+      "metric": "Surprises — problems leadership learned about only after the deadline",
+      "target": "0",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "D1": {
+      "metric": "% of feedback conversations the giver rates as \"received openly\"",
+      "target": "≥ 90%",
+      "source": "Manual — giver logs it same day",
+      "cadence": "Per conversation"
+    },
+    "D2": {
+      "metric": "Pieces of feedback that had to be raised a second time",
+      "target": "0 per quarter",
+      "source": "Manual tally (keep a feedback log)",
+      "cadence": "Monthly"
+    },
+    "D3": {
+      "metric": "Tasks where more than a day was lost before he asked for help",
+      "target": "≤ 1 per month",
+      "source": "Manual tally + his own log",
+      "cadence": "Monthly"
+    },
+    "D4": {
+      "metric": "Closed decisions he reopens or relitigates",
+      "target": "0",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "D5": {
+      "metric": "Areas only Frans can support (bus factor of 1); knowledge-share sessions run",
+      "target": "Trend to 0; ≥ 1 session/month",
+      "source": "Manual — maintain a coverage list",
+      "cadence": "Monthly"
+    },
+    "D6": {
+      "metric": "Disagreements that had to be escalated to John or Bryan",
+      "target": "0",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "E1": {
+      "metric": "% of his items that reach production working without someone else finishing them",
+      "target": "≥ 95%",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "E2": {
+      "metric": "Improvements or risks he raised outside his own assigned work",
+      "target": "≥ 2 per month",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "E3": {
+      "metric": "Work items he reviewed for others; median review turnaround",
+      "target": "≥ 8/month; ≤ 1 business day",
+      "source": "Manual tally / GitHub PR reviews",
+      "cadence": "Monthly"
+    },
+    "E4": {
+      "metric": "Hours pairing or mentoring; peer-rated helpfulness 1–5",
+      "target": "≥ 4 hrs/month; ≥ 4.0",
+      "source": "Manual log + quarterly peer rating",
+      "cadence": "Monthly / Quarterly"
+    },
+    "E5": {
+      "metric": "Unplanned firefights vs. risks he flagged in advance",
+      "target": "Firefights trend down; ≥ 2 risks flagged/month",
+      "source": "Manual tally",
+      "cadence": "Monthly"
+    },
+    "E6": {
+      "metric": "% of ambiguous problems where he returned a written plan within 3 days, unprompted",
+      "target": "100%",
+      "source": "Manual tally",
+      "cadence": "Per occurrence"
+    }
+  },
+  "scale": [
+    {
+      "value": "5",
+      "label": "Exceptional — could teach this to others"
+    },
+    {
+      "value": "4",
+      "label": "Strong — consistently does this well"
+    },
+    {
+      "value": "3",
+      "label": "Solid — meets the bar for a developer here"
+    },
+    {
+      "value": "2",
+      "label": "Developing — inconsistent, needs prompting"
+    },
+    {
+      "value": "1",
+      "label": "Significant development needed"
+    },
+    {
+      "value": "N/A",
+      "label": "Haven't seen enough to judge — leave blank"
+    }
+  ],
+  "openQuestions": [
+    "1. What is he genuinely good at — what should not change?",
+    "2. If he changed ONE thing, what would make the biggest difference?",
+    "3. What would you need to see before you'd be comfortable with him leading the dev team?"
+  ]
+};
