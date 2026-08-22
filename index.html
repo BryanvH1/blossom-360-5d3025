@@ -212,13 +212,17 @@
     if (!same && rel === 'self' && e && r) $('relationship').value = '';
   }
 
+  /* events can be fired at non-elements (document, window); guard before matching */
+  function el(ev){ var t = ev.target; return (t && t.nodeType === 1) ? t : null; }
   document.addEventListener('change', function(ev){
-    if (ev.target.matches('input[type=radio]')) { touched = true; }
-    if (ev.target.matches('#evaluee,#rater,#relationship')) syncSelf();
+    var t = el(ev);
+    if (t && t.matches('input[type=radio]')) touched = true;
+    if (!t || t.matches('#evaluee,#rater,#relationship')) syncSelf();
     progress(); save();
   });
   document.addEventListener('input', function(ev){
-    if (ev.target.matches('textarea')) save();
+    var t = el(ev);
+    if (t && t.matches('textarea')) save();
   });
 
   $('jumpBtn').addEventListener('click', function(){
