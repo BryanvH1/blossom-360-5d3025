@@ -35,9 +35,19 @@ between you rather than expecting the console to sync.
 `Developer_360_Assessment_v1.xlsx`). Edit the items, weights or metric library there and regenerate —
 do not hand-edit `data.js`, or the spreadsheet and the web pages will drift apart.
 
-## Note on scope
+## One assessment per role
 
-The thirty behaviours and their weights describe a **software developer becoming a lead developer**.
-The roster dropdown lists the whole team for convenience, but pointing this instrument at a
-non-developer would produce numbers that look objective and mean very little. Other roles need their
-own item set first.
+Each role has its own **profile** — its own dimensions, behaviours, importance weights and metric
+library — defined in `assessment_content.py`. Choosing who is being evaluated swaps the questions and
+retitles the page; the console does the same when you change person.
+
+Today only **Frans** has one (`developer` → "Developer 360"). Everyone else shows *"No assessment is
+defined for X yet"* rather than falling back to the developer questions, which would produce numbers
+that look objective and mean nothing.
+
+**To add a role:** copy the `developer` entry in `PROFILES`, rewrite its dimensions / items / metrics
+for that job, point the person at it in `ROSTER`, then run `gen_data.py` (web) and
+`build_assessment.py` (spreadsheet).
+
+Response codes carry the profile they were answered against. The console refuses a code whose profile
+does not match the person's current one, so nobody can be scored against the wrong questions.
