@@ -155,3 +155,30 @@ tbody tr:hover{background:var(--accent-soft)}
 .covbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px}
 .covbar .frac{font-size:20px;font-weight:700;color:var(--brand)}
 @media (prefers-color-scheme: dark){.covbar .frac{color:var(--brand)}}
+
+/* ---- scoring scale ---- */
+table.scale{width:100%;border-collapse:collapse;font-size:13.5px;margin:4px 0 0}
+table.scale th{background:transparent;color:var(--muted);font-size:11px;text-transform:uppercase;
+  letter-spacing:.06em;padding:0 10px 6px;position:static;text-align:left}
+table.scale td{padding:8px 10px;border-top:1px solid var(--line-soft);vertical-align:top}
+table.scale td.n{width:56px;text-align:center;font-weight:700;font-size:16px;color:var(--brand)}
+table.scale td.nm{width:210px;font-weight:600}
+table.scale td.ds{color:var(--muted)}
+table.scale tr:nth-child(4) td{background:var(--accent-soft)}   /* the "3" row — the expected score */
+@media(max-width:640px){
+  /* stack each score into a block: "5  Exceptional" then the description under it */
+  table.scale,table.scale tbody,table.scale tr,table.scale td{display:block;width:auto}
+  table.scale tr:first-child{display:none}           /* column headers add nothing once stacked */
+  table.scale tr{border-top:1px solid var(--line-soft);padding:10px 2px}
+  table.scale tr:first-of-type{border-top:0}
+  table.scale td{border-top:0;padding:0}
+  table.scale td.n{display:inline-block;width:auto;margin-right:9px;text-align:left;font-size:17px}
+  table.scale td.nm{display:inline;font-weight:700}
+  table.scale td.ds{display:block;margin-top:4px}
+}
+.dim-head .legend{margin-top:6px;font-size:11.5px;color:#c7e6d3;opacity:.9}
+.dim-head .legend b{color:#fff}
+@media (prefers-color-scheme: dark){
+  .dim-head .legend{color:var(--muted)}
+  .dim-head .legend b{color:var(--ink)}
+}

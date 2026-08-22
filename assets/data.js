@@ -454,27 +454,33 @@ window.B360_DATA = {
       "scale": [
         {
           "value": "5",
-          "label": "Exceptional — could teach this to others"
+          "name": "Exceptional",
+          "desc": "Among the best you've seen at this, anywhere — not just at Blossom. You'd point a new hire at them to learn how it's done. Should be rare."
         },
         {
           "value": "4",
-          "label": "Strong — consistently does this well"
+          "name": "Strong",
+          "desc": "Consistently does this well. You don't think about it and you don't check up on it. A genuinely good score."
         },
         {
           "value": "3",
-          "label": "Solid — meets the bar for this role"
+          "name": "Solid — meets the bar",
+          "desc": "Does this reliably; occasionally needs a nudge or a reminder. This is the expected score, not a criticism. It means they are doing the job."
         },
         {
           "value": "2",
-          "label": "Developing — inconsistent, needs prompting"
+          "name": "Developing",
+          "desc": "Inconsistent. Happens when prompted, or when things are calm, but you can't count on it under pressure. Not failing — just not yet reliable."
         },
         {
           "value": "1",
-          "label": "Significant development needed"
+          "name": "Significant development needed",
+          "desc": "Doesn't happen, or happens so rarely that other people work around it. Something has to change here."
         },
         {
-          "value": "N/A",
-          "label": "Haven't seen enough to judge — leave blank"
+          "value": "",
+          "name": "Not observed",
+          "desc": "You haven't seen enough to judge. Always better than a guess — blanks are ignored in the maths, guesses aren't."
         }
       ],
       "openQuestions": [
@@ -889,27 +895,33 @@ window.B360_DATA = {
       "scale": [
         {
           "value": "5",
-          "label": "Exceptional — could teach this to others"
+          "name": "Exceptional",
+          "desc": "Among the best you've seen at this, anywhere — not just at Blossom. You'd point a new hire at them to learn how it's done. Should be rare."
         },
         {
           "value": "4",
-          "label": "Strong — consistently does this well"
+          "name": "Strong",
+          "desc": "Consistently does this well. You don't think about it and you don't check up on it. A genuinely good score."
         },
         {
           "value": "3",
-          "label": "Solid — meets the bar for this role"
+          "name": "Solid — meets the bar",
+          "desc": "Does this reliably; occasionally needs a nudge or a reminder. This is the expected score, not a criticism. It means they are doing the job."
         },
         {
           "value": "2",
-          "label": "Developing — inconsistent, needs prompting"
+          "name": "Developing",
+          "desc": "Inconsistent. Happens when prompted, or when things are calm, but you can't count on it under pressure. Not failing — just not yet reliable."
         },
         {
           "value": "1",
-          "label": "Significant development needed"
+          "name": "Significant development needed",
+          "desc": "Doesn't happen, or happens so rarely that other people work around it. Something has to change here."
         },
         {
-          "value": "N/A",
-          "label": "Haven't seen enough to judge — leave blank"
+          "value": "",
+          "name": "Not observed",
+          "desc": "You haven't seen enough to judge. Always better than a guess — blanks are ignored in the maths, guesses aren't."
         }
       ],
       "openQuestions": [
@@ -1325,27 +1337,33 @@ window.B360_DATA = {
       "scale": [
         {
           "value": "5",
-          "label": "Exceptional — could teach this to others"
+          "name": "Exceptional",
+          "desc": "Among the best you've seen at this, anywhere — not just at Blossom. You'd point a new hire at them to learn how it's done. Should be rare."
         },
         {
           "value": "4",
-          "label": "Strong — consistently does this well"
+          "name": "Strong",
+          "desc": "Consistently does this well. You don't think about it and you don't check up on it. A genuinely good score."
         },
         {
           "value": "3",
-          "label": "Solid — meets the bar for this role"
+          "name": "Solid — meets the bar",
+          "desc": "Does this reliably; occasionally needs a nudge or a reminder. This is the expected score, not a criticism. It means they are doing the job."
         },
         {
           "value": "2",
-          "label": "Developing — inconsistent, needs prompting"
+          "name": "Developing",
+          "desc": "Inconsistent. Happens when prompted, or when things are calm, but you can't count on it under pressure. Not failing — just not yet reliable."
         },
         {
           "value": "1",
-          "label": "Significant development needed"
+          "name": "Significant development needed",
+          "desc": "Doesn't happen, or happens so rarely that other people work around it. Something has to change here."
         },
         {
-          "value": "N/A",
-          "label": "Haven't seen enough to judge — leave blank"
+          "value": "",
+          "name": "Not observed",
+          "desc": "You haven't seen enough to judge. Always better than a guess — blanks are ignored in the maths, guesses aren't."
         }
       ],
       "openQuestions": [
@@ -1761,27 +1779,33 @@ window.B360_DATA = {
       "scale": [
         {
           "value": "5",
-          "label": "Exceptional — could teach this to others"
+          "name": "Exceptional",
+          "desc": "Among the best you've seen at this, anywhere — not just at Blossom. You'd point a new hire at them to learn how it's done. Should be rare."
         },
         {
           "value": "4",
-          "label": "Strong — consistently does this well"
+          "name": "Strong",
+          "desc": "Consistently does this well. You don't think about it and you don't check up on it. A genuinely good score."
         },
         {
           "value": "3",
-          "label": "Solid — meets the bar for this role"
+          "name": "Solid — meets the bar",
+          "desc": "Does this reliably; occasionally needs a nudge or a reminder. This is the expected score, not a criticism. It means they are doing the job."
         },
         {
           "value": "2",
-          "label": "Developing — inconsistent, needs prompting"
+          "name": "Developing",
+          "desc": "Inconsistent. Happens when prompted, or when things are calm, but you can't count on it under pressure. Not failing — just not yet reliable."
         },
         {
           "value": "1",
-          "label": "Significant development needed"
+          "name": "Significant development needed",
+          "desc": "Doesn't happen, or happens so rarely that other people work around it. Something has to change here."
         },
         {
-          "value": "N/A",
-          "label": "Haven't seen enough to judge — leave blank"
+          "value": "",
+          "name": "Not observed",
+          "desc": "You haven't seen enough to judge. Always better than a guess — blanks are ignored in the maths, guesses aren't."
         }
       ],
       "openQuestions": [
@@ -2197,27 +2221,33 @@ window.B360_DATA = {
       "scale": [
         {
           "value": "5",
-          "label": "Exceptional — could teach this to others"
+          "name": "Exceptional",
+          "desc": "Among the best you've seen at this, anywhere — not just at Blossom. You'd point a new hire at them to learn how it's done. Should be rare."
         },
         {
           "value": "4",
-          "label": "Strong — consistently does this well"
+          "name": "Strong",
+          "desc": "Consistently does this well. You don't think about it and you don't check up on it. A genuinely good score."
         },
         {
           "value": "3",
-          "label": "Solid — meets the bar for this role"
+          "name": "Solid — meets the bar",
+          "desc": "Does this reliably; occasionally needs a nudge or a reminder. This is the expected score, not a criticism. It means they are doing the job."
         },
         {
           "value": "2",
-          "label": "Developing — inconsistent, needs prompting"
+          "name": "Developing",
+          "desc": "Inconsistent. Happens when prompted, or when things are calm, but you can't count on it under pressure. Not failing — just not yet reliable."
         },
         {
           "value": "1",
-          "label": "Significant development needed"
+          "name": "Significant development needed",
+          "desc": "Doesn't happen, or happens so rarely that other people work around it. Something has to change here."
         },
         {
-          "value": "N/A",
-          "label": "Haven't seen enough to judge — leave blank"
+          "value": "",
+          "name": "Not observed",
+          "desc": "You haven't seen enough to judge. Always better than a guess — blanks are ignored in the maths, guesses aren't."
         }
       ],
       "openQuestions": [
@@ -2227,6 +2257,16 @@ window.B360_DATA = {
       ]
     }
   },
+  "scaleNotes": [
+    {
+      "label": "The bar is this role's bar.",
+      "text": "A 4 for an Associate Developer means “strong for an Associate Developer”, not “as good as a lead”. The same behaviour scored across two roles does not mean the same absolute thing."
+    },
+    {
+      "label": "Most scores should be 3s and 4s.",
+      "text": "If you are handing out mostly 4s and 5s, you are probably rating how much you enjoy working with the person rather than the specific behaviour in front of you. 5s should be rare, and a 1 should mean something is genuinely wrong."
+    }
+  ],
   "relationshipMap": {
     "John": {
       "Bryan": "report",

@@ -66,6 +66,12 @@
       matter more than the numbers, so please spend your time there.
     </div>
 
+    <div class="card" id="scaleCard">
+      <h2>What the numbers mean</h2>
+      <table class="scale" id="scaleTable"></table>
+      <div id="scaleNotes"></div>
+    </div>
+
     <div class="note small">
       <b>This is not anonymous, by design.</b> Your name is on your response, and your scores and
       written answers are shared with the person you are rating. Blossom would rather have candid
@@ -149,9 +155,28 @@
     if (allowed.indexOf(keep) !== -1) $('relationship').value = keep;
   }
 
+  function renderScale(p){
+    var rows = p.scale.map(function(s){
+      return '<tr><td class="n">' + (s.value || 'blank') + '</td>' +
+             '<td class="nm">' + s.name + '</td>' +
+             '<td class="ds">' + s.desc + '</td></tr>';
+    }).join('');
+    $('scaleTable').innerHTML =
+      '<tr><th>Score</th><th>Means</th><th>What it looks like</th></tr>' + rows;
+    $('scaleNotes').innerHTML = (D.scaleNotes || []).map(function(x){
+      return '<p class="small" style="margin:10px 0 0"><b>' + x.label + '</b> ' + x.text + '</p>';
+    }).join('');
+  }
+
+  function scaleFor(p, v){
+    for (var i = 0; i < p.scale.length; i++) if (p.scale[i].value === v) return p.scale[i];
+    return null;
+  }
+
   function renderProfile(p){
     profile = p;
     fillRelationships(p);
+    if (p) renderScale(p);
     var host = $('items'); host.innerHTML = ''; $('openQs').innerHTML = '';
     if (!p) return;
 
@@ -162,7 +187,8 @@
     p.dimensions.forEach(function(dim){
       var head = document.createElement('div');
       head.className = 'dim-head';
-      head.innerHTML = '<h2></h2><div class="q"></div>';
+      head.innerHTML = '<h2></h2><div class="q"></div>' +
+        '<div class="legend">1 needs development · 2 developing · <b>3 meets the bar</b> · 4 strong · 5 exceptional</div>';
       head.querySelector('h2').textContent = dim.name;
       head.querySelector('.q').textContent = dim.question;
       host.appendChild(head);
@@ -178,12 +204,17 @@
         left.appendChild(code); left.appendChild(txt);
         var right = document.createElement('div'); right.className = 'radios';
         [1,2,3,4,5].forEach(function(v){
+          var sc = scaleFor(p, String(v));
           var l = document.createElement('label');
-          l.innerHTML = '<input type="radio" name="' + it.code + '" value="' + v + '"><span>' + v + '</span>';
+          if (sc) l.title = v + ' — ' + sc.name + '. ' + sc.desc;
+          l.innerHTML = '<input type="radio" name="' + it.code + '" value="' + v + '"' +
+                        (sc ? ' aria-label="' + v + ' — ' + sc.name + '"' : '') + '><span>' + v + '</span>';
           right.appendChild(l);
         });
+        var naSc = scaleFor(p, '');
         var na = document.createElement('label'); na.className = 'na';
-        na.innerHTML = '<input type="radio" name="' + it.code + '" value="0"><span>Not obs.</span>';
+        if (naSc) na.title = 'Not observed. ' + naSc.desc;
+        na.innerHTML = '<input type="radio" name="' + it.code + '" value="0" aria-label="Not observed"><span>Not obs.</span>';
         right.appendChild(na);
         row.appendChild(left); row.appendChild(right);
         box.appendChild(row);
