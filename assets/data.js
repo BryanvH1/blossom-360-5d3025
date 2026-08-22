@@ -2230,7 +2230,7 @@ window.B360_DATA = {
   "relationshipMap": {
     "John": {
       "Bryan": "report",
-      "Mark": "report",
+      "Mark": "peer",
       "Frans": "report",
       "Jeremy": "report"
     },
@@ -2241,7 +2241,7 @@ window.B360_DATA = {
       "Jeremy": "report"
     },
     "Mark": {
-      "John": "manager",
+      "John": "peer",
       "Bryan": "peer"
     },
     "Frans": {
