@@ -62,10 +62,15 @@ does not match the person's current one, so nobody can be scored against the wro
 
 ## Who rates whom
 
-`RELATIONSHIP_MAP` in `assessment_content.py` records what each rater is to each person. The form
-fills the relationship in from it so a rater does not drift between groups from one round to the
-next — which would break the comparison — and the console flags in amber any response whose declared
-relationship differs from the expected one. Pairs left out of the map are chosen by hand on the form.
+`RELATIONSHIP_MAP` in `assessment_content.py` records what each rater is to each person. **The rater
+is never asked** — the form derives the relationship from the matrix and shows it read-only. It is not
+theirs to choose: a rater who is a peer one round and a report the next breaks the comparison, and
+mis-filing themselves shifts the group averages.
+
+A pair that is not in the matrix cannot be rated at all — the form says so and will not accept a
+submission. That makes the matrix the definition of who rates whom, and keeps it under the
+administrator's control rather than the rater's. Adding a pairing is one line in `RELATIONSHIP_MAP`
+followed by `gen_data.py`.
 
 ## This is deliberately not anonymous
 

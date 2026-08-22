@@ -182,3 +182,8 @@ table.scale tr:nth-child(4) td{background:var(--accent-soft)}   /* the "3" row â
   .dim-head .legend{color:var(--muted)}
   .dim-head .legend b{color:var(--ink)}
 }
+
+/* read-only field (the derived relationship) */
+.readonly{padding:9px 11px;border:1px dashed var(--line);border-radius:7px;background:transparent;
+  color:var(--ink);font-size:14px;font-weight:600}
+.readonly.unset{color:var(--muted);font-weight:400}

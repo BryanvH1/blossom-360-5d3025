@@ -33,8 +33,8 @@
         <select id="rater"><option value="">Choose…</option></select>
       </div>
       <div>
-        <label for="relationship">Your relationship to them</label>
-        <select id="relationship"><option value="">Choose…</option></select>
+        <label>Your relationship to them</label>
+        <div class="readonly" id="relDisplay">—</div>
         <div class="small muted" id="relHint" style="margin-top:5px"></div>
       </div>
       <div>
@@ -43,12 +43,13 @@
       </div>
     </div>
     <div id="selfNote" class="note hidden" style="margin:14px 0 0">
-      You've selected yourself — relationship set to <b>Self</b>. Score yourself as honestly as you can;
-      the point of the exercise is the difference between how you see this and how others do.
+      You are scoring yourself. Do it as honestly as you can — the gap between how you see this and how
+      everyone else does is the most useful thing the exercise produces.
     </div>
-    <div id="sameNote" class="note bad hidden" style="margin:14px 0 0">
-      You've chosen the same person as evaluator and evaluatee but the relationship isn't “Self”.
-      Please fix one or the other.
+    <div id="notPaired" class="note bad hidden" style="margin:14px 0 0">
+      <b><span id="npRater"></span> is not set up to rate <span id="npEvaluee"></span>.</b>
+      Who rates whom is defined centrally so that everyone stays in the same group from one round to the
+      next. If this pairing should exist, ask Bryan to add it.
     </div>
   </div>
 
@@ -147,14 +148,6 @@
     return k;
   }
 
-  function fillRelationships(p){
-    var keep = $('relationship').value;
-    $('relationship').innerHTML = '<option value="">Choose…</option>';
-    var allowed = (p && p.relationships) ? p.relationships : ['self','manager','peer'];
-    fill($('relationship'), allowed.map(function(k){ return [k, relLabel(k)]; }));
-    if (allowed.indexOf(keep) !== -1) $('relationship').value = keep;
-  }
-
   function renderScale(p){
     var rows = p.scale.map(function(s){
       return '<tr><td class="n">' + (s.value || 'blank') + '</td>' +
@@ -175,7 +168,6 @@
 
   function renderProfile(p){
     profile = p;
-    fillRelationships(p);
     if (p) renderScale(p);
     var host = $('items'); host.innerHTML = ''; $('openQs').innerHTML = '';
     if (!p) return;
@@ -242,7 +234,7 @@
     return {
       profile: profile ? profile.id : null,
       evaluee: $('evaluee').value, rater: $('rater').value,
-      relationship: $('relationship').value, date: $('date').value,
+      relationship: relationship, date: $('date').value,
       scores: scores, answered: answered,
       open: profile ? profile.openQuestions.map(function(_,i){ return $('q'+i) ? $('q'+i).value.trim() : ''; }) : []
     };
@@ -261,8 +253,7 @@
     if (!profile) return;
     var s = readForm();
     try { localStorage.setItem(KEY, JSON.stringify({
-      profile: profile.id, evaluee: s.evaluee, rater: s.rater,
-      relationship: s.relationship, date: s.date,
+      profile: profile.id, evaluee: s.evaluee, rater: s.rater, date: s.date,
       raw: profile.items.map(function(it){
         var el = document.querySelector('input[name="' + it.code + '"]:checked');
         return el ? el.value : '';
@@ -278,7 +269,6 @@
     var p = B.profileFor(j.evaluee);
     if (!p || p.id !== j.profile) return;   // roster changed under them — start clean
     applyProfile(true);
-    if (j.relationship) $('relationship').value = j.relationship;
     (j.raw || '').split(',').forEach(function(v, i){
       if (v === '' || !p.items[i]) return;
       var el = document.querySelector('input[name="' + p.items[i].code + '"][value="' + v + '"]');
@@ -343,12 +333,15 @@
     }
     lastEvaluee = next;
     applyProfile();
-    applyExpectedRelationship();
-    syncSelf();
+    deriveRelationship();
     save();
   });
 
   /* ---------- relationship coupling ---------- */
+  /* The relationship is derived from the central matrix, never asked. A rater who is a peer one
+     round and a report the next would break the comparison, and it is not their call to make. */
+  var relationship = null;
+
   function expectedRelationship(evaluee, rater){
     if (!evaluee || !rater) return null;
     if (evaluee === rater) return 'self';
@@ -356,28 +349,26 @@
     return (m && m[rater]) ? m[rater] : null;
   }
 
-  function applyExpectedRelationship(){
-    var e = $('evaluee').value, r = $('rater').value, sel = $('relationship');
+  function deriveRelationship(){
+    var e = $('evaluee').value, r = $('rater').value;
     var want = expectedRelationship(e, r);
-    var offered = Array.prototype.map.call(sel.options, function(o){ return o.value; });
-    if (want && offered.indexOf(want) !== -1){
-      if (sel.value !== want) sel.value = want;
-      $('relHint').innerHTML = 'Filled in for you — change it if that is not right.';
-    } else if (e && r && !want){
-      sel.value = '';   // do not leave the previous pair's answer sitting there
-      $('relHint').textContent = 'Not a pairing we have on record — please choose.';
-    } else {
-      $('relHint').textContent = '';
-    }
-  }
+    if (want && profile && profile.relationships.indexOf(want) === -1) want = null;
+    relationship = want;
 
-  function syncSelf(){
-    var e = $('evaluee').value, r = $('rater').value, rel = $('relationship').value;
-    var same = e && r && e === r;
-    if (same && rel !== 'self'){ $('relationship').value = 'self'; rel = 'self'; }
-    $('selfNote').classList.toggle('hidden', !same);
-    $('sameNote').classList.toggle('hidden', !(same && rel !== 'self'));
-    if (!same && rel === 'self' && e && r) $('relationship').value = '';
+    $('relDisplay').textContent = want ? relLabel(want) : '—';
+    $('relDisplay').classList.toggle('unset', !want);
+    $('selfNote').classList.toggle('hidden', want !== 'self');
+
+    var unpaired = !!(e && r && profile && !want);
+    $('npRater').textContent = r;
+    $('npEvaluee').textContent = e;
+    $('notPaired').classList.toggle('hidden', !unpaired);
+    $('formBody').classList.toggle('hidden', !profile || unpaired);
+    $('foot').classList.toggle('hidden', !profile || unpaired);
+
+    $('relHint').textContent = want
+      ? 'Set centrally — not something you choose.'
+      : (e && r ? '' : 'Choose both names above.');
   }
 
   /* events can be fired at non-elements (document, window); guard before matching */
@@ -386,8 +377,7 @@
     var t = el(ev);
     if (t && t.id === 'evaluee') return;          // handled by its own listener
     if (t && t.matches('input[type=radio]')) touched = true;
-    if (t && t.id === 'rater') applyExpectedRelationship();
-    if (!t || t.matches('#rater,#relationship')) syncSelf();
+    if (!t || t.id === 'rater') deriveRelationship();
     progress(); save();
   });
   document.addEventListener('input', function(ev){
@@ -410,12 +400,9 @@
     if (!s.profile){ $('footMsg').textContent = 'Choose who you are evaluating first.'; return; }
     if (!s.evaluee) problems.push('who you are evaluating');
     if (!s.rater) problems.push('your name');
-    if (!s.relationship) problems.push('your relationship to them');
     if (!s.date) problems.push('the date');
-    if (s.evaluee && s.rater && s.evaluee === s.rater && s.relationship !== 'self')
-      problems.push('the relationship (you picked yourself, so it must be “Self”)');
-    if (s.evaluee && s.rater && s.evaluee !== s.rater && s.relationship === 'self')
-      problems.push('the relationship (“Self” only applies when you are evaluating yourself)');
+    if (s.evaluee && s.rater && !s.relationship)
+      problems.push(s.rater + ' is not set up to rate ' + s.evaluee + ' — ask Bryan to add the pairing');
     var missing = profile.items.length - s.answered;
     if (missing > 0)
       problems.push(missing + ' unanswered behaviour' + (missing === 1 ? '' : 's') +
@@ -466,7 +453,7 @@
 
   restore();
   lastEvaluee = $('evaluee').value;
-  applyProfile(true); applyExpectedRelationship(); syncSelf(); progress();
+  applyProfile(true); deriveRelationship(); progress();
 })();
 </script>
 </body>
