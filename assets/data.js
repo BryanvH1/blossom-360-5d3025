@@ -14,7 +14,7 @@ window.B360_DATA = {
     },
     {
       "name": "Bryan",
-      "role": "COO / CFO · Integrator",
+      "role": "COO · Integrator",
       "profile": "coo-cfo-integrator"
     },
     {
@@ -1816,9 +1816,9 @@ window.B360_DATA = {
     },
     "coo-cfo-integrator": {
       "id": "coo-cfo-integrator",
-      "label": "COO / CFO · Integrator",
-      "formTitle": "COO / CFO · Integrator 360 — Rater Form",
-      "consoleTitle": "COO / CFO · Integrator 360 — Console",
+      "label": "COO · Integrator",
+      "formTitle": "COO · Integrator 360 — Rater Form",
+      "consoleTitle": "COO · Integrator 360 — Console",
       "blurb": "Thirty observable behaviours · about eight minutes",
       "note": "Built around the EOS Integrator seat. The criticals sit on accountability, removing obstacles, a forecast people can plan against, and the honesty of the partnership with the Visionary.",
       "relationships": [

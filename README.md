@@ -45,7 +45,7 @@ retitles both pages.
 |---|---|---|---|
 | Frans | Developer | `developer` | self · manager · peer |
 | Jeremy | Associate Developer | `developer-associate` | self · manager · peer |
-| Bryan | COO / CFO · Integrator | `coo-cfo-integrator` | self · manager · peer · direct report |
+| Bryan | COO · Integrator | `coo-cfo-integrator` | self · manager · peer · direct report |
 | John | Chief Vision Officer / CEO | `ceo-visionary` | self · manager · peer · direct report |
 | Mark | Chief Growth Officer | `cgo` | self · manager · peer · direct report |
 
