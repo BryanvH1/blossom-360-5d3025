@@ -12,7 +12,7 @@ import json, os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from assessment_content import (PROFILES, ROSTER, RELATIONSHIPS, SCALE_NOTES,
+from assessment_content import (PROFILES, ROSTER, RELATIONSHIPS, SCALE_NOTES, LENS_DEFS,
                                 RELATIONSHIP_MAP, validate, coverage_warnings)
 
 WEB = os.environ.get("B360_WEB", os.path.dirname(HERE))
@@ -24,6 +24,7 @@ def pack(p):
         "formTitle": p["formTitle"], "consoleTitle": p["consoleTitle"],
         "blurb": p.get("blurb", ""), "note": p.get("note", ""),
         "relationships": p["relationships"],
+        "lenses": p["lenses"],
         "dimensions": [{"code": c, "name": n, "question": q} for c, n, q in p["dimensions"]],
         "items": [{"code": c, "text": t, "importance": i, "dim": c[0]} for c, t, i in p["items"]],
         "metrics": {k: {"metric": v[0], "target": v[1], "source": v[2], "cadence": v[3]}
@@ -48,6 +49,7 @@ data = {
     "relationships": [[k, l] for k, l in RELATIONSHIPS],
     "profiles": {k: pack(v) for k, v in PROFILES.items()},
     "scaleNotes": [{"label": l, "text": t} for l, t in SCALE_NOTES],
+    "lensDefs": [{"key": k, "name": n, "question": q} for k, n, q in LENS_DEFS],
     "relationshipMap": RELATIONSHIP_MAP,
     "contact": "bryan@blossom.ag",
 }

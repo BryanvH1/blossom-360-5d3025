@@ -24,7 +24,7 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from assessment_content import (PROFILES, ROSTER, RELATIONSHIPS, RELATIONSHIP_MAP,
-                                SCALE, SCALE_NOTES, validate, coverage_warnings)
+                                SCALE, SCALE_NOTES, LENS_DEFS, validate, coverage_warnings)
 
 REPO = os.path.dirname(HERE)
 # Workbooks are build artefacts, not source — .gitignore keeps *.xlsx out of the repo.
@@ -128,6 +128,7 @@ def build(person):
     ITEMS      = profile["items"]
     METRICS    = profile["metrics"]
     OPEN_QS    = profile["openQuestions"]
+    LENSES     = profile["lenses"]
 
     raters = raters_for(name)
     n_rat = len(raters)
@@ -544,6 +545,56 @@ def build(person):
             cell.number_format = ("0%" if cc == R_PCT else
                                   "+0.00;-0.00;0.00" if cc == R_BLIND else "0.00")
 
+    # ---- the four lenses -------------------------------------------------
+    # Same item scores, grouped John's way instead of by dimension. Each lens is a
+    # discontiguous set of rows, so these are AVERAGE(range,range,...) over the item
+    # rows rather than a block — one list per lens, built from the lens tags.
+    LR_HDR = TOT + 2
+    ws.cell(row=LR_HDR - 1, column=R_DIM, value="The four lenses").font = F_BOLD
+    lens_heads = dict(heads)
+    lens_heads[R_DIM] = "Lens"
+    for cc, h in lens_heads.items():
+        cell = ws.cell(row=LR_HDR, column=cc, value=h)
+        cell.font = F_HDR; cell.fill = FILL_HDR; cell.alignment = CTR; cell.border = BOX
+    ws.row_dimensions[LR_HDR].height = 22
+
+    item_row = {code: FIRST + i for i, (code, _, _) in enumerate(ITEMS)}
+
+    def lens_avg(codes_in, col_a, col_b):
+        """AVERAGE across one lens's item rows for a span of rater columns."""
+        a, b = L(col_a), L(col_b)
+        rngs = ",".join(f"'3 Scores'!{a}{item_row[c]}:{b}{item_row[c]}"
+                        for c in sorted(codes_in, key=lambda c: item_row[c]))
+        return f'=IF(COUNT({rngs})=0,"",ROUND(AVERAGE({rngs}),2))'
+
+    lr = LR_HDR + 1
+    for key, label, question in LENS_DEFS:
+        codes_in = LENSES.get(key, [])
+        if not codes_in:
+            continue
+        ws.cell(row=lr, column=R_DIM, value=label).font = F_BOLD
+        ws.cell(row=lr, column=R_SELF, value=lens_avg(codes_in, C_SELF, C_SELF))
+        for gkey, a, bb in shown:
+            ws.cell(row=lr, column=R_GRP[gkey], value=lens_avg(codes_in, a, bb))
+        ws.cell(row=lr, column=R_OTHERS, value=lens_avg(codes_in, C_FIRST_OTHER, C_LAST_RATER))
+        ws.cell(row=lr, column=R_PCT, value=f'=IF({L(R_OTHERS)}{lr}="","",{L(R_OTHERS)}{lr}/5)')
+        ws.cell(row=lr, column=R_BLIND, value=(
+            f'=IF(OR({L(R_SELF)}{lr}="",{L(R_OTHERS)}{lr}=""),"",'
+            f'ROUND({L(R_SELF)}{lr}-{L(R_OTHERS)}{lr},2))'))
+        ws.cell(row=lr, column=R_WHAT, value=f"{question}  ({len(codes_in)} behaviours)").font = F_SMALL
+        ws.cell(row=lr, column=R_WHAT).alignment = WRAP
+        for cc in range(R_SELF, R_WHAT):
+            cell = ws.cell(row=lr, column=cc); cell.alignment = CTR; cell.border = BOX; cell.font = F_BODY
+            cell.number_format = ("0%" if cc == R_PCT else
+                                  "+0.00;-0.00;0.00" if cc == R_BLIND else "0.00")
+        ws.cell(row=lr, column=R_DIM).border = BOX
+        ws.row_dimensions[lr].height = 22
+        lr += 1
+    LENS_LAST = lr - 1
+    ws.cell(row=lr + 1, column=R_DIM, value=(
+        "Every behaviour belongs to exactly one lens, so the four cover the whole set — "
+        "the same answers read a second way, not extra questions.")).font = F_SMALL
+
     band = f"{L(R_SELF)}{HR + 1}:{L(R_OTHERS)}{TOT}"
     ws.conditional_formatting.add(band, CellIsRule(operator="lessThan", formula=["3"],
                                                    fill=PatternFill("solid", bgColor=BAND_RED)))
@@ -552,6 +603,16 @@ def build(person):
     ws.conditional_formatting.add(band, CellIsRule(operator="greaterThanOrEqual", formula=["4"],
                                                    fill=PatternFill("solid", bgColor=BAND_GRN)))
     ws.conditional_formatting.add(f"{L(R_BLIND)}{HR + 1}:{L(R_BLIND)}{TOT}",
+        CellIsRule(operator="greaterThanOrEqual", formula=["0.75"],
+                   fill=PatternFill("solid", bgColor=BAND_RED), font=Font(bold=True, color="8A1C12")))
+    lens_band = f"{L(R_SELF)}{LR_HDR + 1}:{L(R_OTHERS)}{LENS_LAST}"
+    ws.conditional_formatting.add(lens_band, CellIsRule(operator="lessThan", formula=["3"],
+                                                        fill=PatternFill("solid", bgColor=BAND_RED)))
+    ws.conditional_formatting.add(lens_band, CellIsRule(operator="between", formula=["3", "3.99"],
+                                                        fill=PatternFill("solid", bgColor=BAND_YEL)))
+    ws.conditional_formatting.add(lens_band, CellIsRule(operator="greaterThanOrEqual", formula=["4"],
+                                                        fill=PatternFill("solid", bgColor=BAND_GRN)))
+    ws.conditional_formatting.add(f"{L(R_BLIND)}{LR_HDR + 1}:{L(R_BLIND)}{LENS_LAST}",
         CellIsRule(operator="greaterThanOrEqual", formula=["0.75"],
                    fill=PatternFill("solid", bgColor=BAND_RED), font=Font(bold=True, color="8A1C12")))
 
@@ -565,9 +626,9 @@ def build(person):
     chart.add_data(data, titles_from_data=True)
     chart.set_categories(cats)
     chart.height = 11; chart.width = 15
-    ws.add_chart(chart, f"{L(R_DIM)}{TOT + 3}")
+    ws.add_chart(chart, f"{L(R_DIM)}{LENS_LAST + 3}")
 
-    r = TOT + 26
+    r = LENS_LAST + 26
     ws.cell(row=r, column=2, value=(
         f"Biggest blind spots — where {name} rates themselves highest above everyone else")).font = F_BOLD
     r += 1

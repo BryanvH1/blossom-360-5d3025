@@ -12,7 +12,7 @@ META = {
     "label": "COO · Integrator",
     "formTitle": "COO · Integrator 360 — Rater Form",
     "consoleTitle": "COO · Integrator 360 — Console",
-    "blurb": "Thirty observable behaviours · about eight minutes",
+    "blurb": "Thirty-six observable behaviours · about ten minutes",
     "note": ("Built around the EOS Integrator seat. The criticals sit on accountability, removing "
              "obstacles, a forecast people can plan against, and the honesty of the partnership "
              "with the Visionary."),
@@ -25,6 +25,8 @@ DIMENSIONS = [
     ("C", "Leading the Team",           "Are people clear, capable and held to it?"),
     ("D", "Operating Rhythm",           "Does the business run on a system rather than heroics?"),
     ("E", "Partnership with the Visionary", "Does the Visionary–Integrator pair actually work?"),
+    ("F", "Durability & Improvement",
+     "Does the fix hold, and does the business get easier to run?"),
 ]
 
 ITEMS = [
@@ -62,6 +64,13 @@ ITEMS = [
  ("E4", "Tells John what he needs to hear, not what is comfortable", 3),
  ("E5", "Keeps the leadership team aligned behind one plan", 3),
  ("E6", "Protects the organisation from whiplash without blocking change", 2),
+
+ ("F1","Fixes the process that caused the problem, not just this instance",3),
+ ("F2","Chooses the sustainable fix over the quick patch, and says which he is choosing",2),
+ ("F3","Builds the business so it runs without him in the room",2),
+ ("F4","Protects next year's capacity while still hitting this quarter's plan",2),
+ ("F5","Follows up to confirm a fix actually held",1),
+ ("F6","Raises the standard the business is held to over time",2),
 ]
 
 METRICS = {
@@ -99,4 +108,23 @@ METRICS = {
  "E4": ("Uncomfortable truths raised with John, logged at the time", "≥ 1 per month", "Manual log", "Monthly"),
  "E5": ("Leadership team giving the same answer on the current priorities", "100%", "Manual — ask each separately", "Quarterly"),
  "E6": ("Direction changes absorbed without a mid-quarter replan", "≥ 80%", "Manual tally", "Quarterly"),
+
+ "F1":("Issues raised in IDS that had already been raised in a previous quarter","0","EOS issues list","Quarterly"),
+ "F2":("Patches applied without a stated plan to make them permanent","0","Manual tally","Monthly"),
+ "F3":("Weeks the business ran to plan while he was away","100% of weeks away","Manual review","Annually"),
+ "F4":("Quarters where next-year capacity was cut to make the current number","0","Manual review","Quarterly"),
+ "F5":("Fixes revisited 60 days later to confirm they held","≥ 80%","Manual — fix log","Monthly"),
+ "F6":("Scorecard measures whose target was raised in the last year","≥ 3","EOS scorecard","Annually"),
+}
+
+
+# Which of John's four lenses each item answers to. Exactly one lens per item,
+# so the four scores partition the thirty-six — nothing counted twice, nothing
+# left out. Dimensions ask how he is doing at a part of the job; lenses ask what
+# kind of thing is going wrong, and they deliberately cut across each other.
+LENSES = {
+ "skill":       ["B1", "B2", "B4", "B5", "B6", "C6", "D1", "D4", "E1", "E3", "E5"],
+ "ethic":       ["A1", "A2", "A3", "A4", "A6", "C1", "D2"],
+ "attitude":    ["A5", "B3", "C2", "C4", "C5", "E2", "E4"],
+ "durability":  ["C3", "D3", "D5", "D6", "E6", "F1", "F2", "F3", "F4", "F5", "F6"],
 }

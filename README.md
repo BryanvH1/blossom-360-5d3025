@@ -2,7 +2,7 @@
 
 Two static pages for running 360 assessments across the roster — one profile per role.
 
-- **`index.html`** — the rater form. Thirty behaviours, 1–5 plus "Not observed", three written questions.
+- **`index.html`** — the rater form. Thirty-six behaviours, 1–5 plus "Not observed", three written questions.
   On submit it produces a short response code the rater sends back. Nothing is transmitted anywhere.
 - **`console.html`** — the console for John and Bryan. Paste the codes in; it computes the scores,
   results, development plan, metric library and progression.
@@ -19,7 +19,7 @@ between you rather than expecting the console to sync.
 ## How the maths works
 
 - `Gap = Importance × (5 − Others' average)`. The five highest gaps become the development plan.
-- **Importance** is a role definition set by John and Bryan, not polled from raters. Eight of the thirty
+- **Importance** is a role definition set by John and Bryan, not polled from raters. Nine of the thirty-six
   are "critical" — a deliberate budget, so the label means something.
 - **Others** excludes the self-score, so nobody can lift their own result.
 - **Blind spot** = self minus others. +1.00 or more means they rate themselves materially higher
@@ -64,6 +64,30 @@ means a workbook someone has filled in with real scores can never be committed b
 B360_WORKBOOKS=~/Documents/360-workbooks python3 tools/build_assessment.py
 ```
 
+## The four lenses
+
+Alongside the six dimensions, every behaviour is tagged with one of four lenses — the things John
+looks for in anyone, whatever the seat:
+
+| Lens | Asks |
+|---|---|
+| **Skill Set** | Can they actually do the job? |
+| **Work Ethic** | Does the work land — finished, on the date given, to the standard? |
+| **Attitude** | How do they take feedback, handle disagreement and treat the people around them? |
+| **Durability & Improvement** | Does the fix hold, and does the standard rise? |
+
+Dimensions ask *how is he doing at this part of the job*. Lenses ask *what kind of thing is going
+wrong*, and they cut across the dimensions deliberately — continuous improvement shows up in the
+feedback items as much as in the durability ones, and the tag is what catches that.
+
+Each item carries **exactly one** lens, so the four scores are a partition of the thirty-six: nothing
+counted twice, nothing left out. `validate()` enforces it. The tags live in `LENSES` at the bottom of
+each profile module, and moving an item between lenses is a one-line edit and a rebuild.
+
+The sixth dimension, **Durability & Improvement**, is the only place the fourth lens has a dedicated
+home — the other three were already well covered by the original five dimensions. Its F1 is a
+critical in every profile, which is why the budget is nine rather than eight.
+
 ## One assessment per role
 
 Each role has its own **profile** — dimensions, behaviours, importance weights, metric library and
@@ -89,7 +113,8 @@ Blossom already runs.
 person at it in `ROSTER` (both in `tools/assessment_content.py`), then run `tools/gen_data.py` (web)
 and `tools/build_assessment.py` (spreadsheets). `validate()` runs first and fails the build on a
 missing metric, an orphan item, a bad relationship, a rater matrix that disagrees with itself about
-who reports to whom, or a critical count that is not exactly eight.
+who reports to whom, a critical count that is not exactly nine, or an item that is missing a
+lens or carries two.
 
 Response codes carry the profile they were answered against. The console refuses a code whose profile
 does not match the person's current one, so nobody can be scored against the wrong questions.

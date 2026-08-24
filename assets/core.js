@@ -151,6 +151,29 @@
         blind: (s !== null && o !== null) ? r2(s - o) : null
       };
     });
+    /* The same rows grouped John's way instead of by dimension. Every item carries
+       exactly one lens, so these four are a partition of the whole set — a second
+       reading of one set of answers, not a second set of questions. */
+    var lensOf = {};
+    Object.keys(profile.lenses || {}).forEach(function (k) {
+      profile.lenses[k].forEach(function (c) { lensOf[c] = k; });
+    });
+    var lenses = (D.lensDefs || []).map(function (L) {
+      var sub = rows.filter(function (r) { return lensOf[r.code] === L.key; });
+      function avg(k) { return r2(mean(sub.map(function (r) { return r[k]; }).filter(function (v) { return v !== null; }))); }
+      var s2 = avg('self'), o2 = avg('others');
+      var scored = sub.filter(function (r) { return r.gap !== null; })
+                      .slice().sort(function (a, b) { return b.gap - a.gap; });
+      return {
+        key: L.key, name: L.name, question: L.question, count: sub.length,
+        self: s2, mgr: avg('mgr'), peer: avg('peer'), report: avg('report'), others: o2,
+        pct: o2 === null ? null : o2 / 5,
+        blind: (s2 !== null && o2 !== null) ? r2(s2 - o2) : null,
+        criticals: sub.filter(function (r) { return r.importance === 3; }).length,
+        worst: scored[0] || null
+      };
+    });
+
     function overallOf(k) { return r2(mean(dims.map(function (d) { return d[k]; }).filter(function (v) { return v !== null; }))); }
     var os = overallOf('self'), oo = overallOf('others');
     var overall = {
@@ -164,7 +187,7 @@
 
     return {
       profile: profile, rows: rows, ranked: ranked, top5: ranked.slice(0, 5),
-      dims: dims, overall: overall, blindSpots: blindSpots,
+      dims: dims, lenses: lenses, overall: overall, blindSpots: blindSpots,
       counts: { self: self.length, manager: mgr.length, peer: peer.length,
                 report: report.length, total: responses.length },
       tie: { gap: cut, count: tiedAtCut, contested: cut === null ? [] :

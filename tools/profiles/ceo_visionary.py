@@ -11,7 +11,7 @@ META = {
     "label": "Chief Vision Officer / CEO",
     "formTitle": "Chief Vision Officer 360 — Rater Form",
     "consoleTitle": "Chief Vision Officer 360 — Console",
-    "blurb": "Thirty observable behaviours · about eight minutes",
+    "blurb": "Thirty-six observable behaviours · about ten minutes",
     "note": ("Built around the EOS Visionary seat. The criticals are weighted toward a stable, "
              "repeatable direction and toward ideas being filtered and finished — the two places "
              "a Visionary most often costs the company more than they add."),
@@ -24,6 +24,8 @@ DIMENSIONS = [
     ("C", "Culture & People",        "Is this a place good people stay?"),
     ("D", "External & Relationships","Do they open doors the company could not open itself?"),
     ("E", "Discipline & Follow-through", "Do the ideas become things, or just more ideas?"),
+    ("F", "Durability & Improvement",
+     "Does the fix hold, and does the company get stronger?"),
 ]
 
 ITEMS = [
@@ -61,6 +63,13 @@ ITEMS = [
  ("E4", "Works through the process the team relies on rather than around it", 2),
  ("E5", "Prepares for the meetings they ask others to prepare for", 1),
  ("E6", "Follows through on what they commit to internally", 2),
+
+ ("F1","Solves the underlying problem rather than the symptom in front of them",3),
+ ("F2","Makes calls that will still look right in three years",2),
+ ("F3","Builds the company so it does not depend on them personally",2),
+ ("F4","Invests in capability that only pays off after this year",2),
+ ("F5","Changes the system after a failure rather than the person",1),
+ ("F6","Holds the company to a rising standard rather than a fixed one",2),
 ]
 
 METRICS = {
@@ -98,4 +107,23 @@ METRICS = {
  "E4": ("Requests made outside the agreed planning and meeting rhythm", "≤ 2 per month", "Manual tally", "Monthly"),
  "E5": ("Meetings he called and arrived prepared for", "100%", "Manual — attendee rating", "Monthly"),
  "E6": ("Internal commitments met by the date given", "≥ 90%", "Manual — commitment log", "Monthly"),
+
+ "F1":("Recurring problems escalated to them more than twice in a year","0","Manual — issues list","Quarterly"),
+ "F2":("Major decisions reviewed at 12 months and still judged right","≥ 80%","Manual — decision log","Annually"),
+ "F3":("Areas where the company would stall if they were away a month","0","Manual — leadership review","Quarterly"),
+ "F4":("Spend or time committed to capability beyond the current year","≥ 10% of leadership time","Manual review","Quarterly"),
+ "F5":("Failures followed by a system change rather than only a conversation","≥ 80%","Manual — post-mortem log","Quarterly"),
+ "F6":("Standards raised and restated in the last year","≥ 2","Manual review","Annually"),
+}
+
+
+# Which of John's four lenses each item answers to. Exactly one lens per item,
+# so the four scores partition the thirty-six — nothing counted twice, nothing
+# left out. Dimensions ask how he is doing at a part of the job; lenses ask what
+# kind of thing is going wrong, and they deliberately cut across each other.
+LENSES = {
+ "skill":       ["A1", "A4", "A5", "A6", "B3", "B4", "B5", "D1", "D2", "D4", "D5"],
+ "ethic":       ["B1", "E1", "E4", "E5", "E6"],
+ "attitude":    ["B2", "B6", "C1", "C2", "C3", "C4", "C6", "E2", "E3"],
+ "durability":  ["A2", "A3", "C5", "D3", "D6", "F1", "F2", "F3", "F4", "F5", "F6"],
 }

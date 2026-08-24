@@ -52,13 +52,59 @@ window.B360_DATA = {
       "label": "Developer",
       "formTitle": "Developer 360 — Rater Form",
       "consoleTitle": "Developer 360 — Console",
-      "blurb": "Thirty observable behaviours · about eight minutes",
-      "note": "Weighted for a software developer moving toward lead developer: eight of the thirty are critical, and they lean on handover, transparency and mentoring.",
+      "blurb": "Thirty-six observable behaviours · about ten minutes",
+      "note": "Weighted for a software developer moving toward lead developer: nine of the thirty-six are critical, and they lean on handover, transparency and mentoring.",
       "relationships": [
         "self",
         "manager",
         "peer"
       ],
+      "lenses": {
+        "skill": [
+          "A1",
+          "A4",
+          "B1",
+          "B3",
+          "B5",
+          "C3",
+          "E2",
+          "E3",
+          "E6"
+        ],
+        "ethic": [
+          "A2",
+          "A5",
+          "B2",
+          "C1",
+          "C4",
+          "E1"
+        ],
+        "attitude": [
+          "A3",
+          "A6",
+          "C5",
+          "C6",
+          "D1",
+          "D3",
+          "D4",
+          "D5",
+          "D6"
+        ],
+        "durability": [
+          "B4",
+          "B6",
+          "C2",
+          "D2",
+          "E4",
+          "E5",
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "F5",
+          "F6"
+        ]
+      },
       "dimensions": [
         {
           "code": "A",
@@ -84,6 +130,11 @@ window.B360_DATA = {
           "code": "E",
           "name": "Ownership & Lead Readiness",
           "question": "Does he act like the outcome is his?"
+        },
+        {
+          "code": "F",
+          "name": "Durability & Improvement",
+          "question": "Does the fix hold, and does the standard rise?"
         }
       ],
       "items": [
@@ -149,7 +200,7 @@ window.B360_DATA = {
         },
         {
           "code": "B5",
-          "text": "Diagnoses production problems fast and fixes the cause, not the symptom",
+          "text": "Diagnoses production problems quickly and accurately, under pressure",
           "importance": 2,
           "dim": "B"
         },
@@ -266,6 +317,42 @@ window.B360_DATA = {
           "text": "Can be handed an ambiguous problem and come back with a plan",
           "importance": 2,
           "dim": "E"
+        },
+        {
+          "code": "F1",
+          "text": "Fixes the cause, so the same problem does not come back",
+          "importance": 3,
+          "dim": "F"
+        },
+        {
+          "code": "F2",
+          "text": "Changes what let the failure happen, not just the thing that failed",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F3",
+          "text": "Comes back and pays down the shortcut once the pressure is off",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F4",
+          "text": "Chooses the option still right in a year when the deadline argues otherwise",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F5",
+          "text": "Removes the recurring manual step instead of repeating it",
+          "importance": 1,
+          "dim": "F"
+        },
+        {
+          "code": "F6",
+          "text": "Is visibly better at the craft than he was a year ago",
+          "importance": 2,
+          "dim": "F"
         }
       ],
       "metrics": {
@@ -330,8 +417,8 @@ window.B360_DATA = {
           "cadence": "Monthly"
         },
         "B5": {
-          "metric": "Median time from bug reported to root cause identified; repeat incidents from same cause",
-          "target": "≤ 1 business day; 0 repeats",
+          "metric": "Median time from a bug being reported to the cause being identified",
+          "target": "≤ 1 business day",
           "source": "Manual tally",
           "cadence": "Monthly"
         },
@@ -448,6 +535,42 @@ window.B360_DATA = {
           "target": "100%",
           "source": "Manual tally",
           "cadence": "Per occurrence"
+        },
+        "F1": {
+          "metric": "Production issues that recur within 90 days of being called fixed",
+          "target": "0",
+          "source": "Manual — incident log",
+          "cadence": "Monthly"
+        },
+        "F2": {
+          "metric": "Incidents whose follow-up changed the system, not only the instance",
+          "target": "≥ 80%",
+          "source": "Manual — incident log",
+          "cadence": "Monthly"
+        },
+        "F3": {
+          "metric": "Logged shortcuts still open after 90 days",
+          "target": "≤ 2",
+          "source": "Tech debt list",
+          "cadence": "Monthly"
+        },
+        "F4": {
+          "metric": "Deadline trade-offs where the durable option was chosen and said out loud",
+          "target": "Majority",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "F5": {
+          "metric": "Recurring manual steps automated or removed",
+          "target": "≥ 1 per quarter",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "F6": {
+          "metric": "Review comments still repeating a theme raised a year ago",
+          "target": "Trending to 0",
+          "source": "GitHub review history",
+          "cadence": "Annually"
         }
       },
       "scale": [
@@ -493,13 +616,59 @@ window.B360_DATA = {
       "label": "Associate Developer",
       "formTitle": "Associate Developer 360 — Rater Form",
       "consoleTitle": "Associate Developer 360 — Console",
-      "blurb": "Thirty observable behaviours · about eight minutes",
+      "blurb": "Thirty-six observable behaviours · about ten minutes",
       "note": "Weighted for someone establishing competence, not for someone moving into a lead role. The criticals are about learning speed and not going quiet, rather than mentoring or handover.",
       "relationships": [
         "self",
         "manager",
         "peer"
       ],
+      "lenses": {
+        "skill": [
+          "A1",
+          "A4",
+          "B1",
+          "B3",
+          "B5",
+          "C3",
+          "E2",
+          "E6"
+        ],
+        "ethic": [
+          "A2",
+          "A5",
+          "B2",
+          "B6",
+          "C1",
+          "C4",
+          "E1"
+        ],
+        "attitude": [
+          "A3",
+          "A6",
+          "C5",
+          "C6",
+          "D1",
+          "D3",
+          "D4",
+          "D5",
+          "D6",
+          "E5"
+        ],
+        "durability": [
+          "B4",
+          "C2",
+          "D2",
+          "E3",
+          "E4",
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "F5",
+          "F6"
+        ]
+      },
       "dimensions": [
         {
           "code": "A",
@@ -525,6 +694,11 @@ window.B360_DATA = {
           "code": "E",
           "name": "Ownership & Growth",
           "question": "Are they getting better, and do they own their work?"
+        },
+        {
+          "code": "F",
+          "name": "Durability & Improvement",
+          "question": "Does the fix hold, and are they getting better?"
         }
       ],
       "items": [
@@ -707,6 +881,42 @@ window.B360_DATA = {
           "text": "Given an ambiguous problem, comes back with the questions that sharpen it",
           "importance": 2,
           "dim": "E"
+        },
+        {
+          "code": "F1",
+          "text": "Fixes the cause, not just the thing in front of them",
+          "importance": 3,
+          "dim": "F"
+        },
+        {
+          "code": "F2",
+          "text": "Asks why it broke, not only how to make it work again",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F3",
+          "text": "Says when they have taken a shortcut rather than leaving it to be found",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F4",
+          "text": "Goes back and tidies work they know was rushed",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F5",
+          "text": "Suggests a better way of doing something they were shown",
+          "importance": 1,
+          "dim": "F"
+        },
+        {
+          "code": "F6",
+          "text": "Is measurably more capable than three months ago",
+          "importance": 2,
+          "dim": "F"
         }
       ],
       "metrics": {
@@ -889,6 +1099,42 @@ window.B360_DATA = {
           "target": "100%",
           "source": "Manual tally",
           "cadence": "Per occurrence"
+        },
+        "F1": {
+          "metric": "Issues they closed that had to be reopened for the same cause",
+          "target": "0",
+          "source": "Linear / manual tally",
+          "cadence": "Monthly"
+        },
+        "F2": {
+          "metric": "Fixes where they can explain the cause, not just the change",
+          "target": "≥ 90%",
+          "source": "Manual — ask at review",
+          "cadence": "Monthly"
+        },
+        "F3": {
+          "metric": "Shortcuts they flagged themselves vs. ones found in review",
+          "target": "≥ 2:1",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "F4": {
+          "metric": "Rushed work returned to and cleaned up within the next sprint",
+          "target": "≥ 80%",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "F5": {
+          "metric": "Suggested improvements to an existing way of working",
+          "target": "≥ 1 per quarter",
+          "source": "Manual tally",
+          "cadence": "Quarterly"
+        },
+        "F6": {
+          "metric": "Work he can now take unsupervised that needed help three months ago",
+          "target": "Growing each quarter",
+          "source": "Manual — capability list",
+          "cadence": "Quarterly"
         }
       },
       "scale": [
@@ -934,7 +1180,7 @@ window.B360_DATA = {
       "label": "Chief Growth Officer",
       "formTitle": "Chief Growth Officer 360 — Rater Form",
       "consoleTitle": "Chief Growth Officer 360 — Console",
-      "blurb": "Thirty observable behaviours · about eight minutes",
+      "blurb": "Thirty-six observable behaviours · about ten minutes",
       "note": "Weighted for growth at a small company: a forecast people can plan against and a promise the company can keep matter more here than raw activity.",
       "relationships": [
         "self",
@@ -942,6 +1188,52 @@ window.B360_DATA = {
         "peer",
         "report"
       ],
+      "lenses": {
+        "skill": [
+          "A1",
+          "A4",
+          "A5",
+          "B2",
+          "B3",
+          "B4",
+          "B5",
+          "B6",
+          "C1",
+          "C3",
+          "C4",
+          "D2",
+          "E2"
+        ],
+        "ethic": [
+          "A2",
+          "C2",
+          "C6",
+          "E1",
+          "E4"
+        ],
+        "attitude": [
+          "A3",
+          "B1",
+          "D1",
+          "D3",
+          "D4",
+          "E5"
+        ],
+        "durability": [
+          "A6",
+          "C5",
+          "D5",
+          "D6",
+          "E3",
+          "E6",
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "F5",
+          "F6"
+        ]
+      },
       "dimensions": [
         {
           "code": "A",
@@ -967,6 +1259,11 @@ window.B360_DATA = {
           "code": "E",
           "name": "Judgement & Accountability",
           "question": "Do they own the number?"
+        },
+        {
+          "code": "F",
+          "name": "Durability & Improvement",
+          "question": "Does the growth compound, or does it start again each quarter?"
         }
       ],
       "items": [
@@ -1149,6 +1446,42 @@ window.B360_DATA = {
           "text": "Thinks past this quarter to where growth comes from next year",
           "importance": 2,
           "dim": "E"
+        },
+        {
+          "code": "F1",
+          "text": "Builds growth that compounds rather than a run of one-off wins",
+          "importance": 3,
+          "dim": "F"
+        },
+        {
+          "code": "F2",
+          "text": "Fixes the reason a deal was lost, not just the deal",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F3",
+          "text": "Chooses the customer we can keep over the one we can close this quarter",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F4",
+          "text": "Invests in next year's pipeline while still delivering this quarter's",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F5",
+          "text": "Leaves an account in better shape than they found it",
+          "importance": 1,
+          "dim": "F"
+        },
+        {
+          "code": "F6",
+          "text": "Can point to how they are better at this than a year ago",
+          "importance": 2,
+          "dim": "F"
         }
       ],
       "metrics": {
@@ -1331,6 +1664,42 @@ window.B360_DATA = {
           "target": "≥ 2 live at all times",
           "source": "Manual — plan review",
           "cadence": "Quarterly"
+        },
+        "F1": {
+          "metric": "Revenue from repeat and expansion vs. net new each quarter",
+          "target": "Repeat share rising",
+          "source": "CRM",
+          "cadence": "Quarterly"
+        },
+        "F2": {
+          "metric": "Losses with a written reason and a change made as a result",
+          "target": "≥ 80%",
+          "source": "CRM — loss reasons",
+          "cadence": "Quarterly"
+        },
+        "F3": {
+          "metric": "Customers signed in the last year still active",
+          "target": "≥ 90%",
+          "source": "CRM",
+          "cadence": "Quarterly"
+        },
+        "F4": {
+          "metric": "Pipeline created for periods beyond the current quarter",
+          "target": "≥ 30% of new pipeline",
+          "source": "CRM",
+          "cadence": "Monthly"
+        },
+        "F5": {
+          "metric": "Accounts whose health score improved while they owned them",
+          "target": "Majority",
+          "source": "CRM / manual review",
+          "cadence": "Quarterly"
+        },
+        "F6": {
+          "metric": "Named capabilities they have added, with evidence",
+          "target": "≥ 2 per year",
+          "source": "Manual — development log",
+          "cadence": "Annually"
         }
       },
       "scale": [
@@ -1376,7 +1745,7 @@ window.B360_DATA = {
       "label": "Chief Vision Officer / CEO",
       "formTitle": "Chief Vision Officer 360 — Rater Form",
       "consoleTitle": "Chief Vision Officer 360 — Console",
-      "blurb": "Thirty observable behaviours · about eight minutes",
+      "blurb": "Thirty-six observable behaviours · about ten minutes",
       "note": "Built around the EOS Visionary seat. The criticals are weighted toward a stable, repeatable direction and toward ideas being filtered and finished — the two places a Visionary most often costs the company more than they add.",
       "relationships": [
         "self",
@@ -1384,6 +1753,52 @@ window.B360_DATA = {
         "peer",
         "report"
       ],
+      "lenses": {
+        "skill": [
+          "A1",
+          "A4",
+          "A5",
+          "A6",
+          "B3",
+          "B4",
+          "B5",
+          "D1",
+          "D2",
+          "D4",
+          "D5"
+        ],
+        "ethic": [
+          "B1",
+          "E1",
+          "E4",
+          "E5",
+          "E6"
+        ],
+        "attitude": [
+          "B2",
+          "B6",
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C6",
+          "E2",
+          "E3"
+        ],
+        "durability": [
+          "A2",
+          "A3",
+          "C5",
+          "D3",
+          "D6",
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "F5",
+          "F6"
+        ]
+      },
       "dimensions": [
         {
           "code": "A",
@@ -1409,6 +1824,11 @@ window.B360_DATA = {
           "code": "E",
           "name": "Discipline & Follow-through",
           "question": "Do the ideas become things, or just more ideas?"
+        },
+        {
+          "code": "F",
+          "name": "Durability & Improvement",
+          "question": "Does the fix hold, and does the company get stronger?"
         }
       ],
       "items": [
@@ -1591,6 +2011,42 @@ window.B360_DATA = {
           "text": "Follows through on what they commit to internally",
           "importance": 2,
           "dim": "E"
+        },
+        {
+          "code": "F1",
+          "text": "Solves the underlying problem rather than the symptom in front of them",
+          "importance": 3,
+          "dim": "F"
+        },
+        {
+          "code": "F2",
+          "text": "Makes calls that will still look right in three years",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F3",
+          "text": "Builds the company so it does not depend on them personally",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F4",
+          "text": "Invests in capability that only pays off after this year",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F5",
+          "text": "Changes the system after a failure rather than the person",
+          "importance": 1,
+          "dim": "F"
+        },
+        {
+          "code": "F6",
+          "text": "Holds the company to a rising standard rather than a fixed one",
+          "importance": 2,
+          "dim": "F"
         }
       ],
       "metrics": {
@@ -1773,6 +2229,42 @@ window.B360_DATA = {
           "target": "≥ 90%",
           "source": "Manual — commitment log",
           "cadence": "Monthly"
+        },
+        "F1": {
+          "metric": "Recurring problems escalated to them more than twice in a year",
+          "target": "0",
+          "source": "Manual — issues list",
+          "cadence": "Quarterly"
+        },
+        "F2": {
+          "metric": "Major decisions reviewed at 12 months and still judged right",
+          "target": "≥ 80%",
+          "source": "Manual — decision log",
+          "cadence": "Annually"
+        },
+        "F3": {
+          "metric": "Areas where the company would stall if they were away a month",
+          "target": "0",
+          "source": "Manual — leadership review",
+          "cadence": "Quarterly"
+        },
+        "F4": {
+          "metric": "Spend or time committed to capability beyond the current year",
+          "target": "≥ 10% of leadership time",
+          "source": "Manual review",
+          "cadence": "Quarterly"
+        },
+        "F5": {
+          "metric": "Failures followed by a system change rather than only a conversation",
+          "target": "≥ 80%",
+          "source": "Manual — post-mortem log",
+          "cadence": "Quarterly"
+        },
+        "F6": {
+          "metric": "Standards raised and restated in the last year",
+          "target": "≥ 2",
+          "source": "Manual review",
+          "cadence": "Annually"
         }
       },
       "scale": [
@@ -1818,7 +2310,7 @@ window.B360_DATA = {
       "label": "COO · Integrator",
       "formTitle": "COO · Integrator 360 — Rater Form",
       "consoleTitle": "COO · Integrator 360 — Console",
-      "blurb": "Thirty observable behaviours · about eight minutes",
+      "blurb": "Thirty-six observable behaviours · about ten minutes",
       "note": "Built around the EOS Integrator seat. The criticals sit on accountability, removing obstacles, a forecast people can plan against, and the honesty of the partnership with the Visionary.",
       "relationships": [
         "self",
@@ -1826,6 +2318,52 @@ window.B360_DATA = {
         "peer",
         "report"
       ],
+      "lenses": {
+        "skill": [
+          "B1",
+          "B2",
+          "B4",
+          "B5",
+          "B6",
+          "C6",
+          "D1",
+          "D4",
+          "E1",
+          "E3",
+          "E5"
+        ],
+        "ethic": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A6",
+          "C1",
+          "D2"
+        ],
+        "attitude": [
+          "A5",
+          "B3",
+          "C2",
+          "C4",
+          "C5",
+          "E2",
+          "E4"
+        ],
+        "durability": [
+          "C3",
+          "D3",
+          "D5",
+          "D6",
+          "E6",
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "F5",
+          "F6"
+        ]
+      },
       "dimensions": [
         {
           "code": "A",
@@ -1851,6 +2389,11 @@ window.B360_DATA = {
           "code": "E",
           "name": "Partnership with the Visionary",
           "question": "Does the Visionary–Integrator pair actually work?"
+        },
+        {
+          "code": "F",
+          "name": "Durability & Improvement",
+          "question": "Does the fix hold, and does the business get easier to run?"
         }
       ],
       "items": [
@@ -2033,6 +2576,42 @@ window.B360_DATA = {
           "text": "Protects the organisation from whiplash without blocking change",
           "importance": 2,
           "dim": "E"
+        },
+        {
+          "code": "F1",
+          "text": "Fixes the process that caused the problem, not just this instance",
+          "importance": 3,
+          "dim": "F"
+        },
+        {
+          "code": "F2",
+          "text": "Chooses the sustainable fix over the quick patch, and says which he is choosing",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F3",
+          "text": "Builds the business so it runs without him in the room",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F4",
+          "text": "Protects next year's capacity while still hitting this quarter's plan",
+          "importance": 2,
+          "dim": "F"
+        },
+        {
+          "code": "F5",
+          "text": "Follows up to confirm a fix actually held",
+          "importance": 1,
+          "dim": "F"
+        },
+        {
+          "code": "F6",
+          "text": "Raises the standard the business is held to over time",
+          "importance": 2,
+          "dim": "F"
         }
       ],
       "metrics": {
@@ -2215,6 +2794,42 @@ window.B360_DATA = {
           "target": "≥ 80%",
           "source": "Manual tally",
           "cadence": "Quarterly"
+        },
+        "F1": {
+          "metric": "Issues raised in IDS that had already been raised in a previous quarter",
+          "target": "0",
+          "source": "EOS issues list",
+          "cadence": "Quarterly"
+        },
+        "F2": {
+          "metric": "Patches applied without a stated plan to make them permanent",
+          "target": "0",
+          "source": "Manual tally",
+          "cadence": "Monthly"
+        },
+        "F3": {
+          "metric": "Weeks the business ran to plan while he was away",
+          "target": "100% of weeks away",
+          "source": "Manual review",
+          "cadence": "Annually"
+        },
+        "F4": {
+          "metric": "Quarters where next-year capacity was cut to make the current number",
+          "target": "0",
+          "source": "Manual review",
+          "cadence": "Quarterly"
+        },
+        "F5": {
+          "metric": "Fixes revisited 60 days later to confirm they held",
+          "target": "≥ 80%",
+          "source": "Manual — fix log",
+          "cadence": "Monthly"
+        },
+        "F6": {
+          "metric": "Scorecard measures whose target was raised in the last year",
+          "target": "≥ 3",
+          "source": "EOS scorecard",
+          "cadence": "Annually"
         }
       },
       "scale": [
@@ -2264,6 +2879,28 @@ window.B360_DATA = {
     {
       "label": "Most scores should be 3s and 4s.",
       "text": "If you are handing out mostly 4s and 5s, you are probably rating how much you enjoy working with the person rather than the specific behaviour in front of you. 5s should be rare, and a 1 should mean something is genuinely wrong."
+    }
+  ],
+  "lensDefs": [
+    {
+      "key": "skill",
+      "name": "Skill Set",
+      "question": "Can they actually do the job?"
+    },
+    {
+      "key": "ethic",
+      "name": "Work Ethic",
+      "question": "Does the work land — finished, on the date given, to the standard?"
+    },
+    {
+      "key": "attitude",
+      "name": "Attitude",
+      "question": "How do they take feedback, handle disagreement and treat the people around them?"
+    },
+    {
+      "key": "durability",
+      "name": "Durability & Improvement",
+      "question": "Does the fix hold, and does the standard rise?"
     }
   ],
   "relationshipMap": {

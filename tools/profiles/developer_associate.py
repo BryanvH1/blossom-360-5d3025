@@ -13,7 +13,7 @@ META = {
     "label": "Associate Developer",
     "formTitle": "Associate Developer 360 — Rater Form",
     "consoleTitle": "Associate Developer 360 — Console",
-    "blurb": "Thirty observable behaviours · about eight minutes",
+    "blurb": "Thirty-six observable behaviours · about ten minutes",
     "note": ("Weighted for someone establishing competence, not for someone moving into a lead role. "
              "The criticals are about learning speed and not going quiet, rather than mentoring or handover."),
     "relationships": ["self", "manager", "peer"],
@@ -25,6 +25,8 @@ DIMENSIONS = [
     ("C", "Communication & Transparency", "Do people know where things stand without chasing them?"),
     ("D", "Collaboration & Coachability", "Does feedback actually change anything?"),
     ("E", "Ownership & Growth",       "Are they getting better, and do they own their work?"),
+    ("F", "Durability & Improvement",
+     "Does the fix hold, and are they getting better?"),
 ]
 
 ITEMS = [
@@ -62,6 +64,13 @@ ITEMS = [
  ("E4", "Comes away understanding why something worked, not just that it did", 2),
  ("E5", "Flags something that looks wrong even when it isn't theirs to fix", 2),
  ("E6", "Given an ambiguous problem, comes back with the questions that sharpen it", 2),
+
+ ("F1","Fixes the cause, not just the thing in front of them",3),
+ ("F2","Asks why it broke, not only how to make it work again",2),
+ ("F3","Says when they have taken a shortcut rather than leaving it to be found",2),
+ ("F4","Goes back and tidies work they know was rushed",2),
+ ("F5","Suggests a better way of doing something they were shown",1),
+ ("F6","Is measurably more capable than three months ago",2),
 ]
 
 METRICS = {
@@ -99,4 +108,23 @@ METRICS = {
  "E4": ("Can explain a past fix a month later without looking it up", "≥ 80% of spot checks", "Manual — ask at the monthly check-in", "Monthly"),
  "E5": ("Problems raised that were outside their assigned work", "≥ 1 per month", "Manual tally", "Monthly"),
  "E6": ("Ambiguous tasks where they returned clarifying questions before building", "100%", "Manual tally", "Per occurrence"),
+
+ "F1":("Issues they closed that had to be reopened for the same cause","0","Linear / manual tally","Monthly"),
+ "F2":("Fixes where they can explain the cause, not just the change","≥ 90%","Manual — ask at review","Monthly"),
+ "F3":("Shortcuts they flagged themselves vs. ones found in review","≥ 2:1","Manual tally","Monthly"),
+ "F4":("Rushed work returned to and cleaned up within the next sprint","≥ 80%","Manual tally","Monthly"),
+ "F5":("Suggested improvements to an existing way of working","≥ 1 per quarter","Manual tally","Quarterly"),
+ "F6":("Work he can now take unsupervised that needed help three months ago","Growing each quarter","Manual — capability list","Quarterly"),
+}
+
+
+# Which of John's four lenses each item answers to. Exactly one lens per item,
+# so the four scores partition the thirty-six — nothing counted twice, nothing
+# left out. Dimensions ask how he is doing at a part of the job; lenses ask what
+# kind of thing is going wrong, and they deliberately cut across each other.
+LENSES = {
+ "skill":       ["A1", "A4", "B1", "B3", "B5", "C3", "E2", "E6"],
+ "ethic":       ["A2", "A5", "B2", "B6", "C1", "C4", "E1"],
+ "attitude":    ["A3", "A6", "C5", "C6", "D1", "D3", "D4", "D5", "D6", "E5"],
+ "durability":  ["B4", "C2", "D2", "E3", "E4", "F1", "F2", "F3", "F4", "F5", "F6"],
 }

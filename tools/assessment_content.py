@@ -72,7 +72,26 @@ RELATIONSHIPS = [
     ("report",  "Direct report"),
 ]
 
-CRITICAL_BUDGET = 8
+# ---------------------------------------------------------------- John's four lenses
+# A second, coarser way of reading the same items. Every item belongs to exactly one
+# lens, so the four lens scores are a partition of the thirty-six — nothing double
+# counted, nothing left out. Dimensions answer "how is he doing at this part of the
+# job"; lenses answer "what kind of thing is going wrong". They cut across each other
+# on purpose: continuous improvement shows up in the feedback items as much as in the
+# durability ones, and the lens tag is what catches that.
+LENS_DEFS = [
+ ("skill",      "Skill Set",
+                "Can they actually do the job?"),
+ ("ethic",      "Work Ethic",
+                "Does the work land — finished, on the date given, to the standard?"),
+ ("attitude",   "Attitude",
+                "How do they take feedback, handle disagreement and treat the people around them?"),
+ ("durability", "Durability & Improvement",
+                "Does the fix hold, and does the standard rise?"),
+]
+LENS_KEYS = [k for k, _, _ in LENS_DEFS]
+
+CRITICAL_BUDGET = 9
 
 # What the mirror image of a relationship must be. If A says B is their manager,
 # then B's entry for A must say "report" — otherwise the two forms disagree about
@@ -85,6 +104,7 @@ def _build(mod):
     p["dimensions"] = mod.DIMENSIONS
     p["items"] = mod.ITEMS
     p["metrics"] = mod.METRICS
+    p["lenses"] = mod.LENSES
     p["scale"] = SCALE
     p["openQuestions"] = getattr(mod, "OPEN_QS", OPEN_QS)
     p.setdefault("relationships", ["self", "manager", "peer"])
@@ -132,6 +152,21 @@ def validate():
         for c, t, i in p["items"]:
             if i not in (1, 2, 3):
                 problems.append(f"{pid}: item {c} has importance {i}, must be 1-3")
+        lensed = {}
+        for lens, codes_in in p["lenses"].items():
+            if lens not in LENS_KEYS:
+                problems.append(f"{pid}: unknown lens '{lens}'")
+            for c in codes_in:
+                if c in lensed:
+                    problems.append(f"{pid}: item {c} is tagged to both "
+                                    f"'{lensed[c]}' and '{lens}' — each item gets exactly one lens")
+                lensed[c] = lens
+                if c not in codes:
+                    problems.append(f"{pid}: lens '{lens}' lists {c}, which is not an item")
+        for c in codes:
+            if c not in lensed:
+                problems.append(f"{pid}: item {c} has no lens")
+
         n_crit = sum(1 for _, _, i in p["items"] if i == 3)
         if n_crit != CRITICAL_BUDGET:
             problems.append(f"{pid}: {n_crit} criticals, budget is {CRITICAL_BUDGET}")
@@ -236,7 +271,8 @@ if __name__ == "__main__":
         print("  note:", w)
     for pid, p in PROFILES.items():
         crit = [c for c, _, i in p["items"] if i == 3]
-        print(f"  {pid:22s} {len(p['items'])} items · criticals {','.join(crit)} · raters {'/'.join(p['relationships'])}")
+        split = " ".join(f"{k}:{len(p['lenses'].get(k, []))}" for k in LENS_KEYS)
+        print(f"  {pid:22s} {len(p['items'])} items · criticals {','.join(crit)} · {split}")
     print("roster:")
     for r in ROSTER:
         print(f"  {r['name']:8s} {r['role']:34s} -> {r['profile']}")

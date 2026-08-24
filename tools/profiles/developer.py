@@ -6,8 +6,8 @@ META = {
     "label": "Developer",
     "formTitle": "Developer 360 — Rater Form",
     "consoleTitle": "Developer 360 — Console",
-    "blurb": "Thirty observable behaviours · about eight minutes",
-    "note": ("Weighted for a software developer moving toward lead developer: eight of the thirty "
+    "blurb": "Thirty-six observable behaviours · about ten minutes",
+    "note": ("Weighted for a software developer moving toward lead developer: nine of the thirty-six "
              "are critical, and they lean on handover, transparency and mentoring."),
     # Jeremy is led by Frans in practice, and the person being mentored is the best judge
     # of the mentoring items — two of which are criticals here.
@@ -31,6 +31,8 @@ DIMENSIONS = [
      "Does feedback actually change anything?"),
     ("E", "Ownership & Lead Readiness",
      "Does he act like the outcome is his?"),
+    ("F", "Durability & Improvement",
+     "Does the fix hold, and does the standard rise?"),
 ]
 
 ITEMS = [
@@ -45,7 +47,7 @@ ITEMS = [
  ("B2","Tests his own work before handing it off",2),
  ("B3","Chooses the simple solution when the simple solution is enough",1),
  ("B4","Names and logs technical debt rather than hiding it",2),
- ("B5","Diagnoses production problems fast and fixes the cause, not the symptom",2),
+ ("B5","Diagnoses production problems quickly and accurately, under pressure",2),
  ("B6","Keeps systems documented well enough that someone else could take over tomorrow",3),
 
  ("C1","Provides status without being asked for it",2),
@@ -68,6 +70,13 @@ ITEMS = [
  ("E4","Mentors — makes the other developers measurably better",3),
  ("E5","Anticipates risk and plans for it instead of reacting",2),
  ("E6","Can be handed an ambiguous problem and come back with a plan",2),
+
+ ("F1","Fixes the cause, so the same problem does not come back",3),
+ ("F2","Changes what let the failure happen, not just the thing that failed",2),
+ ("F3","Comes back and pays down the shortcut once the pressure is off",2),
+ ("F4","Chooses the option still right in a year when the deadline argues otherwise",2),
+ ("F5","Removes the recurring manual step instead of repeating it",1),
+ ("F6","Is visibly better at the craft than he was a year ago",2),
 ]
 
 METRICS = {
@@ -82,7 +91,7 @@ METRICS = {
  "B2":("Defects found by someone else within 2 weeks of a release","≤ 2 per release","Manual tally","Per release"),
  "B3":("Times a reviewer flags a solution as more complex than the problem needs","≤ 1 per month","Manual tally / code review notes","Monthly"),
  "B4":("Tech-debt items he logs himself vs. items others discover","≥ 2 logged/month, ≥ 2:1 ratio","Manual tally / Linear backlog label","Monthly"),
- "B5":("Median time from bug reported to root cause identified; repeat incidents from same cause","≤ 1 business day; 0 repeats","Manual tally","Monthly"),
+ "B5":("Median time from a bug being reported to the cause being identified","≤ 1 business day","Manual tally","Monthly"),
  "B6":("% of systems he owns with a current one-page README/runbook a stranger could follow","100% by day 90","Manual checklist (list systems, tick off)","Monthly"),
 
  "C1":("% of weeks with a written status update posted without being asked","100%","Manual tally (count the weeks)","Weekly"),
@@ -105,4 +114,23 @@ METRICS = {
  "E4":("Hours pairing or mentoring; peer-rated helpfulness 1–5","≥ 4 hrs/month; ≥ 4.0","Manual log + quarterly peer rating","Monthly / Quarterly"),
  "E5":("Unplanned firefights vs. risks he flagged in advance","Firefights trend down; ≥ 2 risks flagged/month","Manual tally","Monthly"),
  "E6":("% of ambiguous problems where he returned a written plan within 3 days, unprompted","100%","Manual tally","Per occurrence"),
+
+ "F1":("Production issues that recur within 90 days of being called fixed","0","Manual — incident log","Monthly"),
+ "F2":("Incidents whose follow-up changed the system, not only the instance","≥ 80%","Manual — incident log","Monthly"),
+ "F3":("Logged shortcuts still open after 90 days","≤ 2","Tech debt list","Monthly"),
+ "F4":("Deadline trade-offs where the durable option was chosen and said out loud","Majority","Manual tally","Quarterly"),
+ "F5":("Recurring manual steps automated or removed","≥ 1 per quarter","Manual tally","Quarterly"),
+ "F6":("Review comments still repeating a theme raised a year ago","Trending to 0","GitHub review history","Annually"),
+}
+
+
+# Which of John's four lenses each item answers to. Exactly one lens per item,
+# so the four scores partition the thirty-six — nothing counted twice, nothing
+# left out. Dimensions ask how he is doing at a part of the job; lenses ask what
+# kind of thing is going wrong, and they deliberately cut across each other.
+LENSES = {
+ "skill":       ["A1", "A4", "B1", "B3", "B5", "C3", "E2", "E3", "E6"],
+ "ethic":       ["A2", "A5", "B2", "C1", "C4", "E1"],
+ "attitude":    ["A3", "A6", "C5", "C6", "D1", "D3", "D4", "D5", "D6"],
+ "durability":  ["B4", "B6", "C2", "D2", "E4", "E5", "F1", "F2", "F3", "F4", "F5", "F6"],
 }

@@ -10,7 +10,7 @@ META = {
     "label": "Chief Growth Officer",
     "formTitle": "Chief Growth Officer 360 — Rater Form",
     "consoleTitle": "Chief Growth Officer 360 — Console",
-    "blurb": "Thirty observable behaviours · about eight minutes",
+    "blurb": "Thirty-six observable behaviours · about ten minutes",
     "note": ("Weighted for growth at a small company: a forecast people can plan against and a promise "
              "the company can keep matter more here than raw activity."),
     "relationships": ["self", "manager", "peer", "report"],
@@ -22,6 +22,8 @@ DIMENSIONS = [
     ("C", "Go-to-Market Execution",    "Do plans turn into signed customers?"),
     ("D", "Communication & Leadership","Does the rest of the company know what is happening, and why?"),
     ("E", "Judgement & Accountability","Do they own the number?"),
+    ("F", "Durability & Improvement",
+     "Does the growth compound, or does it start again each quarter?"),
 ]
 
 ITEMS = [
@@ -59,6 +61,13 @@ ITEMS = [
  ("E4", "Only promises what the company can actually deliver", 3),
  ("E5", "Changes course on evidence rather than defending a position", 2),
  ("E6", "Thinks past this quarter to where growth comes from next year", 2),
+
+ ("F1","Builds growth that compounds rather than a run of one-off wins",3),
+ ("F2","Fixes the reason a deal was lost, not just the deal",2),
+ ("F3","Chooses the customer we can keep over the one we can close this quarter",2),
+ ("F4","Invests in next year's pipeline while still delivering this quarter's",2),
+ ("F5","Leaves an account in better shape than they found it",1),
+ ("F6","Can point to how they are better at this than a year ago",2),
 ]
 
 METRICS = {
@@ -96,4 +105,23 @@ METRICS = {
  "E4": ("Signed commitments the company could not deliver on time", "0", "Manual tally", "Quarterly"),
  "E5": ("Positions changed on new evidence vs. defended past it", "≥ 2:1", "Manual — decision log review", "Quarterly"),
  "E6": ("Named growth bets for next year with a first step under way", "≥ 2 live at all times", "Manual — plan review", "Quarterly"),
+
+ "F1":("Revenue from repeat and expansion vs. net new each quarter","Repeat share rising","CRM","Quarterly"),
+ "F2":("Losses with a written reason and a change made as a result","≥ 80%","CRM — loss reasons","Quarterly"),
+ "F3":("Customers signed in the last year still active","≥ 90%","CRM","Quarterly"),
+ "F4":("Pipeline created for periods beyond the current quarter","≥ 30% of new pipeline","CRM","Monthly"),
+ "F5":("Accounts whose health score improved while they owned them","Majority","CRM / manual review","Quarterly"),
+ "F6":("Named capabilities they have added, with evidence","≥ 2 per year","Manual — development log","Annually"),
+}
+
+
+# Which of John's four lenses each item answers to. Exactly one lens per item,
+# so the four scores partition the thirty-six — nothing counted twice, nothing
+# left out. Dimensions ask how he is doing at a part of the job; lenses ask what
+# kind of thing is going wrong, and they deliberately cut across each other.
+LENSES = {
+ "skill":       ["A1", "A4", "A5", "B2", "B3", "B4", "B5", "B6", "C1", "C3", "C4", "D2", "E2"],
+ "ethic":       ["A2", "C2", "C6", "E1", "E4"],
+ "attitude":    ["A3", "B1", "D1", "D3", "D4", "E5"],
+ "durability":  ["A6", "C5", "D5", "D6", "E3", "E6", "F1", "F2", "F3", "F4", "F5", "F6"],
 }
