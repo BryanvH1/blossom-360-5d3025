@@ -27,7 +27,14 @@ from build_assessment import (F_TITLE, F_SUB, F_HDR, F_BODY, F_BOLD, F_SMALL, F_
                               FILL_HDR, FILL_DIM, FILL_IN, FILL_LT, BOX, WRAP, WRAPT, CTR,
                               NAVY, GREY, BAND_RED, BAND_GRN)
 
-OUT = os.path.join(os.path.dirname(HERE), "workbooks", "Importance-Review.xlsx")
+# Bryan keeps the review file in iCloud so it can be opened and shared from anywhere.
+# Falls back to the repo's workbooks/ if that folder is not on this machine; override
+# either with B360_REVIEW_DIR.
+ICLOUD = os.path.expanduser("~/Library/Mobile Documents/com~apple~CloudDocs/MacDocuments/"
+                            "blossom/DeveloperAssessment")
+REVIEW_DIR = os.environ.get("B360_REVIEW_DIR") or (
+    ICLOUD if os.path.isdir(ICLOUD) else os.path.join(os.path.dirname(HERE), "workbooks"))
+OUT = os.path.join(REVIEW_DIR, "ImportanceReview.xlsx")
 LENS_NAME = {k: n for k, n, _ in LENS_DEFS}
 
 WEIGHTS = [("3", "Critical", "The role fails without it. Deliberately scarce — "
@@ -84,6 +91,11 @@ def build():
       "The Lens column is the second way the same behaviours are grouped — John's four: Skill "
       "Set, Work Ethic, Attitude, and Durability & Improvement. It is there for context while "
       "you weigh things up; nothing needs changing in that column."),
+     ("The Metrics tab",
+      "One row per behaviour per position: how we would actually measure it, the target, how "
+      "often, and where the number comes from. It is there because a weight and a metric are the "
+      "same argument — if a behaviour is critical but nobody will ever count it, either the weight "
+      "is wrong or the metric is. Worth a skim while you are weighing things up."),
      ("Afterwards",
       "Nothing reads this file back automatically. Send it over and the agreed changes get typed "
       "into the profile definitions, then the forms and workbooks are rebuilt from those."),
@@ -223,6 +235,59 @@ def build():
             "argue a weight up or down once you can see who it would help.")).font = F_SMALL
         s.merge_cells(start_row=n, start_column=2, end_row=n, end_column=7)
         s.row_dimensions[n].height = 28
+
+    # ------------------------------------------------------------- metrics tab
+    ms = wb.create_sheet("Metrics")
+    ms.sheet_view.showGridLines = False
+    for col, w in [("A", 20), ("B", 7), ("C", 60), ("D", 7), ("E", 58),
+                   ("F", 22), ("G", 15), ("H", 34), ("I", 32)]:
+        ms.column_dimensions[col].width = w
+
+    ms.cell(row=1, column=1, value="Metric library — every behaviour, every position").font = F_TITLE
+    ms.cell(row=2, column=1, value=(
+        "How each behaviour would actually be counted. A metric nobody will keep is worse than "
+        "none — if one here looks unkeepable, say so in Notes and we will swap it for something "
+        "you would genuinely tally.")).font = F_SUB
+
+    MHR = 4
+    for i, h in enumerate(["Position", "Code", "Behaviour", "Imp.", "Suggested metric",
+                           "Target", "Cadence", "How to capture it", "Notes"], start=1):
+        c = ms.cell(row=MHR, column=i, value=h)
+        c.font = F_HDR; c.fill = FILL_HDR; c.border = BOX
+        c.alignment = Alignment(wrap_text=True, horizontal="center", vertical="center")
+    ms.row_dimensions[MHR].height = 26
+    ms.freeze_panes = f"C{MHR + 1}"
+
+    r = MHR + 1
+    for n, person in enumerate(people):
+        prof = PROFILES[person["profile"]]
+        shade = PatternFill("solid", fgColor="F7FAFC") if n % 2 else None
+        first_row = r
+        for code, text, imp in prof["items"]:
+            met, tgt, src, cad = prof["metrics"][code]
+            vals = [person["name"] if r == first_row else None, code, text, imp,
+                    met, tgt, cad, src, None]
+            for col, v in enumerate(vals, start=1):
+                c = ms.cell(row=r, column=col, value=v)
+                c.font = F_BOLD if (col == 1 or (col == 4 and imp == 3)) else F_BODY
+                c.alignment = WRAP if col in (3, 5, 8) else CTR
+                c.border = BOX
+                if shade and col != 9:
+                    c.fill = shade
+            ms.cell(row=r, column=9).fill = FILL_IN
+            ms.cell(row=r, column=1).alignment = WRAPT
+            ms.row_dimensions[r].height = 30
+            r += 1
+        ms.cell(row=first_row, column=1, value=person["name"]).font = F_BOLD
+
+    ms.conditional_formatting.add(f"D{MHR + 1}:D{r - 1}", CellIsRule(
+        operator="equal", formula=["3"],
+        fill=PatternFill("solid", bgColor="FFD9A0"), font=Font(bold=True)))
+    ms.cell(row=r + 1, column=1, value=(
+        "Most of these are a count, not a measurement — recurrences, reopens, weeks with a status "
+        "post, times feedback had to be repeated. A shared note or one spreadsheet tab, updated "
+        "Friday afternoon, is enough. Count events, never adjectives.")).font = F_SMALL
+    ms.merge_cells(start_row=r + 1, start_column=1, end_row=r + 1, end_column=8)
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     wb.save(OUT)
