@@ -18,11 +18,12 @@ import os
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.worksheet.datavalidation import DataValidation
-from openpyxl.formatting.rule import CellIsRule
+from openpyxl.formatting.rule import CellIsRule, FormulaRule
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from assessment_content import PROFILES, ROSTER, LENS_DEFS, CRITICAL_BUDGET, validate
+from assessment_content import (PROFILES, ROSTER, LENS_DEFS, CRITICAL_BUDGET,
+                                OPEN_QS as DEFAULT_OPEN_QS, validate)
 from build_assessment import (F_TITLE, F_SUB, F_HDR, F_BODY, F_BOLD, F_SMALL, F_DIM,
                               FILL_HDR, FILL_DIM, FILL_IN, FILL_LT, BOX, WRAP, WRAPT, CTR,
                               NAVY, GREY, BAND_RED, BAND_GRN)
@@ -91,6 +92,11 @@ def build():
       "The Lens column is the second way the same behaviours are grouped — John's four: Skill "
       "Set, Work Ethic, Attitude, and Durability & Improvement. It is there for context while "
       "you weigh things up; nothing needs changing in that column."),
+     ("The Open questions tab",
+      "The three written questions each rater answers at the end of the form. They carry more "
+      "weight in the conversation than any score does — the numbers tell you where to look, these "
+      "tell you what is actually going on. Only the Developer form tailors its third question "
+      "today; the other four ask a generic version, which is the obvious thing to improve."),
      ("The Metrics tab",
       "One row per behaviour per position: how we would actually measure it, the target, how "
       "often, and where the number comes from. It is there because a weight and a metric are the "
@@ -235,6 +241,74 @@ def build():
             "argue a weight up or down once you can see who it would help.")).font = F_SMALL
         s.merge_cells(start_row=n, start_column=2, end_row=n, end_column=7)
         s.row_dimensions[n].height = 28
+
+    # ------------------------------------------------------- open questions tab
+    qs = wb.create_sheet("Open questions")
+    qs.sheet_view.showGridLines = False
+    for col, w in [("A", 20), ("B", 5), ("C", 78), ("D", 16), ("E", 52), ("F", 40)]:
+        qs.column_dimensions[col].width = w
+
+    qs.cell(row=1, column=1, value="The written questions").font = F_TITLE
+    qs.cell(row=2, column=1, value=(
+        "Three questions at the end of every form, answered in the rater's own words. These carry "
+        "more weight in the conversation than any score does — the numbers say where to look, "
+        "these say what is actually going on.")).font = F_SUB
+
+    QHR = 4
+    for i, h in enumerate(["Position", "#", "Question as asked today", "Written for this role?",
+                           "Proposed wording", "Notes"], start=1):
+        c = qs.cell(row=QHR, column=i, value=h)
+        c.font = F_HDR; c.fill = FILL_HDR; c.border = BOX
+        c.alignment = Alignment(wrap_text=True, horizontal="center", vertical="center")
+    qs.row_dimensions[QHR].height = 26
+    qs.freeze_panes = f"A{QHR + 1}"
+
+    r = QHR + 1
+    generic = 0
+    for n, person in enumerate(people):
+        prof = PROFILES[person["profile"]]
+        own = prof["openQuestions"] != DEFAULT_OPEN_QS
+        shade = PatternFill("solid", fgColor="F7FAFC") if n % 2 else None
+        first_row = r
+        for i, q in enumerate(prof["openQuestions"], start=1):
+            text = q.split(". ", 1)[1] if q[:2].rstrip(".").isdigit() else q
+            tailored = "Yes" if own else "No — generic"
+            if not own:
+                generic += 1
+            for col, v in enumerate([person["name"] if r == first_row else None, i, text,
+                                     tailored if r == first_row else None, None, None], start=1):
+                c = qs.cell(row=r, column=col, value=v)
+                c.font = F_BOLD if col == 1 else F_BODY
+                c.alignment = WRAP if col == 3 else CTR
+                c.border = BOX
+                if shade and col < 5:
+                    c.fill = shade
+            for col in (5, 6):
+                qs.cell(row=r, column=col).fill = FILL_IN
+                qs.cell(row=r, column=col).alignment = WRAPT
+            qs.cell(row=r, column=1).alignment = WRAPT
+            qs.cell(row=r, column=4).alignment = WRAP
+            qs.row_dimensions[r].height = 34
+            r += 1
+
+    qs.conditional_formatting.add(f"D{QHR + 1}:D{r - 1}", FormulaRule(
+        formula=[f'ISNUMBER(SEARCH("generic",D{QHR + 1}))'],
+        fill=PatternFill("solid", bgColor="FCE7A2")))
+
+    notes = [
+     "Question 3 is the one worth tailoring. Frans's asks what you would need to see before you "
+     "would be comfortable with him leading the dev team — a specific decision, so it gets "
+     "specific answers. The other four ask the generic version, which gets generic answers.",
+     "Keep them to three. Raters answer three questions properly and six of them badly.",
+     "They are answered in the rater's own words and attached to their name, like the scores. "
+     "The comments get summarised for the person being assessed rather than passed on verbatim.",
+    ]
+    r += 1
+    for note in notes:
+        c = qs.cell(row=r, column=1, value=note); c.font = F_SMALL; c.alignment = WRAPT
+        qs.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+        qs.row_dimensions[r].height = max(26, 13 * (len(note) // 110 + 1))
+        r += 1
 
     # ------------------------------------------------------------- metrics tab
     ms = wb.create_sheet("Metrics")
