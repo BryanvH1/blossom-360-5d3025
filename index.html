@@ -98,8 +98,21 @@
 
     <div class="card hidden" id="result">
       <h2>Your response code</h2>
-      <p class="small muted">Copy this whole block and send it to Bryan — Slack or email is fine.
-        Nothing was transmitted anywhere; this code <em>is</em> your response.</p>
+      <p class="small muted">Nothing was transmitted anywhere; this code <em>is</em> your response.
+        It is not saved and not sent until you send it.</p>
+
+      <div class="note">
+        <b>Please send it this way:</b> click <b>Copy code</b>, then paste it into an email or a
+        Slack message to Bryan. That works everywhere.
+        <div class="small muted" style="margin-top:6px">
+          The <b>Email it to Bryan</b> button below only works if this device opens email in a
+          program like Outlook or Apple Mail. If you use Gmail or Outlook in a browser tab, the
+          button may do nothing at all — use <b>Copy code</b> instead.
+          Paste it as plain text, and send the whole block: it is checked on arrival and a code that
+          arrives cut short or altered will be rejected.
+        </div>
+      </div>
+
       <textarea class="codebox" id="code" readonly onclick="this.select()"></textarea>
       <div class="toolbar" style="margin:12px 0 0">
         <button class="btn" id="copyBtn" type="button">Copy code</button>
