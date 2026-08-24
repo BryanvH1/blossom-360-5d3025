@@ -40,18 +40,26 @@ tools/              the Python that generates everything
   profiles/               one module per role
   build_assessment.py     writes the workbooks
   gen_data.py             writes assets/data.js
+  build_importance_review.py  writes the review spreadsheet
 workbooks/          GENERATED .xlsx per person — untracked, rebuild any time
 ```
 
+The review spreadsheet is written to `blossom/DeveloperAssessment/` in iCloud rather than into the
+repo, since it gets opened and marked up away from a checkout.
+
 ## Keeping it in step with the workbooks
 
-`tools/assessment_content.py` is the single source of truth. Two scripts read it, and both run
-`validate()` first and refuse to write anything if it fails:
+`tools/assessment_content.py` is the single source of truth. Three scripts read it, and each runs
+`validate()` first and refuses to write anything if it fails:
 
 | Script | Writes | Run it from the repo root |
 |---|---|---|
 | `tools/gen_data.py` | `assets/data.js` (these pages) | `python3 tools/gen_data.py` |
 | `tools/build_assessment.py` | `workbooks/*.xlsx` (one per person) | `python3 tools/build_assessment.py [Name ...]` |
+| `tools/build_importance_review.py` | `ImportanceReview.xlsx` (for reviewing weights, metrics and the written questions) | `python3 tools/build_importance_review.py` |
+
+`build_importance_review.py` **overwrites its output in place**. Rename a marked-up copy before
+rebuilding, or the notes in it are gone.
 
 Edit the items, weights or metric library in `tools/profiles/` and run both. Do not hand-edit
 `data.js` or the workbooks, or the spreadsheet and the web pages will drift apart.
@@ -63,6 +71,15 @@ means a workbook someone has filled in with real scores can never be committed b
 ```
 B360_WORKBOOKS=~/Documents/360-workbooks python3 tools/build_assessment.py
 ```
+
+## Bump `?v=` when the item set changes
+
+`index.html` and `console.html` load their assets as `assets/data.js?v=3`. The version exists
+because a browser holding a cached `data.js` would render one item set against a scorer expecting
+another — a rater would fill in the wrong form and only find out when the console refused the code.
+
+**Raise the number in both HTML files whenever `data.js` or `core.js` changes shape.** Wording fixes
+do not need it; adding, removing or renumbering items does.
 
 ## The four lenses
 
