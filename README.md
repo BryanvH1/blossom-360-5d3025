@@ -1,6 +1,6 @@
-# Developer 360 — Blossom
+# Blossom 360
 
-Two static pages for running a 360 assessment on a developer moving toward lead developer.
+Two static pages for running 360 assessments across the roster — one profile per role.
 
 - **`index.html`** — the rater form. Thirty behaviours, 1–5 plus "Not observed", three written questions.
   On submit it produces a short response code the rater sends back. Nothing is transmitted anywhere.
@@ -29,11 +29,18 @@ between you rather than expecting the console to sync.
   the Excel workbook. When several items tie at the fifth slot the console says so, because which one
   makes the cut is then a judgement call rather than a result.
 
-## Keeping it in step with the workbook
+## Keeping it in step with the workbooks
 
-`assets/data.js` is **generated** from `build_assessment.py` (the script that builds
-`Developer_360_Assessment_v1.xlsx`). Edit the items, weights or metric library there and regenerate —
-do not hand-edit `data.js`, or the spreadsheet and the web pages will drift apart.
+`assessment_content.py` is the single source of truth. Two scripts read it:
+
+| Script | Writes | Run it |
+|---|---|---|
+| `gen_data.py` | `assets/data.js` (these pages) | `python3 gen_data.py` |
+| `build_assessment.py` | `workbooks/*.xlsx` (one per person) | `python3 build_assessment.py [Name ...]` |
+
+Edit the items, weights or metric library in the profile modules and run both. Do not hand-edit
+`data.js` or the workbooks, or the spreadsheet and the web pages will drift apart. Both scripts run
+`validate()` first and refuse to write anything if it fails.
 
 ## One assessment per role
 
@@ -41,13 +48,17 @@ Each role has its own **profile** — dimensions, behaviours, importance weights
 rater groups — as one module in `profiles/`. Choosing who is being evaluated swaps the questions and
 retitles both pages.
 
-| Person | Role | Profile | Raters |
+| Person | Role | Profile | Who rates them |
 |---|---|---|---|
-| Frans | Developer | `developer` | self · manager · peer |
-| Jeremy | Associate Developer | `developer-associate` | self · manager · peer |
-| Bryan | COO · Integrator | `coo-cfo-integrator` | self · manager · peer · direct report |
-| John | Chief Vision Officer / CEO | `ceo-visionary` | self · manager · peer · direct report |
-| Mark | Chief Growth Officer | `cgo` | self · manager · peer · direct report |
+| Frans | Developer | `developer` | John, Bryan, Mark (managers) · Jeremy (peer) |
+| Jeremy | Associate Developer | `developer-associate` | John, Bryan, Mark (managers) · Frans (peer) |
+| Bryan | COO · Integrator | `coo-cfo-integrator` | John (manager) · Mark (peer) · Frans, Jeremy (reports) |
+| John | Chief Vision Officer / CEO | `ceo-visionary` | Mark (peer) · Bryan, Frans, Jeremy (reports) |
+| Mark | Chief Growth Officer | `cgo` | John, Bryan (peers) · Frans, Jeremy (reports) |
+
+Everyone also rates themselves. Neither John nor Mark has a manager above them on the roster, so that
+group does not appear on their forms — `coverage_warnings()` prints a note about each, so an empty
+group is a decision you can see rather than a silent gap.
 
 The two leadership profiles are built on the EOS Visionary and Integrator seats, since that is how
 Blossom already runs.
@@ -80,6 +91,11 @@ rather than polite feedback from nobody.
 
 ## The spreadsheets are the fallback, not the primary
 
-`workbooks/` holds a generated .xlsx per role. They support **self, manager and peer only** — there are
-no direct-report columns, so the three leadership roles must be read in the web console. The workbook
-remains useful offline and for the individual-contributor roles.
+`workbooks/` holds a generated .xlsx per person, named for the role. Each one carries **one column per
+named rater** — self, managers, peers and direct reports, in that order — taken from
+`RELATIONSHIP_MAP`, so every seat gets exactly the raters it actually has rather than a fixed grid of
+"Peer 1…Peer 4". Group averages, the radar chart and the blind-spot ranking all size themselves to
+that column set.
+
+The workbooks compute the same numbers as the console, by the same tie-break rules, and are the
+offline route when the web pages are inconvenient.

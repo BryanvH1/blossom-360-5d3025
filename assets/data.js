@@ -57,8 +57,7 @@ window.B360_DATA = {
       "relationships": [
         "self",
         "manager",
-        "peer",
-        "report"
+        "peer"
       ],
       "dimensions": [
         {
@@ -2282,17 +2281,21 @@ window.B360_DATA = {
     },
     "Mark": {
       "John": "peer",
-      "Bryan": "peer"
+      "Bryan": "peer",
+      "Frans": "report",
+      "Jeremy": "report"
     },
     "Frans": {
       "John": "manager",
       "Bryan": "manager",
-      "Jeremy": "report"
+      "Mark": "manager",
+      "Jeremy": "peer"
     },
     "Jeremy": {
       "John": "manager",
       "Bryan": "manager",
-      "Frans": "manager"
+      "Mark": "manager",
+      "Frans": "peer"
     }
   },
   "contact": "bryan@blossom.ag"
