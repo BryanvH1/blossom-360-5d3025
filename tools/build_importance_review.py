@@ -32,7 +32,7 @@ from build_assessment import (F_TITLE, F_SUB, F_HDR, F_BODY, F_BOLD, F_SMALL, F_
 # Falls back to the repo's workbooks/ if that folder is not on this machine; override
 # either with B360_REVIEW_DIR.
 ICLOUD = os.path.expanduser("~/Library/Mobile Documents/com~apple~CloudDocs/MacDocuments/"
-                            "blossom/DeveloperAssessment")
+                            "blossom/Employees/DeveloperAssessment")
 REVIEW_DIR = os.environ.get("B360_REVIEW_DIR") or (
     ICLOUD if os.path.isdir(ICLOUD) else os.path.join(os.path.dirname(HERE), "workbooks"))
 OUT = os.path.join(REVIEW_DIR, "ImportanceReview.xlsx")
