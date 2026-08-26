@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#006838">
-<link rel="stylesheet" href="assets/styles.css?v=10">
+<link rel="stylesheet" href="assets/styles.css?v=11">
 </head>
 <body>
 <div class="wrap wide">
@@ -74,8 +74,8 @@
   <div id="v-prog" class="view hidden"></div>
 </div>
 
-<script src="assets/data.js?v=10"></script>
-<script src="assets/core.js?v=10"></script>
+<script src="assets/data.js?v=11"></script>
+<script src="assets/core.js?v=11"></script>
 <script>
 (function(){
   'use strict';
@@ -650,9 +650,10 @@
       });
     });
     $('v-metrics').innerHTML =
-      '<div class="note small">A quantifiable measure for all thirty-six behaviours, so whatever the assessment surfaces already has ' +
-      'one. Count events, never adjectives — “two items reopened” is checkable, “quality improved” is a debate. If a metric goes ' +
-      'three weeks unfilled, that is your answer about whether it was the right metric.</div>' +
+      '<div class="note small"><b>Reference only — nothing here is entered anywhere.</b> A concrete way of ' +
+      'thinking about each of the thirty-six behaviours, useful for framing the question at a one-to-one: ' +
+      '“has anyone had to ask you to explain your code this month?” is a good question and a bad ' +
+      'spreadsheet cell. Progress is measured by re-running the assessment, not by keeping a tally.</div>' +
       '<div class="scroll"><table><tr><th class="c">Code</th><th>Behaviour</th><th>Suggested quantifiable metric</th>' +
       '<th class="c">Target</th><th class="c">Cadence</th><th>How to capture it</th></tr>' + rows + '</table></div>';
   }

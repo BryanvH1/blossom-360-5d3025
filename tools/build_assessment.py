@@ -664,18 +664,18 @@ def build(person):
     # =====================================================================
     ws = wb.create_sheet("5 Development Plan")
     ws.sheet_view.showGridLines = False
-    for col, w in [("A", 3), ("B", 5), ("C", 7), ("D", 50), ("E", 9), ("F", 9), ("G", 9),
-                   ("H", 46), ("I", 20), ("J", 14), ("K", 16), ("L", 13), ("M", 16)]:
+    for col, w in [("A", 3), ("B", 5), ("C", 7), ("D", 46), ("E", 9), ("F", 9), ("G", 9),
+                   ("H", 42), ("I", 40), ("J", 22)]:
         ws.column_dimensions[col].width = w
 
     ws.cell(row=2, column=2, value="Development Plan — the five items").font = F_TITLE
     ws.cell(row=3, column=2, value=(
         f"Auto-selected by gap score from sheet 3. Nobody chose these; they fell out of the data. "
-        f"Fill the yellow cells with {name} in the room.")).font = F_SUB
+        f"Fill the yellow cells with {name} in the room — in words, not numbers.")).font = F_SUB
 
     HR = 5
-    heads = ["#", "Code", "Behaviour", "Self", "Others", "Gap", "Suggested metric", "Target",
-             "Baseline (today)", "90-day target", "Cadence", "Who counts it"]
+    heads = ["#", "Code", "Behaviour", "Self", "Others", "Gap", "Worth asking about",
+             "What we will see instead", "Who is watching"]
     for i, h in enumerate(heads, start=2):
         cell = ws.cell(row=HR, column=i, value=h); cell.font = F_HDR; cell.fill = FILL_HDR
         cell.alignment = Alignment(wrap_text=True, horizontal="center", vertical="center")
@@ -691,21 +691,17 @@ def build(person):
         for col, src in zip(range(3, 8), [L(C_CODE), L(C_BEHAV), SELF_L, OTH_L, GAP_L]):
             ws.cell(row=r, column=col,
                     value=f"=IFERROR(INDEX('3 Scores'!${src}${FIRST}:${src}${LAST},{m}),\"\")")
+        # the metric is a question to ask, not a figure to look up
         ws.cell(row=r, column=8,
                 value=f'=IFERROR(VLOOKUP($C{r},\'6 Metric Library\'!$A$4:$E${MET_LAST},3,FALSE),"")')
-        ws.cell(row=r, column=9,
-                value=f'=IFERROR(VLOOKUP($C{r},\'6 Metric Library\'!$A$4:$E${MET_LAST},4,FALSE),"")')
-        for col in (10, 11, 12, 13):
+        for col in (9, 10):
             cell = ws.cell(row=r, column=col)
-            cell.fill = FILL_IN; cell.border = BOX; cell.alignment = WRAP; cell.font = F_BODY
-        ws.cell(row=r, column=12,
-                value=f'=IFERROR(VLOOKUP($C{r},\'6 Metric Library\'!$A$4:$E${MET_LAST},5,FALSE),"")')
-        ws.cell(row=r, column=12).fill = FILL_IN
-        for col in range(2, 14):
+            cell.fill = FILL_IN; cell.border = BOX; cell.alignment = WRAPT; cell.font = F_BODY
+        for col in range(2, 11):
             cell = ws.cell(row=r, column=col); cell.border = BOX
             if cell.font is None or cell.font.name is None:
                 cell.font = F_BODY
-        for col in (4, 9, 10):
+        for col in (4, 8):
             ws.cell(row=r, column=col).alignment = WRAP
             ws.cell(row=r, column=col).font = F_BODY
         for col in (2, 3, 5, 6, 7):
@@ -721,23 +717,21 @@ def build(person):
      ("Five, not fifteen",
       "Anything past five stops being a plan and becomes a performance file. If a sixth matters more "
       "later, retire one."),
-     ("Baseline before target",
-      "Measure two to four weeks of the current reality before setting the target. A target set from a "
-      "guess gets argued about instead of hit."),
-     (f"{name} keeps the log",
-      f"{name} records the readings; whoever runs the check-in verifies them monthly. Ownership of the "
-      "measurement is itself part of the assessment — someone who won't track it is telling you "
-      "something."),
+     ("Describe it, do not count it",
+      "Nothing on this sheet is tallied. Write what you expect to SEE different — \"nobody has to ask "
+      "him to explain the payments module\" — and name who is placed to notice. If you cannot describe "
+      "what would look different, the item is not ready to work on."),
+     ("The score is the measurement",
+      f"Same {len(ITEMS)} items, same raters, re-run every two months. Whether the behaviour changed is "
+      "answered by whether the people around him score it differently — that is the outcome, not a "
+      "proxy for it."),
      ("Monthly, 30 minutes",
-      "Read the numbers, not the impressions. \"Three surprises last month, zero this month\" ends an "
-      "argument that \"communication is better\" cannot."),
-     ("Re-run the 360 at 90 and 180 days",
-      f"Same {len(ITEMS)} items, same raters. Movement in the scores is the outcome; movement in the "
-      "metrics is the leading indicator that gets you there."),
+      "Between rounds nothing is measured; these five are simply what the one-to-one is about. "
+      "\"Has anyone had to ask you to explain your code this month?\" is a good question and a bad "
+      "spreadsheet cell."),
      ("Name the bar before they start",
-      "Agree up front what result counts as done — e.g. all five items at target and no dimension "
-      "under 3.5 at the 180-day re-run. Naming it first is the difference between a development plan and "
-      "a moving goalpost."),
+      "Agree up front what result counts as done — e.g. no dimension under 3.5 at the six-month "
+      "re-run. Naming it first is the difference between a development plan and a moving goalpost."),
     ]
     for lbl, txt in notes:
         ws.cell(row=r, column=2, value=lbl).font = F_BOLD if txt else F_TITLE

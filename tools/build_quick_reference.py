@@ -293,8 +293,9 @@ def console_card():
         ["Development Plan", "The top five items by gap, each with its current score and room to "
                              "say what you expect to see instead, and who will notice.",
                              "The agenda for the monthly one-to-one. Nothing here is counted."],
-        ["Metric Library", "A proposed way to count every behaviour, not just the five.",
-                           "Swapping in a metric you will actually keep."],
+        ["Metric Library", "A concrete way of thinking about each of the 36 behaviours. Reference "
+                           "only - nothing here is entered anywhere.",
+                           "Framing the question at a one-to-one."],
         ["Progression", "Dimension scores at each snapshot, the trend chart, the six-month goal "
                         "and distance to it, and the monthly check-in log.",
                         "Re-run every two months, snapshot each time. Set the goal once."],
