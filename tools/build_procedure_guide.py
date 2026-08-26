@@ -436,8 +436,20 @@ def build():
                "<b>not</b> survive clearing your browsing data, and it does not follow you to "
                "another computer. A backup is the only copy that does."))
     F.append(P("What a backup contains", "h2"))
-    F.append(P("Every response, the development plan, the snapshots and the metric readings - "
-               "one JSON file, named by date, for example blossom-360-backup-2026-08-24.json."))
+    F.append(P("<b>Everything in your console</b> - every response for every person, the "
+               "development plans, the snapshots and the metric readings. One JSON file. It is "
+               "not one person's assessment, which matters when you decide what to call it and "
+               "who to send it to."))
+    F.append(P("What it is called", "h2"))
+    F.append(P("The console names the file itself:"))
+    F.append(Paragraph("<b>blossom-360_2026-08-26_1430_bryan.json</b>", S["body"]))
+    F.append(P("Date, then the time in 24-hour form, then whose console it came from. The first "
+               "time you export, it asks whose console this is and remembers the answer - the "
+               "line under the buttons shows it and lets you change it."))
+    F.append(P("Two exports can never collide, they sort oldest to newest in Drive, and the name "
+               "says who to ask about it. Do <b>not</b> add the name of the person being reviewed: "
+               "the file holds all five, and a file called \"frans\" invites someone to import it "
+               "thinking it only touches Frans.", "small"))
     F.append(P("Method A - Google Drive for Desktop (recommended)", "h2"))
     F.append(P("If Drive is installed on the Mac it appears as an ordinary folder, and this "
                "becomes a two-second habit."))
@@ -461,9 +473,8 @@ def build():
         "moment new data exists, which makes it the only moment a backup is worth taking. "
         "Keep the dated files rather than overwriting - they are tiny, and being able to go "
         "back to last month's state has saved people before."))
-    F.append(P("Exporting twice on the same day reuses the filename, so the second one arrives "
-               "as ...(1).json or quietly replaces the first, depending on the browser. If you "
-               "want both, rename one.", "small"))
+    F.append(P("Because the name carries the time, exporting twice in one day gives you two "
+               "files rather than a collision. Keep them both.", "small"))
 
     F.append(CondPageBreak(2.2 * inch))
 
@@ -474,8 +485,9 @@ def build():
                "is not lost as long as you have a backup."))
     F.append(steps_table([
      ("Get the file onto the machine",
-      "From Google Drive, download the most recent blossom-360-backup file. With Drive for "
-      "Desktop it is already there in the folder. Note where it is."),
+      "From Google Drive, download the newest blossom-360_ file - they sort oldest to newest, "
+      "so it is the one at the bottom. With Drive for Desktop it is already there in the "
+      "folder. Note where it is."),
      ("Open the console",
       "Go to %s in the browser you intend to use from now on." % CONSOLE_URL),
      ("Click Import backup",
@@ -499,8 +511,38 @@ def build():
                "whoever imports last has their own separate copy from that point on, so decide "
                "between you who is holding the live one."))
 
+    # ---------------------------------------------------------------- sharing
+    F.append(P("11. Sharing with John", "h1"))
+    F.append(P("Importing replaces; it never merges. There is no sync. That makes two people "
+               "entering codes at the same time the one thing that can quietly destroy work, so "
+               "the rule is simple:"))
+    F.append(callout(
+        "One live console at a time",
+        "Bryan holds it. Every code comes to Bryan and Bryan enters all of them. John imports a "
+        "copy whenever he wants to read results, and never exports. Nothing can be lost, and "
+        "neither of you has to coordinate."))
+    F.append(P("How John reads the results", "h2"))
+    F.extend(B([
+     "At the end of a session of entering codes, Bryan exports to the shared Drive folder.",
+     "John downloads the newest file - they sort by date and time - and clicks Import backup.",
+     "John reads. He does not enter codes, and he does not export.",
+    ]))
+    F.append(P("Why it has to work that way", "h2"))
+    F.append(P("Suppose both consoles are live. John exports at nine and Bryan imports it. Bryan "
+               "enters three of Frans's codes at ten. Meanwhile John, not knowing, enters two of "
+               "Mark's. Bryan exports at eleven and John imports it - and John's two codes are "
+               "gone. Nothing warns either of them, and the only evidence is a rater who "
+               "eventually asks why their scores are missing."))
+    F.append(P("If John does need to enter codes", "h2"))
+    F.append(P("Pass the baton and say so out loud. He tells you he is taking it, imports the "
+               "newest file, enters what he has, exports, and tells you he is done. You import "
+               "that before you touch anything. The rule is not the file name - it is that only "
+               "one console is being written to at any moment."))
+    F.append(P("Set the sharing on the Drive folder to just the two of you. It holds real scores "
+               "and written comments about real people.", "small"))
+
     # ---------------------------------------------------------------- troubleshooting
-    F.append(P("11. If something goes wrong", "h1"))
+    F.append(P("12. If something goes wrong", "h1"))
     F.append(table([
         ["Symptom", "What it means and what to do"],
         ["The console is empty",
@@ -524,13 +566,17 @@ def build():
          "Same person, rater and date replaces the earlier one. A different date is kept as a "
          "second response and both get averaged in - remove the stale one with the Remove "
          "button on the rater coverage list."],
+        ["John's entries vanished",
+         "Both consoles were being written to at once and one import overwrote the other. "
+         "Section 11 - one live console at a time. Recover from the newest export that still "
+         "has them, if there is one."],
         ["The scores look too generous",
          "Almost always the scale drifting. Re-read the two notes in Section 4 to the group "
          "before the next round; most scores should be 3s and 4s."],
     ], [1.9 * inch, 5.0 * inch]))
 
     # ---------------------------------------------------------------- ground rules
-    F.append(P("12. The ground rules", "h1"))
+    F.append(P("13. The ground rules", "h1"))
     F.extend(B([
      "<b>This is not anonymous, and everyone knows it.</b> Every response carries the rater's "
      "name. That is Blossom's choice: candid feedback attached to a name beats polite feedback "

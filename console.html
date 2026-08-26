@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#006838">
-<link rel="stylesheet" href="assets/styles.css?v=3">
+<link rel="stylesheet" href="assets/styles.css?v=4">
 </head>
 <body>
 <div class="wrap wide">
@@ -33,6 +33,7 @@
       <button class="btn ghost sm" id="exportBtn" type="button">Export backup</button>
       <button class="btn ghost sm" id="importBtn" type="button">Import backup</button>
     </div>
+    <div class="small muted" id="holderLine" style="margin-top:6px"></div>
     <div id="coverage"></div>
     <div id="addPanel" class="hidden" style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px">
       <label for="paste">Paste one or more response codes (one per line)</label>
@@ -73,12 +74,15 @@
   <div id="v-prog" class="view hidden"></div>
 </div>
 
-<script src="assets/data.js?v=3"></script>
-<script src="assets/core.js?v=3"></script>
+<script src="assets/data.js?v=4"></script>
+<script src="assets/core.js?v=4"></script>
 <script>
 (function(){
   'use strict';
   var D = window.B360_DATA, B = window.B360, KEY = 'b360.console.v1';
+  /* Whose console this is. Deliberately NOT part of the exported store: importing a
+     backup should never rename the machine you imported it onto. */
+  var HOLDER_KEY = 'b360.console.holder';
   var $ = function(id){ return document.getElementById(id); };
   var esc = function(s){ var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; };
 
@@ -142,11 +146,40 @@
   });
   function msg(t, bad){ $('addMsg').innerHTML = '<span style="color:' + (bad ? 'var(--red)' : 'var(--green)') + '">' + esc(t) + '</span>'; }
 
+  function getHolder(){ try { return localStorage.getItem(HOLDER_KEY) || ''; } catch(e){ return ''; } }
+  function setHolder(v){ try { localStorage.setItem(HOLDER_KEY, v); } catch(e){} renderHolder(); }
+  function slug(v){ return String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+  function askHolder(){
+    var v = (prompt('Whose console is this? Your first name goes in the backup filename, so ' +
+                    'whoever opens it can see where it came from.', getHolder()) || '').trim();
+    if (v) setHolder(v);
+    return getHolder();
+  }
+  function renderHolder(){
+    var h = getHolder();
+    $('holderLine').innerHTML = h
+      ? 'This console belongs to <b>' + esc(h) + '</b> — backups are named for you. ' +
+        '<a href="#" id="holderEdit">change</a>'
+      : '<a href="#" id="holderEdit">Set whose console this is</a> so backups say where they came from.';
+    var e = $('holderEdit');
+    if (e) e.addEventListener('click', function(ev){ ev.preventDefault(); askHolder(); });
+  }
+  renderHolder();
+
+  function stamp(){
+    /* Local time, not UTC — a backup taken at 4pm should not be filed under the next day. */
+    var d = new Date(), p = function(n){ return (n < 10 ? '0' : '') + n; };
+    return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) +
+           '_' + p(d.getHours()) + p(d.getMinutes());
+  }
+
   $('exportBtn').addEventListener('click', function(){
+    var who = getHolder() || askHolder();
     var blob = new Blob([JSON.stringify(store, null, 2)], {type:'application/json'});
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'blossom-360-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    /* Date, time and holder: never collides, sorts newest last, and says who to ask. */
+    a.download = 'blossom-360_' + stamp() + (who ? '_' + slug(who) : '') + '.json';
     a.click(); URL.revokeObjectURL(a.href);
   });
   $('importBtn').addEventListener('click', function(){ $('fileIn').click(); });
@@ -157,7 +190,10 @@
       try {
         var j = JSON.parse(fr.result);
         if (!j.responses) throw new Error('That file does not look like a Blossom 360 backup.');
-        if (!confirm('Replace everything currently in this browser with the contents of ' + f.name + '?')) return;
+        var n = (j.responses || []).length;
+        if (!confirm('Replace everything currently in this browser with the ' + n +
+                     ' response(s) in ' + f.name + '?\n\nThis cannot be undone. Anything ' +
+                     'entered here and not in that file will be lost.')) return;
         store = { responses: j.responses||[], plan: j.plan||{}, snapshots: j.snapshots||[], readings: j.readings||{} };
         save(); render();
       } catch(e){ alert('Could not import: ' + e.message); }
