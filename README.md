@@ -81,14 +81,16 @@ means a workbook someone has filled in with real scores can never be committed b
 B360_WORKBOOKS=~/Documents/360-workbooks python3 tools/build_assessment.py
 ```
 
-## Bump `?v=` when the item set changes
+## Bump `?v=` whenever the pages change
 
-`index.html` and `console.html` load their assets as `assets/data.js?v=3`. The version exists
-because a browser holding a cached `data.js` would render one item set against a scorer expecting
-another — a rater would fill in the wrong form and only find out when the console refused the code.
+`index.html` and `console.html` load their assets with a version query — `assets/data.js?v=N`.
+Without it a browser can serve a cached `data.js` or `core.js` against freshly deployed HTML: a
+rater fills in a form that no longer matches, and finds out only when the console refuses the code.
 
-**Raise the number in both HTML files whenever `data.js` or `core.js` changes shape.** Wording fixes
-do not need it; adding, removing or renumbering items does.
+**Raise the number in both HTML files together, whenever `data.js`, `core.js` or the console's
+behaviour changes.** In practice that has meant every deploy that was not purely cosmetic — items
+added or renumbered, question wording, the rater matrix, the export filename. It costs nothing to
+bump and it is the one mistake here whose symptom appears on someone else's screen, days later.
 
 ## The four lenses
 
