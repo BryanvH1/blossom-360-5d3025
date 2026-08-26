@@ -290,13 +290,14 @@ def console_card():
         ["Results", "The four lenses, then dimension scores by rater group, the radar chart and "
                     "the five biggest blind spots.",
                     "The headline read. Start here."],
-        ["Development Plan", "The top five items by gap, with a suggested metric. Baseline, "
-                             "90-day target, cadence and owner are editable.",
-                             "Fill in with the person in the room. Saves as you type."],
+        ["Development Plan", "The top five items by gap, each with its current score and room to "
+                             "say what you expect to see instead, and who will notice.",
+                             "The agenda for the monthly one-to-one. Nothing here is counted."],
         ["Metric Library", "A proposed way to count every behaviour, not just the five.",
                            "Swapping in a metric you will actually keep."],
-        ["Progression", "Snapshots over time, the trend chart, and the metric readings table.",
-                        "Save a snapshot each round. Two points is an anecdote."],
+        ["Progression", "Dimension scores at each snapshot, the trend chart, the six-month goal "
+                        "and distance to it, and the monthly check-in log.",
+                        "Re-run every two months, snapshot each time. Set the goal once."],
     ], [1.15 * inch, 3.15 * inch, 2.6 * inch], zebra=True))
 
     F.append(P("Entering codes", "h"))
@@ -394,47 +395,41 @@ def console_card():
     F.append(CondPageBreak(3.4 * inch))
 
     F.append(P("What you type in, and where it comes from", "h"))
-    F.append(P("Two pages have cells you fill in yourself. Everything else is calculated."))
+    F.append(P("Nothing is counted between rounds. The measurement is the assessment itself, "
+               "re-run every two months; what you type is the agreement about what should change "
+               "and the record of talking about it."))
     F.append(table([
         ["Page", "Column", "What goes in it, and how to arrive at it"],
-        ["Development Plan", "Baseline (today)",
-         "The current reading of the <b>suggested metric</b> - a count of real events in that "
-         "metric's own units (\"4 last month\"), <b>not</b> a 1-5 score and not the Others "
-         "average. Measured, not estimated: count the real thing for two to four weeks first. "
-         "A baseline set from a guess gets argued about instead of hit."],
-        ["", "90-day target",
-         "What that same number should read in 90 days. Same unit as the baseline. Stretching but "
-         "reachable - if it cannot move that far in a quarter, it is the wrong metric or the "
-         "wrong target."],
-        ["", "Cadence",
-         "How often it gets counted - weekly or monthly. Pre-filled from the Metric Library; "
-         "change it if you will realistically count it less often."],
-        ["", "Who counts it",
-         "A named person, not a team. Usually the person being reviewed keeps the log and someone "
-         "else verifies at the monthly check-in. Ownership of the measurement is itself part of "
-         "the assessment."],
-        ["Progression", "Baseline",
-         "<b>Filled in for you</b> from the Development Plan, along with Target - they are the "
-         "same figures, so they are shown here rather than typed twice. Change them on the "
-         "Development Plan and they update here."],
-        ["", "Month 1 to Month 6",
-         "The actual reading taken that month, in the same unit every time. Leave it blank until "
-         "you have taken it - a blank is honest, a back-filled guess is not."],
-    ], [1.25 * inch, 1.15 * inch, 4.5 * inch], zebra=True))
+        ["Development Plan", "Score now",
+         "<b>Filled in for you</b> - the Others average for that behaviour today. This is the "
+         "number that has to move."],
+        ["", "What we will see instead",
+         "In words, the observable difference. Not a number and not a target: <i>\"Jeremy stops "
+         "having to ask him to explain the payments module\"</i>. If you cannot describe what "
+         "would look different, the item is not ready to work on."],
+        ["", "Who is watching",
+         "A named person who is placed to notice - usually whoever raised it. They are not "
+         "keeping a log, they are the one who will say whether it changed."],
+        ["Progression", "6-month goal",
+         "The score you want that <b>dimension</b> to reach. Per dimension and overall, not per "
+         "behaviour: one rater changing their mind on one item moves that item by 0.25 but its "
+         "dimension by 0.04, so an item-level goal would mostly track noise. Distance to it is "
+         "worked out for you."],
+        ["", "Monthly check-ins",
+         "Date and a line on what you discussed. The 360 runs every two months; the plan gets "
+         "talked about every month, and this is the trail of it."],
+    ], [1.25 * inch, 1.3 * inch, 4.35 * inch], zebra=True))
 
     F.append(Spacer(1, 5))
     F.append(box("Yes - everything you type is saved and comes back",
                  "Both pages save to this browser as you type, and <b>Export backup includes all "
-                 "of it</b>: baselines, targets, cadences, owners, every monthly reading and every "
+                 "of it</b>: the plan text, the six-month goals, every check-in note and every "
                  "saved snapshot. Import puts it all back.",
-                 "Baseline and Target on the Progression page are the exception: they are not "
-                 "typed there at all, they mirror the Development Plan. One figure, one place to "
-                 "change it, no chance of the two pages disagreeing.",
-                 "The values are filed under the <b>behaviour code</b>, not the row position. So "
-                 "when a new round changes which five behaviours are top, your figures stay "
-                 "attached to the behaviour they were about. One consequence worth knowing: if a "
-                 "behaviour drops out of the top five its numbers are kept but stop being shown, "
-                 "and if it returns later they reappear.",
+                 "Plan entries are filed under the <b>behaviour code</b>, not the row position, so "
+                 "when a new round changes which five behaviours are top your notes stay attached "
+                 "to the behaviour they were about. One consequence: if a behaviour drops out of "
+                 "the top five its notes are kept but stop being shown, and reappear if it "
+                 "returns.",
                  tone="green"))
 
     F.append(Spacer(1, 5))

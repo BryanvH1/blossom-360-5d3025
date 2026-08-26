@@ -429,19 +429,26 @@ def build():
       "Lead with what should not change. Then the blind spots, framed as a disagreement about "
       "reality rather than a verdict. The person should leave knowing the five things on the "
       "plan and why those five."),
-     ("Set baselines and targets",
-      "For each of the five development items, agree what it is today and what it should be "
-      "in 90 days. The Metric Library proposes a way to count each one. A metric nobody will "
-      "actually keep is worse than none - swap it for one you will."),
-     ("Log the readings monthly",
-      "On the Progression tab, enter each month's reading as you take it. Baseline and Target "
-      "are filled in from the Development Plan - you do not retype them."),
+     ("Describe the change, do not count it",
+      "For each of the five items, agree in words what you expect to SEE different, and who "
+      "will notice it. Nothing here is tallied. The Metric Library stays as a source of good "
+      "questions to ask, not a log to keep."),
+     ("Set the six-month goal",
+      "On the Progression tab, put the score you want each dimension to reach in six months, "
+      "and one for the overall. Goals sit at dimension level, not per behaviour: one rater "
+      "changing their mind on one item moves that item by 0.25 but its dimension by 0.04, so "
+      "an item-level target would mostly measure noise."),
      ("Save a snapshot",
-      "On the Progression tab, save a snapshot labelled with the date. That is the baseline "
-      "the next round is compared against."),
-     ("Re-run at 90 and 180 days",
-      "Same behaviours, same raters. Two points is an anecdote; the line is the evidence - "
-      "for the person, and for any promotion decision."),
+      "On the Progression tab, label it and save. That is the point the next round is "
+      "compared against."),
+     ("Talk about the plan monthly",
+      "Between rounds nothing is measured - the five items are simply what the one-to-one is "
+      "about. Record what you discussed in the Monthly check-ins log, so the trail exists when "
+      "you later ask what changed and when."),
+     ("Re-run every two months",
+      "Same behaviours, same raters, snapshot each time - four readings across six months. Not "
+      "monthly: raters remember what they gave three weeks ago and anchor to it, and a month of "
+      "real movement is smaller than the noise around it."),
     ]))
 
     F.append(CondPageBreak(2.2 * inch))

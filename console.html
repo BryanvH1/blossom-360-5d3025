@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#006838">
-<link rel="stylesheet" href="assets/styles.css?v=9">
+<link rel="stylesheet" href="assets/styles.css?v=10">
 </head>
 <body>
 <div class="wrap wide">
@@ -74,8 +74,8 @@
   <div id="v-prog" class="view hidden"></div>
 </div>
 
-<script src="assets/data.js?v=9"></script>
-<script src="assets/core.js?v=9"></script>
+<script src="assets/data.js?v=10"></script>
+<script src="assets/core.js?v=10"></script>
 <script>
 (function(){
   'use strict';
@@ -90,9 +90,13 @@
   function load(){
     try {
       var j = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if (j && j.responses) { j.plan = j.plan || {}; j.snapshots = j.snapshots || []; j.readings = j.readings || {}; return j; }
+      if (j && j.responses) {
+        j.plan = j.plan || {}; j.snapshots = j.snapshots || []; j.readings = j.readings || {};
+        j.targets = j.targets || {}; j.checkins = j.checkins || {};
+        return j;
+      }
     } catch(e){}
-    return { responses: [], plan: {}, snapshots: [], readings: {} };
+    return { responses: [], plan: {}, snapshots: [], readings: {}, targets: {}, checkins: {} };
   }
   function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){ alert('Could not save to this browser: ' + e.message); } }
 
@@ -194,7 +198,8 @@
         if (!confirm('Replace everything currently in this browser with the ' + n +
                      ' response(s) in ' + f.name + '?\n\nThis cannot be undone. Anything ' +
                      'entered here and not in that file will be lost.')) return;
-        store = { responses: j.responses||[], plan: j.plan||{}, snapshots: j.snapshots||[], readings: j.readings||{} };
+        store = { responses: j.responses||[], plan: j.plan||{}, snapshots: j.snapshots||[],
+                  readings: j.readings||{}, targets: j.targets||{}, checkins: j.checkins||{} };
         save(); render();
       } catch(e){ alert('Could not import: ' + e.message); }
     };
@@ -523,7 +528,10 @@
   }
 
   /* ---------- 3. DEVELOPMENT PLAN ---------- */
-  var PLAN_FIELDS = [['baseline','Baseline (today)'],['target','90-day target'],['cadence','Cadence'],['owner','Who counts it']];
+  /* The plan is the agenda for the monthly conversation, not a spreadsheet. The number that
+     gets committed to lives on Progression at dimension level, where it is steady enough to
+     mean something — one rater nudging one item moves that item by 0.25. */
+  var PLAN_FIELDS = [['change','What we will see instead'],['owner','Who is watching']];
   function renderPlan(m){
     if (!m){ $('v-plan').innerHTML = ''; return; }
     store.plan[person] = store.plan[person] || {};
@@ -536,10 +544,12 @@
         '<td><b>' + esc(r.text) + '</b><div class="small muted" style="margin-top:3px">Self ' + B.fmt(r.self) +
           ' · Others ' + B.fmt(r.others) + ' · Blind spot ' + B.signed(r.blind) + ' · Gap ' + B.fmt(r.gap) + '</div></td>' +
         '<td class="small">' + esc(met.metric || '') + '</td>' +
-        '<td class="c small">' + esc(met.target || '') + '</td>' +
+        td(B.fmt(r.others), B.band(r.others)) +
         PLAN_FIELDS.map(function(f){
-          var v = saved[f[0]] !== undefined ? saved[f[0]] : (f[0]==='cadence' ? (met.cadence||'') : '');
-          return '<td><input type="text" data-plan="' + r.code + '" data-f="' + f[0] + '" value="' + esc(v) + '" style="font-size:12.5px;padding:5px 7px"></td>';
+          var v = saved[f[0]] !== undefined ? saved[f[0]] : '';
+          return '<td><input type="text" data-plan="' + r.code + '" data-f="' + f[0] + '" value="' +
+                 esc(v) + '" placeholder="' + (f[0]==='change' ? 'e.g. Jeremy stops having to ask him to explain it' : '') +
+                 '" style="font-size:12.5px;padding:5px 7px;min-width:200px"></td>';
         }).join('') +
       '</tr>';
     }).join('');
@@ -554,14 +564,14 @@
         'Ties are normal with a handful of raters and whole-number scores.</div>';
     }
     $('v-plan').innerHTML =
-      '<div class="note small">These five were selected by gap score — nobody picked them. Fill the editable cells with ' +
-      esc(person) + ' in the room; they save to this browser as you type. ' +
-      '<b>Baseline and target are readings of the suggested metric</b> — counts of real events in ' +
-      'that metric\'s own units (“4 last month”, “2 per week”), not 1–5 scores. The 1–5 averages ' +
-      'are shown under each behaviour for context; the 360 score itself is tracked separately, by ' +
-      'saving a snapshot on the Progression tab each round.</div>' + tieNote +
-      '<div class="scroll"><table><tr><th class="c">#</th><th class="c">Code</th><th>Behaviour</th><th>Suggested metric</th>' +
-      '<th class="c">Suggested target</th>' + PLAN_FIELDS.map(function(f){ return '<th>' + f[1] + '</th>'; }).join('') + '</tr>' +
+      '<div class="note small">These five were selected by gap score — nobody picked them. ' +
+      'This is the <b>agenda for your monthly one-to-one</b>, not a spreadsheet: describe the ' +
+      'change you expect to see in words, and who will notice it. Nothing here is counted. ' +
+      'The number you commit to lives on <b>Progression</b>, at dimension level, where a single ' +
+      'rater changing their mind cannot swing it. Saves as you type.</div>' + tieNote +
+      '<div class="scroll"><table><tr><th class="c">#</th><th class="c">Code</th><th>Behaviour</th>' +
+      '<th>Worth asking about</th><th class="c">Score now</th>' +
+      PLAN_FIELDS.map(function(f){ return '<th>' + f[1] + '</th>'; }).join('') + '</tr>' +
       rows + '</table></div>' +
       '<div class="card" style="margin-top:18px"><h2>Rules that make this work</h2>' +
       [['Five, not fifteen','Anything past five stops being a plan and becomes a performance file. If a sixth matters more later, retire one.'],
@@ -581,24 +591,45 @@
       store.plan[person] = store.plan[person] || {};
       store.plan[person][el.dataset.plan] = store.plan[person][el.dataset.plan] || {};
       store.plan[person][el.dataset.plan][el.dataset.f] = el.value;
+      save(); return;
+    }
+    var g = e.target.closest('[data-goal]');
+    if (g){
+      store.targets[person] = store.targets[person] || {};
+      store.targets[person][g.dataset.goal] = g.value;
       save();
-      /* showTab() only toggles visibility — the Progression view is rendered once, so its
-         mirrored cells have to be updated here or they sit stale until the next render(). */
-      var mirror = el.dataset.f === 'baseline' ? 'basefor'
-                 : el.dataset.f === 'target' ? 'targetfor' : null;
-      if (mirror){
-        var cell = document.querySelector('[data-' + mirror + '="' + el.dataset.plan + '"]');
-        if (cell) cell.textContent = el.value || (mirror === 'basefor' ? '—' : '');
+      /* showTab() only toggles visibility, so the distance cell next to it has to be
+         recomputed here rather than waiting for the next render(). */
+      var snaps = store.snapshots.filter(function(x){ return x.person === person; });
+      var last = snaps[snaps.length - 1];
+      var now = !last ? null : (g.dataset.goal === 'overall' ? last.overall : last.dims[g.dataset.goal]);
+      var cell = document.querySelector('[data-togo="' + g.dataset.goal + '"]');
+      if (cell){
+        var t = parseFloat(g.value);
+        cell.textContent = (isNaN(t) || now === null || now === undefined) ? ''
+                         : (t - now <= 0 ? 'met' : '+' + (t - now).toFixed(2) + ' to go');
       }
+    }
+  });
+
+  /* ---------- monthly check-ins ---------- */
+  document.addEventListener('click', function(e){
+    if (!e.target || e.target.nodeType !== 1) return;
+    if (e.target.id === 'ciAdd'){
+      var d = ($('ciDate').value || '').trim(), n = ($('ciNote').value || '').trim();
+      if (!d || !n){ alert('A check-in needs both a date and a note.'); return; }
+      store.checkins[person] = store.checkins[person] || [];
+      store.checkins[person].push({ date: d, note: n });
+      save(); render(); tab = 'prog'; showTab();
       return;
     }
-    if (!e.target || e.target.nodeType !== 1) return;
-    var rd = e.target.closest('[data-read]');
-    if (rd){
-      store.readings[person] = store.readings[person] || {};
-      store.readings[person][rd.dataset.read] = store.readings[person][rd.dataset.read] || {};
-      store.readings[person][rd.dataset.read][rd.dataset.m] = rd.value;
-      save();
+    var del = e.target.closest('[data-cidel]');
+    if (del){
+      var key = del.dataset.cidel;
+      if (!confirm('Remove this check-in note?')) return;
+      store.checkins[person] = (store.checkins[person] || []).filter(function(c){
+        return (c.date + '|' + c.note) !== key; });
+      save(); render(); tab = 'prog'; showTab();
     }
   });
 
@@ -631,7 +662,8 @@
     var snaps = store.snapshots.filter(function(s){ return s.person === person; });
     var head = '<div class="card"><div class="toolbar" style="margin:0">' +
       '<div class="grow"><h2 style="margin:0">Progression</h2>' +
-      '<span class="small muted">Save a snapshot each time you re-run the 360. Two points is an anecdote; the line is the evidence.</span></div>' +
+      '<span class="small muted">Re-run the 360 every two months and save a snapshot each time. ' +
+      'Set the six-month goal once, in the column on the right.</span></div>' +
       '<input type="text" id="snapLabel" placeholder="Label, e.g. Baseline" style="width:190px">' +
       '<button class="btn sm" id="snapBtn" type="button"' + (m ? '' : ' disabled') + '>Save snapshot</button></div></div>';
 
@@ -639,15 +671,29 @@
     if (snaps.length){
       var cols = snaps.map(function(s){ return '<th class="c">' + esc(s.label) + '<br><span style="font-weight:400;opacity:.8">' + esc(s.date) + '</span></th>'; }).join('');
       var pdims = (B.profileFor(person)||{dimensions:[]}).dimensions;
+      var goals = store.targets[person] = store.targets[person] || {};
+      var last = snaps[snaps.length - 1];
+      /* how far the latest snapshot still is from the goal — the only number worth reading
+         between rounds, and the reason the goal sits at dimension level rather than per item */
+      function goalCell(key, now){
+        var g = goals[key] === undefined ? '' : goals[key];
+        var toGo = (g !== '' && now !== null && now !== undefined && !isNaN(parseFloat(g)))
+          ? (parseFloat(g) - now) : null;
+        return '<td><input type="text" data-goal="' + key + '" value="' + esc(g) +
+               '" placeholder="—" style="width:62px;font-size:12.5px;padding:5px 6px;text-align:center"></td>' +
+               '<td class="c small muted" data-togo="' + key + '">' +
+               (toGo === null ? '' : (toGo <= 0 ? 'met' : '+' + toGo.toFixed(2) + ' to go')) + '</td>';
+      }
       var body = pdims.map(function(d){
         return '<tr><td>' + esc(d.name) + '</td>' + snaps.map(function(s){
           var v = s.dims[d.code]; return td(B.fmt(v), B.band(v));
-        }).join('') + '</tr>';
+        }).join('') + goalCell(d.code, last.dims[d.code]) + '</tr>';
       }).join('') +
       '<tr style="font-weight:700;background:var(--line-soft)"><td>Overall</td>' +
-        snaps.map(function(s){ return td(B.fmt(s.overall), B.band(s.overall)); }).join('') + '</tr>';
+        snaps.map(function(s){ return td(B.fmt(s.overall), B.band(s.overall)); }).join('') +
+        goalCell('overall', last.overall) + '</tr>';
       table = '<div class="card"><div class="scroll" style="max-height:none"><table><tr><th>Dimension (others’ average)</th>' + cols +
-              '<th></th></tr>' + body + '</table></div>' +
+              '<th class="c">6-month goal</th><th class="c">Distance</th></tr>' + body + '</table></div>' +
               '<div class="toolbar" style="margin:12px 0 0">' + snaps.map(function(s,i){
                 return '<button class="btn ghost sm" data-snapdel="' + i + '">Delete “' + esc(s.label) + '”</button>'; }).join('') + '</div></div>';
       chart = '<div class="card">' + lineChart(snaps) + '</div>';
@@ -655,38 +701,27 @@
       table = '<div class="note warn">No snapshots yet' + (m ? ' — give it a label and click <b>Save snapshot</b> to record today’s scores as the baseline.' : '. Add responses first.') + '</div>';
     }
 
-    /* metric readings grid */
-    var readings = '';
-    if (m && m.top5.length){
-      store.readings[person] = store.readings[person] || {};
-      var months = ['Baseline','Month 1','Month 2','Month 3','Month 4','Month 5','Month 6'];
-      readings = '<div class="card"><h2>Metric readings — the five development items</h2>' +
-        '<p class="sub">Log each reading as you take it. Saves to this browser.</p><div class="scroll" style="max-height:none"><table>' +
-        '<tr><th>Item / metric</th>' + months.map(function(x){ return '<th class="c">' + x + '</th>'; }).join('') + '<th class="c">Target</th></tr>' +
-        m.top5.map(function(r){
-          var met = m.profile.metrics[r.code] || {}, saved = (store.readings[person]||{})[r.code] || {};
-          var plan = (store.plan[person]||{})[r.code] || {};
-          /* Baseline is the same number as the Development Plan's, so it is mirrored rather
-             than typed twice — two boxes for one figure is two figures waiting to disagree.
-             Falls back to any Baseline typed here before this was mirrored. */
-          var base = plan.baseline || saved['Baseline'] || '';
-          return '<tr><td style="min-width:280px"><b>' + r.code + '</b> — <span class="small">' + esc(met.metric||'') + '</span></td>' +
-            months.map(function(mo){
-              if (mo === 'Baseline'){
-                return '<td class="c small" data-basefor="' + r.code + '" title="Set on the ' +
-                       'Development Plan" style="background:var(--line-soft);color:var(--muted)">' +
-                       (esc(base) || '—') + '</td>';
-              }
-              return '<td><input type="text" data-read="' + r.code + '" data-m="' + esc(mo) + '" value="' +
-                     esc(saved[mo]||'') + '" style="width:82px;font-size:12.5px;padding:5px 6px;text-align:center"></td>';
-            }).join('') +
-            '<td class="c small" data-targetfor="' + r.code + '">' +
-            esc(plan.target || met.target || '') + '</td></tr>';
-        }).join('') + '</table>' +
-        '<p class="small muted" style="margin:10px 0 0">Baseline and Target are taken from the ' +
-        'Development Plan — edit them there and they update here. Log each monthly reading as you ' +
-        'take it; leave a month blank until you have.</p></div></div>';
-    }
+    /* Monthly check-in log. Replaces the metric readings grid: between rounds nothing is
+       counted, the five plan items are talked about, and this is where that gets recorded. */
+    store.checkins[person] = store.checkins[person] || [];
+    var logs = store.checkins[person];
+    var readings = '<div class="card"><h2>Monthly check-ins</h2>' +
+      '<p class="sub">The 360 runs every two months; the plan gets discussed every month. ' +
+      'Note what you talked about — nothing here is scored, it is the record of the conversation.</p>' +
+      '<div class="toolbar" style="margin:0 0 12px">' +
+      '<input type="date" id="ciDate" style="width:170px">' +
+      '<input type="text" id="ciNote" placeholder="What did you discuss? What changed?" class="grow">' +
+      '<button class="btn sm" id="ciAdd" type="button">Add</button></div>' +
+      (logs.length
+        ? '<div class="scroll" style="max-height:none"><table><tr><th style="width:120px">Date</th>' +
+          '<th>Notes</th><th style="width:90px"></th></tr>' +
+          logs.slice().sort(function(a,b){ return a.date < b.date ? 1 : -1; }).map(function(c){
+            return '<tr><td class="small muted">' + esc(c.date) + '</td><td>' + esc(c.note) + '</td>' +
+              '<td class="right"><button class="btn ghost sm" data-cidel="' + esc(c.date + '|' + c.note) +
+              '">Remove</button></td></tr>';
+          }).join('') + '</table></div>'
+        : '<div class="note small">No check-ins recorded yet.</div>') +
+      '</div>';
 
     $('v-prog').innerHTML = head + chart + table + readings;
 

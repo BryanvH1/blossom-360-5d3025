@@ -227,14 +227,14 @@ def build(person):
       f"Sheet '4 Results' gives the {len(DIMENSIONS)} dimension scores by rater group, the radar chart, and "
       "the blind spots. Sheet '5 Development Plan' auto-fills the top five items with a suggested metric "
       "for each."),
-     ("Step 5 — set the metrics",
-      "For each of the five items, agree a baseline (what it is today) and a 90-day target. Sheet "
-      f"'6 Metric Library' proposes a quantifiable measure for all {len(ITEMS)} behaviours, so whatever "
-      "surfaces already has one. Most are a weekly or monthly tally — five minutes a week. Anything "
-      "nobody will actually count is not a metric; swap it for one you will."),
+     ("Step 5 — set the goal",
+      "Agree what each dimension should score six months out, and write it on sheet '7 Progression'. "
+      f"Sheet '6 Metric Library' proposes a way to think about all {len(ITEMS)} behaviours — treat it as "
+      "a source of questions for the conversation rather than a log to keep. A measure nobody will "
+      "actually maintain is worse than none."),
      ("Step 6 — track it",
-      "Log the readings on sheet '7 Progression' and re-run the full 360 at 90 and 180 days. Two data points "
-      "is an anecdote; the trend line is the evidence."),
+      "Re-run the full 360 every two months and record the dimension scores on sheet '7 Progression'. "
+      "Two data points is an anecdote; the trend line is the evidence."),
      ("Who scores",
       f"Self ({name}) · {rater_line}. These come from the roster, not from the raters — nobody picks "
       "their own relationship, because a rater who is a peer one round and a report the next breaks the "
@@ -807,11 +807,11 @@ def build(person):
 
     ws.cell(row=2, column=2, value="Progression").font = F_TITLE
     ws.cell(row=3, column=2, value=(
-        "Re-run the 360 at 90 and 180 days and record the dimension scores here. Log the five metric "
-        "readings below that. Two points is an anecdote — the line is the evidence.")).font = F_SUB
+        "Re-run the 360 every two months and record the dimension scores here. Two points is an "
+        "anecdote — the line is the evidence.")).font = F_SUB
 
     HR = 5
-    cols = ["Baseline", "+90 days", "+180 days", "+270 days", "+1 year"]
+    cols = ["Baseline", "+2 months", "+4 months", "+6 months", "+1 year"]
     ws.cell(row=HR, column=2, value="Others' average by dimension").font = F_HDR
     ws.cell(row=HR, column=2).fill = FILL_HDR
     for i, cn in enumerate(cols, start=3):
