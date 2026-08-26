@@ -398,9 +398,10 @@ def console_card():
     F.append(table([
         ["Page", "Column", "What goes in it, and how to arrive at it"],
         ["Development Plan", "Baseline (today)",
-         "The current reading of that metric, <b>measured, not estimated</b>. Count the real "
-         "thing for two to four weeks before writing a number here. A baseline set from a guess "
-         "gets argued about instead of hit."],
+         "The current reading of the <b>suggested metric</b> - a count of real events in that "
+         "metric's own units (\"4 last month\"), <b>not</b> a 1-5 score and not the Others "
+         "average. Measured, not estimated: count the real thing for two to four weeks first. "
+         "A baseline set from a guess gets argued about instead of hit."],
         ["", "90-day target",
          "What that same number should read in 90 days. Same unit as the baseline. Stretching but "
          "reachable - if it cannot move that far in a quarter, it is the wrong metric or the "

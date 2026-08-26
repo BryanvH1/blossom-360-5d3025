@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#006838">
-<link rel="stylesheet" href="assets/styles.css?v=8">
+<link rel="stylesheet" href="assets/styles.css?v=9">
 </head>
 <body>
 <div class="wrap wide">
@@ -74,8 +74,8 @@
   <div id="v-prog" class="view hidden"></div>
 </div>
 
-<script src="assets/data.js?v=8"></script>
-<script src="assets/core.js?v=8"></script>
+<script src="assets/data.js?v=9"></script>
+<script src="assets/core.js?v=9"></script>
 <script>
 (function(){
   'use strict';
@@ -555,7 +555,11 @@
     }
     $('v-plan').innerHTML =
       '<div class="note small">These five were selected by gap score — nobody picked them. Fill the editable cells with ' +
-      esc(person) + ' in the room; they save to this browser as you type.</div>' + tieNote +
+      esc(person) + ' in the room; they save to this browser as you type. ' +
+      '<b>Baseline and target are readings of the suggested metric</b> — counts of real events in ' +
+      'that metric\'s own units (“4 last month”, “2 per week”), not 1–5 scores. The 1–5 averages ' +
+      'are shown under each behaviour for context; the 360 score itself is tracked separately, by ' +
+      'saving a snapshot on the Progression tab each round.</div>' + tieNote +
       '<div class="scroll"><table><tr><th class="c">#</th><th class="c">Code</th><th>Behaviour</th><th>Suggested metric</th>' +
       '<th class="c">Suggested target</th>' + PLAN_FIELDS.map(function(f){ return '<th>' + f[1] + '</th>'; }).join('') + '</tr>' +
       rows + '</table></div>' +
