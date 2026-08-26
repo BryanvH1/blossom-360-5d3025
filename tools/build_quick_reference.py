@@ -355,16 +355,80 @@ def console_card():
      ("Spot-check a person,", "then export a fresh backup so this machine holds the current copy."),
     ]))
 
-    F.append(P("The numbers, in one line each", "h"))
+    F.append(P("The numbers on the Scores page", "h"))
     F.append(table([
-        ["Others", "Everyone except the person themselves. Their self-score never lifts their own "
-                   "result."],
-        ["Blind spot", "Self minus Others. Plus 1.00 or more means they rate themselves materially "
-                       "higher than everyone else does."],
-        ["Gap", "Importance x (5 - Others). How far short it falls, weighted by how much the role "
-                "needs it."],
-        ["Rank", "Gaps sorted. The top five become the development plan automatically."],
+        ["Others", "Everyone except the person themselves, averaged. Their own self-score is "
+                   "excluded, so nobody can lift their own result. Blanks are skipped, never "
+                   "counted as zero."],
+        ["Blind spot", "<b>Self minus Others.</b> Only appears when both exist. Positive means "
+                       "they rate themselves above everyone else; +1.00 or more is shaded, and is "
+                       "worth raising even when the absolute score is fine - the disagreement "
+                       "about reality is the problem. Negative means they are harder on "
+                       "themselves than others are."],
+        ["Gap", "<b>Importance x (5 - Others).</b> How far short it falls, weighted by how much "
+                "the role needs it. Runs 0 to 12. A critical behaviour scored 2.5 gives "
+                "3 x 2.5 = 7.5; a helpful one scored 2.75 gives 1 x 2.25 = 2.25 - which is why "
+                "the first lands top of the plan and the second near the bottom."],
+        ["Rank", "The gap scores sorted, biggest first; the top five become the development plan. "
+                 "Ties break by importance, then blind spot (a negative counts as zero), then "
+                 "item order. The console says when items tie at the fifth slot, because which "
+                 "one makes the cut is then a judgement call."],
     ], [0.95 * inch, 5.95 * inch], header=False, zebra=True))
+
+    F.append(P("The Results page", "h"))
+    F.append(table([
+        ["% of 5", "<b>Others divided by 5.</b> The same number as Others avg on a 0-100 scale, "
+                   "for people who read percentages faster than decimals. It is <b>not</b> a pass "
+                   "mark: 60% is an Others average of 3.0, which is solid and meets the bar."],
+        ["Self vs. Managers vs. Peers",
+         "One spoke per dimension, outer ring is 5. Read the <b>shape</b>, not the size. Where "
+         "the Self line sits outside the others, that is a blind spot you can see at a glance. "
+         "Where two rater groups disagree with each other - managers high, reports low - the "
+         "behaviour genuinely differs by audience, or one group simply sees more of it; either "
+         "is worth asking about. A group's line is hidden entirely if it has not scored every "
+         "dimension."],
+    ], [0.95 * inch, 5.95 * inch], header=False, zebra=True))
+
+    F.append(CondPageBreak(3.4 * inch))
+
+    F.append(P("What you type in, and where it comes from", "h"))
+    F.append(P("Two pages have cells you fill in yourself. Everything else is calculated."))
+    F.append(table([
+        ["Page", "Column", "What goes in it, and how to arrive at it"],
+        ["Development Plan", "Baseline (today)",
+         "The current reading of that metric, <b>measured, not estimated</b>. Count the real "
+         "thing for two to four weeks before writing a number here. A baseline set from a guess "
+         "gets argued about instead of hit."],
+        ["", "90-day target",
+         "What that same number should read in 90 days. Same unit as the baseline. Stretching but "
+         "reachable - if it cannot move that far in a quarter, it is the wrong metric or the "
+         "wrong target."],
+        ["", "Cadence",
+         "How often it gets counted - weekly or monthly. Pre-filled from the Metric Library; "
+         "change it if you will realistically count it less often."],
+        ["", "Who counts it",
+         "A named person, not a team. Usually the person being reviewed keeps the log and someone "
+         "else verifies at the monthly check-in. Ownership of the measurement is itself part of "
+         "the assessment."],
+        ["Progression", "Baseline",
+         "The same figure you put on the Development Plan, copied across at the start so the row "
+         "has a starting point."],
+        ["", "Month 1 to Month 6",
+         "The actual reading taken that month, in the same unit every time. Leave it blank until "
+         "you have taken it - a blank is honest, a back-filled guess is not."],
+    ], [1.25 * inch, 1.15 * inch, 4.5 * inch], zebra=True))
+
+    F.append(Spacer(1, 5))
+    F.append(box("Yes - everything you type is saved and comes back",
+                 "Both pages save to this browser as you type, and <b>Export backup includes all "
+                 "of it</b>: baselines, targets, cadences, owners, every monthly reading and every "
+                 "saved snapshot. Import puts it all back.",
+                 "The values are filed under the <b>behaviour code</b>, not the row position. So "
+                 "when a new round changes which five behaviours are top, your figures stay "
+                 "attached to the behaviour they were about. One consequence worth knowing: if a "
+                 "behaviour drops out of the top five its numbers are kept but stop being shown, "
+                 "and if it returns later they reappear.",
+                 tone="green"))
 
     F.append(Spacer(1, 5))
     F.append(P("Console: %s  -  Rater form: %s" % (CONSOLE_URL, FORM_URL), "small"))
