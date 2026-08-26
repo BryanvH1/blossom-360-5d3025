@@ -123,8 +123,9 @@ def table(rows, widths, header=True, align=None):
     return t
 
 
-def callout(title, text):
-    inner = [Paragraph("<b>%s</b>" % esc(title), S["note"]), Paragraph(esc(text), S["note"])]
+def callout(title, *paras):
+    inner = [Paragraph("<b>%s</b>" % esc(title), S["note"])]
+    inner += [Paragraph(t if "<" in t else esc(t), S["note"]) for t in paras]
     t = Table([[inner]], colWidths=[6.9 * inch], hAlign="LEFT")
     t.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, -1), AMBER_BG),
@@ -219,7 +220,12 @@ def build():
         "Always use the same browser on the same machine",
         "Your results are stored per browser. Open the console in Chrome on your laptop and "
         "you will not see anything you entered in Safari, or on another computer. Pick one and "
-        "bookmark it."))
+        "bookmark it.",
+        "<b>If you do have to use a different browser or a different machine:</b> before you "
+        "start, go to Google Drive and import the latest backup, so you are working from "
+        "current data. At the end of the session, export back to Google Drive so the next "
+        "person - or the next machine - picks up where you left off. Sections 9 and 10 have "
+        "the steps."))
 
     # ---------------------------------------------------------------- matrix
     F.append(P("2. Who rates whom", "h1"))
