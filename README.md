@@ -42,6 +42,7 @@ tools/              the Python that generates everything
   gen_data.py             writes assets/data.js
   build_importance_review.py  writes the review spreadsheet
   build_procedure_guide.py    writes the procedure guide PDF
+  build_quick_reference.py    writes the two quick-reference cards
 workbooks/          GENERATED .xlsx per person — untracked, rebuild any time
 ```
 
@@ -60,8 +61,9 @@ printed and marked up away from a checkout.
 | `tools/build_assessment.py` | `workbooks/*.xlsx` (one per person) | `python3 tools/build_assessment.py [Name ...]` |
 | `tools/build_importance_review.py` | `ImportanceReview.xlsx` (for reviewing weights, metrics and the written questions) | `python3 tools/build_importance_review.py` |
 | `tools/build_procedure_guide.py` | `ReviewProcedureGuide.pdf` (how to run a review) | `python3.14 tools/build_procedure_guide.py` |
+| `tools/build_quick_reference.py` | `RaterQuickReference.pdf` (one page, for raters) and `ConsoleQuickReference.pdf` (two pages, for the operator) | `python3.14 tools/build_quick_reference.py` |
 
-The guide needs **python3.14** — the default `python3` here is 3.7, which cannot import reportlab 5.
+The two PDF scripts need **python3.14** — the default `python3` here is 3.7, which cannot import reportlab 5.
 It also registers Arial explicitly: reportlab 5 dropped the base-14 Type1 fonts, and a style asking
 for Helvetica-Bold silently renders unbolded rather than erroring.
 
