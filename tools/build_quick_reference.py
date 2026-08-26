@@ -3,8 +3,10 @@
 
     python3.14 tools/build_quick_reference.py
 
-    RaterQuickReference.pdf     one page, for the people filling in a form
-    ConsoleQuickReference.pdf   two pages, for whoever runs the console
+    RaterQuickReference.pdf     for the people filling in a form. Must stay ONE page — a
+                                rater card that runs to two is a card nobody reads, so if
+                                it spills, cut content rather than letting it grow.
+    ConsoleQuickReference.pdf   for whoever runs the console. Length is not fixed.
 
 Needs python3.14 — this Mac's default python3 is 3.7, which reportlab 5 will not import.
 The scale, the roster and the links come from assessment_content.py, so the cards cannot
