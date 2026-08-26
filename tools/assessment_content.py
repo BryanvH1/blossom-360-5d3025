@@ -62,7 +62,8 @@ SCALE_NOTES = [
 OPEN_QS = [
  "1. What are they genuinely good at — what should not change?",
  "2. If they changed ONE thing, what would make the biggest difference?",
- "3. What would you need to see to be fully confident in them in this role?",
+ "3. What would you need to see to be fully confident in them in this role "
+ "and growing with the organization?",
 ]
 
 RELATIONSHIPS = [

@@ -42,7 +42,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from assessment_content import (PROFILES, ROSTER, RELATIONSHIPS, RELATIONSHIP_MAP, SCALE,
                                 SCALE_NOTES, LENS_DEFS, CRITICAL_BUDGET, validate,
-                                coverage_warnings)
+                                coverage_warnings, OPEN_QS as DEFAULT_OPEN_QS)
 
 ICLOUD = os.path.expanduser("~/Library/Mobile Documents/com~apple~CloudDocs/MacDocuments/"
                             "blossom/Employees/DeveloperAssessment")
@@ -299,7 +299,9 @@ def build():
                "does. The numbers tell you where to look; these tell you what is going on."))
     F.append(Spacer(1, 2))
     F.extend(B([esc(q.split(". ", 1)[1] if q[:2].rstrip(".").isdigit() else q)
-                for q in any_prof["openQuestions"]]))
+                for q in DEFAULT_OPEN_QS]))
+    F.append(P("The same three on every position, so answers can be read side by side and "
+               "compared between rounds.", "small"))
 
     # ---------------------------------------------------------------- scale
     F.append(P("4. What the ratings mean", "h1"))

@@ -95,8 +95,8 @@ def build():
      ("The Open questions tab",
       "The three written questions each rater answers at the end of the form. They carry more "
       "weight in the conversation than any score does — the numbers tell you where to look, these "
-      "tell you what is actually going on. Only the Developer form tailors its third question "
-      "today; the other four ask a generic version, which is the obvious thing to improve."),
+      "tell you what is actually going on. All five positions ask the same three, so answers can "
+      "be compared across people and between rounds."),
      ("The Metrics tab",
       "One row per behaviour per position: how we would actually measure it, the target, how "
       "often, and where the number comes from. It is there because a weight and a metric are the "
@@ -255,7 +255,7 @@ def build():
         "these say what is actually going on.")).font = F_SUB
 
     QHR = 4
-    for i, h in enumerate(["Position", "#", "Question as asked today", "Written for this role?",
+    for i, h in enumerate(["Position", "#", "Question as asked today", "Standard wording?",
                            "Proposed wording", "Notes"], start=1):
         c = qs.cell(row=QHR, column=i, value=h)
         c.font = F_HDR; c.fill = FILL_HDR; c.border = BOX
@@ -264,19 +264,17 @@ def build():
     qs.freeze_panes = f"A{QHR + 1}"
 
     r = QHR + 1
-    generic = 0
     for n, person in enumerate(people):
         prof = PROFILES[person["profile"]]
-        own = prof["openQuestions"] != DEFAULT_OPEN_QS
         shade = PatternFill("solid", fgColor="F7FAFC") if n % 2 else None
         first_row = r
         for i, q in enumerate(prof["openQuestions"], start=1):
             text = q.split(". ", 1)[1] if q[:2].rstrip(".").isdigit() else q
-            tailored = "Yes" if own else "No — generic"
-            if not own:
-                generic += 1
+            # Judged per question, not per set. The third is deliberately identical on every
+            # position; a profile may still differ on the first two (the Developer's say "he").
+            mark = "Standard" if q == DEFAULT_OPEN_QS[i - 1] else "Wording differs"
             for col, v in enumerate([person["name"] if r == first_row else None, i, text,
-                                     tailored if r == first_row else None, None, None], start=1):
+                                     mark, None, None], start=1):
                 c = qs.cell(row=r, column=col, value=v)
                 c.font = F_BOLD if col == 1 else F_BODY
                 c.alignment = WRAP if col == 3 else CTR
@@ -292,13 +290,13 @@ def build():
             r += 1
 
     qs.conditional_formatting.add(f"D{QHR + 1}:D{r - 1}", FormulaRule(
-        formula=[f'ISNUMBER(SEARCH("generic",D{QHR + 1}))'],
+        formula=[f'ISNUMBER(SEARCH("differs",D{QHR + 1}))'],
         fill=PatternFill("solid", bgColor="FCE7A2")))
 
     notes = [
-     "Question 3 is the one worth tailoring. Frans's asks what you would need to see before you "
-     "would be comfortable with him leading the dev team — a specific decision, so it gets "
-     "specific answers. The other four ask the generic version, which gets generic answers.",
+     "All five positions ask the same third question, word for word, so the answers can be read "
+     "side by side and compared between rounds. The Developer form differs on the first two only "
+     "in saying \"he\" rather than \"they\", matching the pronoun used in its behaviours.",
      "Keep them to three. Raters answer three questions properly and six of them badly.",
      "They are answered in the rater's own words and attached to their name, like the scores. "
      "The comments get summarised for the person being assessed rather than passed on verbatim.",

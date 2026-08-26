@@ -14,10 +14,14 @@ META = {
     "relationships": ["self", "manager", "peer"],
 }
 
+# Same three questions as every other profile — this override exists only to say "he",
+# matching the pronoun used throughout this profile's items. The third question must stay
+# word-for-word identical to the standard one or the answers stop being comparable.
 OPEN_QS = [
  "1. What is he genuinely good at — what should not change?",
  "2. If he changed ONE thing, what would make the biggest difference?",
- "3. What would you need to see before you'd be comfortable with him leading the dev team?",
+ "3. What would you need to see to be fully confident in them in this role "
+ "and growing with the organization?",
 ]
 
 DIMENSIONS = [
