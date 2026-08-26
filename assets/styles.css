@@ -20,6 +20,8 @@
   }
 }
 *{box-sizing:border-box}
+::selection{background:rgba(57,181,74,.30)}
+.btn{-webkit-user-select:none;user-select:none}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);
   font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;}
@@ -96,7 +98,8 @@ tbody tr:hover{background:var(--accent-soft)}
 .pill.i1{background:var(--line-soft);color:var(--muted)}
 .tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:2px solid var(--line);margin:0 0 20px}
 .tabs button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;font-size:14px;
-  padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
+  padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;
+  -webkit-user-select:none;user-select:none}
 .tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
 .codebox{width:100%;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;padding:12px;
   border:1px solid var(--line);border-radius:7px;background:var(--input);color:var(--ink);min-height:130px;word-break:break-all}
