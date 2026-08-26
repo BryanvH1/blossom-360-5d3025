@@ -41,7 +41,8 @@ else:
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from assessment_content import (PROFILES, ROSTER, RELATIONSHIPS, RELATIONSHIP_MAP, SCALE,
-                                SCALE_NOTES, LENS_DEFS, CRITICAL_BUDGET, validate)
+                                SCALE_NOTES, LENS_DEFS, CRITICAL_BUDGET, validate,
+                                coverage_warnings)
 
 ICLOUD = os.path.expanduser("~/Library/Mobile Documents/com~apple~CloudDocs/MacDocuments/"
                             "blossom/Employees/DeveloperAssessment")
@@ -265,9 +266,20 @@ def build():
          for p in ROSTER],
         [0.7 * inch, 1.45 * inch, 3.75 * inch, 1.0 * inch]))
     F.append(Spacer(1, 5))
+    gaps = []
+    for person in ROSTER:
+        prof = PROFILES.get(person["profile"]) if person["profile"] else None
+        if not prof:
+            continue
+        filled = {"self"} | set(RELATIONSHIP_MAP.get(person["name"], {}).values())
+        empty = [rel_label[g].lower() for g in prof["relationships"] if g not in filled]
+        if empty:
+            gaps.append("%s has no %s" % (person["name"], " or ".join(empty)))
     F.append(P("Everyone also rates themselves; that self-score is what the blind-spot column "
-               "measures against. Neither John nor Mark has a manager above them on the roster, "
-               "so that group simply does not appear on their forms.", "small"))
+               "measures against." +
+               (" On the roster as it stands, " + "; ".join(gaps) +
+                " - those groups simply do not appear on their forms." if gaps else ""),
+               "small"))
 
     F.append(CondPageBreak(2.2 * inch))
 

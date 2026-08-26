@@ -2912,13 +2912,13 @@ window.B360_DATA = {
     },
     "Bryan": {
       "John": "manager",
-      "Mark": "peer",
+      "Mark": "manager",
       "Frans": "report",
       "Jeremy": "report"
     },
     "Mark": {
       "John": "peer",
-      "Bryan": "peer",
+      "Bryan": "report",
       "Frans": "report",
       "Jeremy": "report"
     },

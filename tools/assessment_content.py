@@ -220,8 +220,8 @@ def validate():
 # submission — so this matrix, not the rater, is the definition of who rates whom.
 RELATIONSHIP_MAP = {
     "John":   {"Bryan": "report",  "Mark": "peer",      "Frans": "report", "Jeremy": "report"},
-    "Bryan":  {"John":  "manager", "Mark": "peer",      "Frans": "report", "Jeremy": "report"},
-    "Mark":   {"John":  "peer",    "Bryan": "peer",     "Frans": "report", "Jeremy": "report"},
+    "Bryan":  {"John":  "manager", "Mark": "manager",   "Frans": "report", "Jeremy": "report"},
+    "Mark":   {"John":  "peer",    "Bryan": "report",   "Frans": "report", "Jeremy": "report"},
     "Frans":  {"John":  "manager", "Bryan": "manager",  "Mark": "manager", "Jeremy": "peer"},
     "Jeremy": {"John":  "manager", "Bryan": "manager",  "Mark": "manager", "Frans": "peer"},
 }
