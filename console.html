@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#006838">
-<link rel="stylesheet" href="assets/styles.css?v=11">
+<link rel="stylesheet" href="assets/styles.css?v=12">
 </head>
 <body>
 <div class="wrap wide">
@@ -74,8 +74,8 @@
   <div id="v-prog" class="view hidden"></div>
 </div>
 
-<script src="assets/data.js?v=11"></script>
-<script src="assets/core.js?v=11"></script>
+<script src="assets/data.js?v=12"></script>
+<script src="assets/core.js?v=12"></script>
 <script>
 (function(){
   'use strict';
@@ -531,7 +531,9 @@
   /* The plan is the agenda for the monthly conversation, not a spreadsheet. The number that
      gets committed to lives on Progression at dimension level, where it is steady enough to
      mean something — one rater nudging one item moves that item by 0.25. */
-  var PLAN_FIELDS = [['change','What we will see instead'],['owner','Who is watching']];
+  var PLAN_FIELDS = [['goal','6-month goal'],
+                     ['change','What we will see instead'],
+                     ['owner','Who is watching']];
   function renderPlan(m){
     if (!m){ $('v-plan').innerHTML = ''; return; }
     store.plan[person] = store.plan[person] || {};
@@ -547,9 +549,12 @@
         td(B.fmt(r.others), B.band(r.others)) +
         PLAN_FIELDS.map(function(f){
           var v = saved[f[0]] !== undefined ? saved[f[0]] : '';
+          var narrow = f[0] === 'goal';
           return '<td><input type="text" data-plan="' + r.code + '" data-f="' + f[0] + '" value="' +
-                 esc(v) + '" placeholder="' + (f[0]==='change' ? 'e.g. Jeremy stops having to ask him to explain it' : '') +
-                 '" style="font-size:12.5px;padding:5px 7px;min-width:200px"></td>';
+                 esc(v) + '" placeholder="' + (f[0]==='change' ? 'e.g. Jeremy stops having to ask him to explain it'
+                                             : f[0]==='goal' ? '—' : '') +
+                 '" style="font-size:12.5px;padding:5px 7px;' +
+                 (narrow ? 'width:64px;text-align:center' : 'min-width:190px') + '"></td>';
         }).join('') +
       '</tr>';
     }).join('');
@@ -591,7 +596,26 @@
       store.plan[person] = store.plan[person] || {};
       store.plan[person][el.dataset.plan] = store.plan[person][el.dataset.plan] || {};
       store.plan[person][el.dataset.plan][el.dataset.f] = el.value;
-      save(); return;
+      save();
+      if (el.dataset.f === 'goal'){
+        /* the views render once and are only shown/hidden, so Progression's copy of this
+           number has to be updated here rather than waiting for the next render() */
+        var code = el.dataset.plan;
+        var cell = document.querySelector('[data-goalfor="' + code + '"]');
+        if (cell) cell.textContent = el.value || '—';
+        var dcell = document.querySelector('[data-idist="' + code + '"]');
+        if (dcell){
+          var sn = store.snapshots.filter(function(x){ return x.person === person; });
+          var latest = null;
+          for (var i = sn.length - 1; i >= 0; i--){
+            if (sn[i].items && sn[i].items[code] !== undefined){ latest = sn[i].items[code]; break; }
+          }
+          var gv = parseFloat(el.value);
+          dcell.textContent = (isNaN(gv) || latest === null) ? ''
+                            : (gv - latest <= 0 ? 'met' : '+' + (gv - latest).toFixed(2) + ' to go');
+        }
+      }
+      return;
     }
     var g = e.target.closest('[data-goal]');
     if (g){
@@ -702,6 +726,42 @@
       table = '<div class="note warn">No snapshots yet' + (m ? ' — give it a label and click <b>Save snapshot</b> to record today’s scores as the baseline.' : '. Add responses first.') + '</div>';
     }
 
+    /* The five plan items tracked round by round against the goal typed on the Development
+       Plan. Read directionally: with four raters one of them shifting one item by a point
+       moves it 0.25, so 3.4 against a 3.5 goal is not a miss. */
+    var itemTable = '';
+    if (m && m.top5.length && snaps.length){
+      var pl = store.plan[person] || {};
+      var icols = snaps.map(function(sn){
+        return '<th class="c">' + esc(sn.label) + '</th>'; }).join('');
+      var irows = m.top5.map(function(r){
+        var goal = (pl[r.code] || {}).goal;
+        var g = parseFloat(goal);
+        var latest = null;
+        for (var i = snaps.length - 1; i >= 0; i--){
+          if (snaps[i].items && snaps[i].items[r.code] !== undefined){ latest = snaps[i].items[r.code]; break; }
+        }
+        var dist = (!isNaN(g) && latest !== null) ? (g - latest) : null;
+        return '<tr><td class="c small muted">' + r.code + '</td>' +
+          '<td><b>' + esc(r.text) + '</b></td>' +
+          '<td class="c" data-goalfor="' + r.code + '">' + (goal ? esc(goal) : '—') + '</td>' +
+          snaps.map(function(sn){
+            var v = (sn.items || {})[r.code];
+            return v === undefined ? '<td class="c small muted" title="This snapshot predates ' +
+                   'per-item tracking">—</td>' : td(B.fmt(v), B.band(v));
+          }).join('') +
+          '<td class="c small muted" data-idist="' + r.code + '">' +
+          (dist === null ? '' : (dist <= 0 ? 'met' : '+' + dist.toFixed(2) + ' to go')) + '</td></tr>';
+      }).join('');
+      itemTable = '<div class="card"><h2>The five items, round by round</h2>' +
+        '<p class="sub">Goals are typed on the Development Plan and shown here. Read them ' +
+        'directionally — a single rater changing their mind moves an item by 0.25, so landing ' +
+        'just short is not a miss. The dimension goals above are the steadier judgement.</p>' +
+        '<div class="scroll" style="max-height:none"><table><tr><th class="c">Code</th>' +
+        '<th>Behaviour</th><th class="c">6-month goal</th>' + icols + '<th class="c">Distance</th></tr>' +
+        irows + '</table></div></div>';
+    }
+
     /* Monthly check-in log. Replaces the metric readings grid: between rounds nothing is
        counted, the five plan items are talked about, and this is where that gets recorded. */
     store.checkins[person] = store.checkins[person] || [];
@@ -724,18 +784,21 @@
         : '<div class="note small">No check-ins recorded yet.</div>') +
       '</div>';
 
-    $('v-prog').innerHTML = head + chart + table + readings;
+    $('v-prog').innerHTML = head + chart + table + itemTable + readings;
 
     var sb = $('snapBtn');
     if (sb) sb.addEventListener('click', function(){
       if (!m) return;
       var label = ($('snapLabel').value || '').trim();
       if (!label){ alert('Give the snapshot a label first — e.g. “Baseline” or “+90 days”.'); return; }
-      var dims = {};
+      var dims = {}, items = {};
       m.dims.forEach(function(d){ dims[d.code] = d.others; });
+      /* per-item scores as well as dimensions — an item-level goal on the plan needs
+         something to be measured against at each round */
+      m.rows.forEach(function(r){ if (r.others !== null) items[r.code] = r.others; });
       store.snapshots.push({
         person: person, label: label, date: new Date().toISOString().slice(0,10),
-        dims: dims, overall: m.overall.others
+        dims: dims, overall: m.overall.others, items: items
       });
       save(); render(); tab = 'prog'; showTab();
     });

@@ -67,6 +67,8 @@ S = {
                          textColor=GREY, spaceAfter=7),
  "h":     ParagraphStyle("h", fontName="Body-Bold", fontSize=10.5, leading=13,
                          textColor=ACCENT, spaceBefore=5.5, spaceAfter=2.5),
+ "h2":    ParagraphStyle("h2", fontName="Body-Bold", fontSize=9.4, leading=12,
+                         textColor=INK, spaceBefore=6, spaceAfter=2),
  "body":  ParagraphStyle("body", fontName="Body", fontSize=8.8, leading=11.6,
                          textColor=INK, spaceAfter=4),
  "small": ParagraphStyle("small", fontName="Body", fontSize=8, leading=10.6,
@@ -393,17 +395,79 @@ def console_card():
          "dimension."],
     ], [0.95 * inch, 5.95 * inch], header=False, zebra=True))
 
-    F.append(CondPageBreak(3.4 * inch))
+    F.append(P("The six-month cycle, round by round", "h"))
+    F.append(P("Four assessments, six one-to-ones. Each round is the same three moves: collect, "
+               "snapshot, talk."))
+    F.append(table([
+        ["When", "What you do"],
+        [Paragraph("<b>Month 0</b><br/><font size=8>first round</font>", S["cellb"]),
+         "Send the form, enter the codes, save a snapshot labelled <b>Baseline</b>. Agree the "
+         "five items with them, type a 6-month goal for each, and a goal for each dimension and "
+         "the overall on Progression. <b>Export a backup.</b>"],
+        [Paragraph("<b>Month 1</b>", S["cellb"]),
+         "One-to-one on the five items. Nothing is scored. Log what you discussed in Monthly "
+         "check-ins."],
+        [Paragraph("<b>Month 2</b><br/><font size=8>round two</font>", S["cellb"]),
+         "Re-run: same form, same raters. Enter the codes, save a snapshot labelled "
+         "<b>+2 months</b>. The item and dimension tables gain a column and the distances "
+         "recalculate. One-to-one on what moved and what did not. Export."],
+        [Paragraph("<b>Month 3</b>", S["cellb"]),
+         "One-to-one and a check-in note. No assessment."],
+        [Paragraph("<b>Month 4</b><br/><font size=8>round three</font>", S["cellb"]),
+         "Re-run, snapshot <b>+4 months</b>, one-to-one, export. This is the round where a plan "
+         "that is not working becomes obvious with time still left to do something about it."],
+        [Paragraph("<b>Month 5</b>", S["cellb"]),
+         "One-to-one and a check-in note."],
+        [Paragraph("<b>Month 6</b><br/><font size=8>final round</font>", S["cellb"]),
+         "Re-run, snapshot <b>+6 months</b>. Now compare against the goals: dimension and overall "
+         "first, items second. Export."],
+    ], [0.95 * inch, 5.95 * inch], zebra=True))
+    F.append(Spacer(1, 5))
+    F.append(P("Closing it out", "h2"))
+    F.extend(bullets([
+     "<b>Read the dimensions before the items.</b> They are the steadier number - a dimension "
+     "only moves when a rater re-rates the whole area, an item moves on one opinion.",
+     "<b>Say plainly whether the bar was met</b>, against what you agreed at Month 0. If you "
+     "never named the bar, the six months just produced a number nobody has to act on.",
+     "<b>Then start the next plan.</b> Re-running produces a fresh top five by gap score; some "
+     "will carry over and some will not. Items that drop out keep their notes and reappear if "
+     "they return.",
+     "<b>Keep every snapshot.</b> They are what makes the second cycle comparable to the first, "
+     "and they cost nothing.",
+    ]))
+
+    F.append(P("What the Metric Library is for", "h"))
+    F.append(P("<b>Reference only. Nothing in it is entered anywhere.</b> It gives each of the 36 "
+               "behaviours a concrete way of thinking about it - what you would actually be "
+               "looking at if you tried to see whether it was happening."))
+    F.append(P("Its use is <b>framing the question</b> at a one-to-one. \"Writes code others can "
+               "read\" is hard to discuss; \"has anyone had to ask you to explain your code this "
+               "month?\" is not. That is a good question and a bad spreadsheet cell - it makes the "
+               "behaviour specific enough to talk about without anyone keeping a tally."))
+    F.append(P("It is not a log, and nothing in it is counted. Progress is measured by "
+               "re-running the assessment.", "small"))
 
     F.append(P("What you type in, and where it comes from", "h"))
     F.append(P("Nothing is counted between rounds. The measurement is the assessment itself, "
                "re-run every two months; what you type is the agreement about what should change "
                "and the record of talking about it."))
+    F.append(box("Yes - everything you type is saved and comes back",
+                 "Both pages save to this browser as you type, and <b>Export backup includes all "
+                 "of it</b>: the plan text, the six-month goals, every check-in note and every "
+                 "saved snapshot. Import puts it all back.",
+                 "Entries are filed under the <b>behaviour code</b>, so when a new round changes "
+                 "the top five your notes stay with the behaviour they were about. A behaviour "
+                 "that drops out keeps its notes and reappears with them if it returns.",
+                 tone="green"))
+    F.append(Spacer(1, 5))
     F.append(table([
         ["Page", "Column", "What goes in it, and how to arrive at it"],
         ["Development Plan", "Score now",
          "<b>Filled in for you</b> - the Others average for that behaviour today. This is the "
          "number that has to move."],
+        ["", "6-month goal",
+         "The score you want <b>that behaviour</b> to reach by the final round. Appears on the "
+         "Progression page against each round's actual."],
         ["", "What we will see instead",
          "In words, the observable difference. Not a number and not a target: <i>\"Jeremy stops "
          "having to ask him to explain the payments module\"</i>. If you cannot describe what "
@@ -412,26 +476,15 @@ def console_card():
          "A named person who is placed to notice - usually whoever raised it. They are not "
          "keeping a log, they are the one who will say whether it changed."],
         ["Progression", "6-month goal",
-         "The score you want that <b>dimension</b> to reach. Per dimension and overall, not per "
-         "behaviour: one rater changing their mind on one item moves that item by 0.25 but its "
-         "dimension by 0.04, so an item-level goal would mostly track noise. Distance to it is "
-         "worked out for you."],
+         "The score you want that <b>dimension</b> to reach, plus one for the overall. Distance "
+         "to every goal is worked out for you.<br/><b>Which to trust:</b> one rater changing "
+         "their mind on one item moves that item 0.25 but its dimension 0.04. Judge the outcome "
+         "on the dimensions; read the item goals directionally."],
         ["", "Monthly check-ins",
          "Date and a line on what you discussed. The 360 runs every two months; the plan gets "
          "talked about every month, and this is the trail of it."],
     ], [1.25 * inch, 1.3 * inch, 4.35 * inch], zebra=True))
 
-    F.append(Spacer(1, 5))
-    F.append(box("Yes - everything you type is saved and comes back",
-                 "Both pages save to this browser as you type, and <b>Export backup includes all "
-                 "of it</b>: the plan text, the six-month goals, every check-in note and every "
-                 "saved snapshot. Import puts it all back.",
-                 "Plan entries are filed under the <b>behaviour code</b>, not the row position, so "
-                 "when a new round changes which five behaviours are top your notes stay attached "
-                 "to the behaviour they were about. One consequence: if a behaviour drops out of "
-                 "the top five its notes are kept but stop being shown, and reappear if it "
-                 "returns.",
-                 tone="green"))
 
     F.append(Spacer(1, 5))
     F.append(P("Console: %s  -  Rater form: %s" % (CONSOLE_URL, FORM_URL), "small"))
