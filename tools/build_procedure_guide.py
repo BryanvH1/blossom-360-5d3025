@@ -433,6 +433,9 @@ def build():
       "For each of the five development items, agree what it is today and what it should be "
       "in 90 days. The Metric Library proposes a way to count each one. A metric nobody will "
       "actually keep is worse than none - swap it for one you will."),
+     ("Log the readings monthly",
+      "On the Progression tab, enter each month's reading as you take it. Baseline and Target "
+      "are filled in from the Development Plan - you do not retype them."),
      ("Save a snapshot",
       "On the Progression tab, save a snapshot labelled with the date. That is the baseline "
       "the next round is compared against."),

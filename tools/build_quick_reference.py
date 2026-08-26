@@ -413,8 +413,9 @@ def console_card():
          "else verifies at the monthly check-in. Ownership of the measurement is itself part of "
          "the assessment."],
         ["Progression", "Baseline",
-         "The same figure you put on the Development Plan, copied across at the start so the row "
-         "has a starting point."],
+         "<b>Filled in for you</b> from the Development Plan, along with Target - they are the "
+         "same figures, so they are shown here rather than typed twice. Change them on the "
+         "Development Plan and they update here."],
         ["", "Month 1 to Month 6",
          "The actual reading taken that month, in the same unit every time. Leave it blank until "
          "you have taken it - a blank is honest, a back-filled guess is not."],
@@ -425,6 +426,9 @@ def console_card():
                  "Both pages save to this browser as you type, and <b>Export backup includes all "
                  "of it</b>: baselines, targets, cadences, owners, every monthly reading and every "
                  "saved snapshot. Import puts it all back.",
+                 "Baseline and Target on the Progression page are the exception: they are not "
+                 "typed there at all, they mirror the Development Plan. One figure, one place to "
+                 "change it, no chance of the two pages disagreeing.",
                  "The values are filed under the <b>behaviour code</b>, not the row position. So "
                  "when a new round changes which five behaviours are top, your figures stay "
                  "attached to the behaviour they were about. One consequence worth knowing: if a "

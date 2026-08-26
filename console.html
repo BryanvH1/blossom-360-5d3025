@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#006838">
-<link rel="stylesheet" href="assets/styles.css?v=6">
+<link rel="stylesheet" href="assets/styles.css?v=7">
 </head>
 <body>
 <div class="wrap wide">
@@ -74,8 +74,8 @@
   <div id="v-prog" class="view hidden"></div>
 </div>
 
-<script src="assets/data.js?v=6"></script>
-<script src="assets/core.js?v=6"></script>
+<script src="assets/data.js?v=7"></script>
+<script src="assets/core.js?v=7"></script>
 <script>
 (function(){
   'use strict';
@@ -577,7 +577,16 @@
       store.plan[person] = store.plan[person] || {};
       store.plan[person][el.dataset.plan] = store.plan[person][el.dataset.plan] || {};
       store.plan[person][el.dataset.plan][el.dataset.f] = el.value;
-      save(); return;
+      save();
+      /* showTab() only toggles visibility — the Progression view is rendered once, so its
+         mirrored cells have to be updated here or they sit stale until the next render(). */
+      var mirror = el.dataset.f === 'baseline' ? 'basefor'
+                 : el.dataset.f === 'target' ? 'targetfor' : null;
+      if (mirror){
+        var cell = document.querySelector('[data-' + mirror + '="' + el.dataset.plan + '"]');
+        if (cell) cell.textContent = el.value || (mirror === 'basefor' ? '—' : '');
+      }
+      return;
     }
     if (!e.target || e.target.nodeType !== 1) return;
     var rd = e.target.closest('[data-read]');
@@ -652,13 +661,27 @@
         '<tr><th>Item / metric</th>' + months.map(function(x){ return '<th class="c">' + x + '</th>'; }).join('') + '<th class="c">Target</th></tr>' +
         m.top5.map(function(r){
           var met = m.profile.metrics[r.code] || {}, saved = (store.readings[person]||{})[r.code] || {};
+          var plan = (store.plan[person]||{})[r.code] || {};
+          /* Baseline is the same number as the Development Plan's, so it is mirrored rather
+             than typed twice — two boxes for one figure is two figures waiting to disagree.
+             Falls back to any Baseline typed here before this was mirrored. */
+          var base = plan.baseline || saved['Baseline'] || '';
           return '<tr><td style="min-width:280px"><b>' + r.code + '</b> — <span class="small">' + esc(met.metric||'') + '</span></td>' +
             months.map(function(mo){
+              if (mo === 'Baseline'){
+                return '<td class="c small" data-basefor="' + r.code + '" title="Set on the ' +
+                       'Development Plan" style="background:var(--line-soft);color:var(--muted)">' +
+                       (esc(base) || '—') + '</td>';
+              }
               return '<td><input type="text" data-read="' + r.code + '" data-m="' + esc(mo) + '" value="' +
                      esc(saved[mo]||'') + '" style="width:82px;font-size:12.5px;padding:5px 6px;text-align:center"></td>';
             }).join('') +
-            '<td class="c small">' + esc((store.plan[person]||{})[r.code] && store.plan[person][r.code].target || met.target || '') + '</td></tr>';
-        }).join('') + '</table></div></div>';
+            '<td class="c small" data-targetfor="' + r.code + '">' +
+            esc(plan.target || met.target || '') + '</td></tr>';
+        }).join('') + '</table>' +
+        '<p class="small muted" style="margin:10px 0 0">Baseline and Target are taken from the ' +
+        'Development Plan — edit them there and they update here. Log each monthly reading as you ' +
+        'take it; leave a month blank until you have.</p></div></div>';
     }
 
     $('v-prog').innerHTML = head + chart + table + readings;
